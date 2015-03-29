@@ -4,7 +4,6 @@
 var LocalStrategy   = require('passport-local').Strategy;
 
 // load up the user model
-var mysql = require('mysql');
 var bcrypt = require('bcrypt-nodejs');
 var db = require('../config/database');
 var utils = require('../app/utils')
