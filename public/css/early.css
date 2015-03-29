@@ -1,0 +1,160 @@
+html,body {
+    background: url(/public/images/hookupBG.png) no-repeat center center fixed;
+    -webkit-background-size: cover; /* For WebKit*/
+    -moz-background-size: cover;    /* Mozilla*/
+    -o-background-size: cover;      /* Opera*/
+    background-size: cover;         /* Generic*/
+}
+
+#page-container {
+	color: #FFFFFF;
+	font-family: HelveticaNeue;
+	width: 90%;
+	margin: auto;
+}
+
+#page-container p {
+	font-size: 1em;
+}
+
+#header {
+	margin-top: 5%;
+	margin-bottom: 10%;
+}
+
+#logo-container {
+	display: inline-block;
+	width: 25%;
+}
+
+#logo-container img {
+	width: 100%;
+}
+
+#header button {
+	float: right;
+	width: 35%;
+	background: #37B1B2;
+	border: none;
+	border-radius: 30px;
+	font-size: 2em;
+	padding: 2% 0%;
+}
+
+.center {
+	text-align: center;
+}
+
+#page-container h1 {
+	font-size: 5em;
+	margin-bottom: 5%;
+}
+
+#page-container h3 {
+	font-size: 2em;
+}
+
+#alert-message {
+	font-weight: bold;
+}
+
+.error {
+	color: #F1A50B;
+}
+
+.success {
+	color: #37B1B2;
+}
+
+#form-container {
+	margin-top: 2%;
+	margin-bottom: 5%;
+}
+
+#form-container input {
+	font-size: 2em;
+	color: gray;
+	padding: 2%;
+	margin: 2%;
+}
+
+#form-container #age {
+	width: 15%;
+}
+
+#form-container #email {
+	width: 100%;
+}
+
+#form-container #submit {
+	color: #FFFFFF;
+	background: #F1A50B;
+	border: none;
+	width: 25%;
+}
+
+#privacy-container {
+	font-family: HelveticaNeue-Light;
+	margin-bottom: 5%;
+	font-size: 1em;
+}
+
+#social-media-container {
+	font-family: HelveticaNeue-Light;
+}
+
+#social-media-container img {
+	width: 10%;
+	margin: 2.5%;
+}
+
+@media screen and (min-width: 600px) {
+	#page-container p, #privacy-container {
+		font-size: 1.5em;
+	}
+
+	#header {
+		margin-top: 2%;
+		margin-bottom: 6%;
+	}
+
+	#logo-container {
+		width: 15%;
+	}
+
+	#header button {
+		font-size: 1.5em;
+		width: 20%
+	}
+
+	#page-container h1 {
+		font-size: 4em;
+		margin-bottom: 3%;
+	}
+
+	#form-container input {
+		font-size: 1.5em;
+		padding: 1%;
+		margin: 1%;
+	}
+	
+	#form-container #age {
+		width: 8%;
+	}
+
+	#form-container #submit {
+		width: 12%;
+	}
+	#form-container #email {
+		width: 40%;
+	}
+
+	#privacy-container {
+		margin-bottom: 3%;
+	}
+
+	#social-media-container img {
+		width: 7%;
+		margin: 1%;
+	}
+}

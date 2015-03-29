@@ -1,7 +1,12 @@
 // app/routes.js
+var mailchimp = require('./mailchimp');
+
 var subroute = '/tn';
 
 module.exports = function(app, passport) {
+	// Landing pages (Mailchimp)
+	app.post('/mailchimp/subscribe', mailchimp.subscribe);
+
 	// =====================================
 	// HOME PAGE (with login links) ========
 	// =====================================
