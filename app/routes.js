@@ -1,4 +1,5 @@
 // app/routes.js
+var admin = require('./admin');
 var mailchimp = require('./mailchimp');
 
 var subroute = '/tn';
@@ -113,6 +114,17 @@ module.exports = function(app, passport) {
 		req.logout();
 		res.redirect(subroute + '/');
 	});
+
+	// Admin
+	app.get(subroute + '/admin', isEmployee, function(req, res) {
+		res.render('admin.ejs', {
+			is_logged_in : true,
+			user : req.user
+		});
+	});
+
+	app.get('/admin/users', isAdmin, admin.get_user);
+	app.post('/admin/users', isAdmin, admin.upgrade_user);
 };
 
 // route middleware to make sure
@@ -133,4 +145,28 @@ function redirectIfLoggedIn(req, res, next) {
 
 	// if they are redirect them to the home page
 	res.redirect(subroute + '/home');
+}
+
+function isEmployee(req, res, next) {
+	if (req.isAuthenticated()) {
+		if (req.user.employee) {
+			return next();
+		} else {
+			res.redirect(subroute + '/home');
+		}
+	}
+
+	res.redirect(subroute + '/');
+}
+
+function isAdmin(req, res, next) {
+	if (req.isAuthenticated()) {
+		if (req.user.admin) {
+			return next();
+		} else {
+			res.redirect(subroute + '/home');
+		}
+	}
+
+	res.redirect(subroute + '/');
 }

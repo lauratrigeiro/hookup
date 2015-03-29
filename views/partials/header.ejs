@@ -12,6 +12,9 @@
 
         <ul class="nav navbar-nav">
             <li><a href="/tn">Home</a></li>
+            <% if (is_logged_in && (user.employee || user.admin)) { %>
+            <li><a href="/tn/admin" class="btn btn-default btn-sm">Admin</a></li>
+            <% } %>
             <% if (is_logged_in) { %>
             <li><a href="/logout" class="btn btn-default btn-sm">Logout</a></li>
             <% } %>

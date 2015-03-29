@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+	<% include ./partials/head %>
+    <script type='text/javascript' src='/public/js/admin.js'></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <% include ./partials/header %>
+        </header>
+        <div class="jumbotron text-center">
+            <h1><span class="fa fa-lock"></span>Admin Page</h1>
+            <a href="#" class="btn btn-default">Approve Stories</a>
+            <% if (user.admin) { %>
+                <% include ./partials/admin_only %>
+            <% } %>
+        </div>
+    </div>
+    <footer>
+        <% include ./partials/footer %>
+    </footer>
+</body>
+</html>
