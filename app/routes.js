@@ -125,6 +125,7 @@ module.exports = function(app, passport) {
 
 	app.get('/admin/users', isAdmin, admin.get_user);
 	app.post('/admin/users', isAdmin, admin.upgrade_user);
+	app.post('/admin/sexperts', isAdmin, admin.add_profile);
 };
 
 // route middleware to make sure
