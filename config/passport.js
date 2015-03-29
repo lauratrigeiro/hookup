@@ -7,6 +7,7 @@ var LocalStrategy   = require('passport-local').Strategy;
 var mysql = require('mysql');
 var bcrypt = require('bcrypt-nodejs');
 var dbconfig = require('./database');
+var utils = require('../app/utils')
 var connection = mysql.createConnection(dbconfig.connection);
 
 connection.query('USE ' + dbconfig.database);
@@ -46,7 +47,18 @@ module.exports = function(passport) {
             passReqToCallback : true // allows us to pass back the entire request to the callback
         },
         function(req, username, password, done) {
-            // find a user whose email is the same as the forms email
+            if (!username|| username.length < 3) {
+                return done(null, false, req.flash('signupMessage', 'Password must be at least 3 characters.'));
+            }
+
+            if (!password || password.length < 6) {
+                return done(null, false, req.flash('signupMessage', 'Password must be at least 6 characters.'));
+            }
+
+            if (password !== req.body.confirm_password) {
+                return done(null, false, req.flash('signupMessage', 'Passwords need to match.'));
+            }
+            // find a user whose username is the same as the forms username
             // we are checking to see if the user trying to login already exists
             connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows) {
                 if (err)
@@ -56,17 +68,20 @@ module.exports = function(passport) {
                 } else {
                     // if there is no user with that username
                     // create the user
-                    var newUserMysql = {
-                        username: username,
-                        password: bcrypt.hashSync(password, null, null)  // use the generateHash function in our user model
+                    var id = utils.uuid();
+                    var new_user = {
+                        id       : id,
+                        username : username,
+                        password : bcrypt.hashSync(password, bcrypt.genSaltSync(10), null),  // use the generateHash function in our user model
+                        email    : req.body.email,
+                        age      : parseInt(req.body.age)
                     };
 
-                    var insertQuery = "INSERT INTO users ( username, password ) values (?,?)";
+                    var insertQuery = "INSERT INTO users ( id, username, password, email, age ) values (?,?,?,?,?)";
 
-                    connection.query(insertQuery,[newUserMysql.username, newUserMysql.password],function(err, rows) {
-                        newUserMysql.id = rows.insertId;
+                    connection.query(insertQuery,[new_user.id, new_user.username, new_user.password, new_user.email, new_user.age],function(err, rows) {
 
-                        return done(null, newUserMysql);
+                        return done(null, new_user);
                     });
                 }
             });
