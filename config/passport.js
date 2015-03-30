@@ -73,9 +73,11 @@ module.exports = function(passport) {
                 }
 
                 conn.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows) {
-                    if (err)
+                    if (err) {
                         conn.release();
                         return done(err);
+                    }
+
                     if (rows.length) {
                         conn.release();
                         return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
