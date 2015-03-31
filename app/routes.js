@@ -1,5 +1,6 @@
 // app/routes.js
 var admin = require('./admin');
+var chats = require('./chats');
 var mailchimp = require('./mailchimp');
 
 var subroute = '/tn';
@@ -66,6 +67,14 @@ module.exports = function(app, passport) {
 		failureFlash : true // allow flash messages
 	}));
 
+	// ASK A SEXPERT
+	app.post('/chats/create', isLoggedIn, chats.create);
+	app.post('/chats/new', isLoggedIn, chats.new_message);
+	app.post('/chats/connect', isSexpert, chats.connect);
+	app.post('/chats/disconnect', isLoggedIn, chats.disconnect);
+	app.get('/chats/sexpert', isLoggedIn, chats.sexpert);
+	app.get('/chats/waiting', isSexpert, chats.waiting);
+
 	// Site pages
 	app.get(subroute + '/home', isLoggedIn, function(req, res) {
 		res.render('home.ejs', {
@@ -115,7 +124,7 @@ module.exports = function(app, passport) {
 		res.redirect(subroute + '/');
 	});
 
-	// Admin
+	// ADMIN
 	app.get(subroute + '/admin', isEmployee, function(req, res) {
 		res.render('admin.ejs', {
 			is_logged_in : true,
@@ -146,6 +155,18 @@ function redirectIfLoggedIn(req, res, next) {
 
 	// if they are redirect them to the home page
 	res.redirect(subroute + '/home');
+}
+
+function isSexpert(req, res, next) {
+	if (req.isAuthenticated()) {
+		if (req.user.sexpert) {
+			return next();
+		} else {
+			res.redirect(subroute + '/home');
+		}
+	}
+
+	res.redirect(subroute + '/');
 }
 
 function isEmployee(req, res, next) {
