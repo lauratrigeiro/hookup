@@ -1,0 +1,12 @@
+/* ---------------------- Header ------------------------ */    
+#menu-toggle { display: block; }  
+  
+#nav-content { display: none; }
+
+/* ----------------------- Main ------------------------- */
+#content-ask { padding-top: 40px; }
+
+#description { height: 60vh !important; }
+
+.question { width: 85%; }
+

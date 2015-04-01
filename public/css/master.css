@@ -1,0 +1,115 @@
+/* ---------------------- Imports ------------------------ */
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400);
+@import url(http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css);
+
+/* ----------------------- Fonts ------------------------- */
+body, input, textarea { font-family: 'HelveticaNeue', sans-serif; }
+
+/* ---------------------- Basics ------------------------- */
+body { margin: 0; }
+
+.clear { clear: both; }
+
+.c2l, .c2r { width: 48%; }
+.c2l, .c3l, .c3m { float: left; }
+.c2r, .c3r { float: right; }
+.c3l { margin-right: 3%; }
+.c3l, .c3m, .c3r { width: 31%; }
+
+h4 { color: #267F9E; font-weight: 100; text-transform: uppercase; }
+
+/* ----------------------- Forms ------------------------- */
+.btn { 
+  background: #162F46;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1em;
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-transform: uppercase;
+}
+
+textarea { border: 1px solid #ccc; border-radius: 3px; padding: 20px; width: 85%; }
+
+/* ---------------------- Header ------------------------ */
+.dropdown { 
+  background: #FF6409; 
+  margin-top: 5px;
+  max-width: 200px; 
+  padding-left: 0; 
+  position: absolute; 
+  list-style: none; 
+}
+.dropdown li { margin: 0 10px; }
+.dropdown li a { color: #fff; }
+
+#header { padding: 5px 30px; }
+
+#logo { float: left; }
+
+#menu-toggle { display: none; margin-bottom: 0; }
+#menu-toggle a { color: #267F9E; }
+
+#menu-content { 
+  background: #FF6409;
+  color: #fff; 
+  margin: 0 27px 0 0 !important; 
+  padding-left: 0px; 
+  position: absolute;
+  top: -300px;
+  width: 220px;
+  z-index: 1000; 
+}
+#menu-content.active { right: 3px; top: 52px !important; }
+#menu-content .dropdown { position: relative; }
+#menu-content li { padding: 5px 10px; }
+#menu-content li a { color: #fff; }
+
+#nav { display: inline-block; float: right;}
+#nav-content, #menu-content { list-style: none; margin-top: 23px; }
+#nav-content > li > a { color: #267F9E; }
+#nav-content li { float: left; line-height: 28px; margin-right: 20px; }
+#nav-content li a, #menu-content li a { font-weight: 100; text-decoration: none; text-transform: uppercase; }
+#nav-content li img { vertical-align: middle; }
+
+/* ----------------------- Main ------------------------- */
+#available-sexperts { color: #267F9E; }
+
+#chat-title { color: #fff; font-size: 3em; margin-left: 35px; }
+
+#content-ask { background: #267F9E; height: 100vh; padding: 185px 0; text-align: center; }
+#content-chat { background: #122B3D; height: 100vh; padding: 30px; }
+#content-chat .question { text-align: center; width: 81%; }
+#content-chat .question h4 { 
+  color: #000; 
+  font-weight: 400; 
+  margin-left: 30px; 
+  margin-top: 10px; 
+  text-align: left; 
+  text-transform: none; 
+}
+#content-chat #submit-question { background: #267F9E; }
+#content-chat #sexpert-profile { background: #fff; margin: 10px auto 40px; padding: 5px 15px; text-align: center; width: 75%; }
+#content-chat #sexpert-profile #name { color: #267F9E; }
+#content-chat #sexpert-profile #bio { margin-bottom: 40px; }
+
+.conversation { list-style: none; }
+.conversation li { background: #fff; margin-bottom: 40px; padding: 10px 20px; width: 70%; }
+.conversation .avatar { margin-bottom: 0px; }
+.conversation .avatar img { margin-top: 8px; max-width: 30px; }
+.conversation .byline { color: gray; float: right; font-size: 0.8em; }
+.conversation .byline .author { color: #122B3D; font-size: 1.25em !important; }
+.conversation .sexpert { float: right; }
+.conversation .user { float: left; }
+
+.question { height: 400px; margin: auto; max-width: 500px; width: 45%; }
+.question-form { background: #fff; border-radius: 3px; padding-top: 15px; position: relative; }
+.question-form .btn { border-radius: 0 0 3px 3px; padding: 30px; width: 100%; }
+.question-form #edit-question a { color: #000; text-decoration: none; }
+.question-form textarea { resize: none; }
+.question-form #available-sexperts { margin-top: 100px; }
+  
+#sexpert-count { background: #FE7B80; color: #fff; border-radius: 20px; padding: 3px 6px; }
+#sexpert-queue { color: #267F9E; font-size: 12px; margin-left: 85px; margin-top: -10px; }
+  

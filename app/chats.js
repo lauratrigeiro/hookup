@@ -34,7 +34,10 @@ function create_chat(req, res) {
 				});
 			}
 
+			req.chat_id = chat_id;
+
 			var message_id = utils.uuid();
+			var content = req.body.content;
 			var msg_querystring = 'INSERT INTO messages (message_id, chat_id, content) VALUES (?, ?, ?)';
 			conn.query(msg_querystring, [message_id, chat_id, content], function(err, rows, fields) {
 				conn.release();
@@ -204,7 +207,7 @@ function get_sexpert_info(req, res) {
 	if (!req.query || !req.query.id) {
 		return res.status(400).send({
 			error      : 'Request must include id',
-			details    : { request : req.body },
+			details    : { request : req.query },
 			error_type : 'bad request'
 		});
 	}
@@ -277,9 +280,61 @@ function get_waiting_chats(req, res) {
 	});
 }
 
+function get_first_message(req, res) {
+	db.get_connection(function(error, conn) {
+		if (!req.query || !req.query.id) {
+			return res.status(400).send({
+				error      : 'Request must include id',
+				details    : { request : req.query },
+				error_type : 'bad request'
+			});
+		}
+
+		if (error) {
+			conn.release();
+			return res.status(502).send({
+				error      : 'database error',
+				details    : error,
+				error_type : 'database connection'
+			});
+		}
+
+		var chat_id = req.query.id;
+		var querystring = 'SELECT content, created_ts FROM messages  \
+			WHERE chat_id = ?';
+		conn.query(querystring, [chat_id], function(err, rows, fields) {
+			conn.release();
+			if (err) {
+				return res.status(502).send({
+					error      : 'database error',
+					details    : err,
+					error_type : 'database query'
+				});
+			}
+
+			if (!rows || rows.length == 0) {
+				return res.status(400).send({
+					error      : 'No messages associated with this chat id',
+					details    : { request : chat_id },
+					error_type : 'bad request'
+				});
+			}
+
+			var row = rows[0];
+			var data = {
+				content    : row.content,
+				created_ts : row.created_ts
+			};
+
+			return res.status(200).send(data);
+		});
+	});
+}
+
 exports.create = create_chat;
 exports.new_message = new_message;
 exports.connect = connect;
 exports.disconnect = disconnect;
 exports.sexpert = get_sexpert_info;
 exports.waiting = get_waiting_chats;
+exports.first = get_first_message;

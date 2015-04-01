@@ -74,6 +74,7 @@ module.exports = function(app, passport) {
 	app.post('/chats/disconnect', isLoggedIn, chats.disconnect);
 	app.get('/chats/sexpert', isLoggedIn, chats.sexpert);
 	app.get('/chats/waiting', isSexpert, chats.waiting);
+	app.get('/chats/first', isLoggedIn, chats.first);
 
 	// Site pages
 	app.get(subroute + '/home', isLoggedIn, function(req, res) {
