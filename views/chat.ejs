@@ -1,11 +1,14 @@
-!doctype html>
+<!doctype html>
 <html>
 <head>
 	<% include ./partials/head %>
 	<script type='text/javascript' src='/public/js/chat.js'></script>
+	<link href="/public/css/chat.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<input type="hidden" id="username" value= <%= user.username %> />
 Chat!
+<p id="alert">Waiting to hookup...</p>
 <% include ./partials/messages %>
 </body>
 </html>

@@ -26,7 +26,7 @@ $(document).ready(function() {
 				$('#credentials').html("Sorry, an error occurred.");
 			}
 		});
-	})
+	});
 
 	$('#submit-type').click(function(e) {
 		e.preventDefault();

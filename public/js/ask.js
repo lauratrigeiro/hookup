@@ -44,7 +44,7 @@ var AskSexpert = (function ($) {
         content   : $questionField.val()
       }),
       success     : function(result) {
-        window.open('/tn/chat', 'blank');
+        window.open('/tn/chat?id=' + result.chat_id, 'blank');
       },
       error       : function() {
         $('#message').html("Sorry, an error occurred.");

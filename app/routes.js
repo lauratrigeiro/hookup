@@ -125,6 +125,14 @@ module.exports = function(app, passport) {
 		res.redirect(subroute + '/');
 	});
 
+	// SEXPERT
+	app.get(subroute + '/sexpert', isSexpert, function(req, res) {
+		res.render('sexpert.ejs', {
+			is_logged_in : true,
+			user : req.user
+		});
+	});
+
 	// ADMIN
 	app.get(subroute + '/admin', isEmployee, function(req, res) {
 		res.render('admin.ejs', {
