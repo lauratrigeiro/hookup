@@ -10,7 +10,7 @@ $(document).ready(function() {
 			data.forEach(function(row) {
 				appendString += '<li class="waiting-item"><a href="#" class="connect" data-chat-id="'
 					+ row.chat_id + '" data-user-id="' + row.user_id + '">' + row.username
-					+ '</a><span class="age">' + row.age + '</span><span class="created-ts">'
+					+ '</a><span class="age">' + row.age || '?' + '</span><span class="created-ts">'
 					+ row.created_ts + '</span><span class="content">' + row.content + '</span></li>';
 			});
 
@@ -27,8 +27,9 @@ $(document).ready(function() {
 		var user_id = $(this).data('user-id');
 		var username = $(this).text();
 		var $waitingItem = $(this).closest('.waiting-item');
-		var created_ts = $waitingItem.find('.created-ts');
-		var content = $waitingItem.find('.content');
+		var age = $waitingItem.find('.age').text();
+		var created_ts = $waitingItem.find('.created-ts').text();
+		var content = $waitingItem.find('.content').text();
 
 		$.ajax({
 			type        : 'POST',
@@ -40,6 +41,19 @@ $(document).ready(function() {
 			success     : function(data) {
 				$('#alert').html("Please wait to hookup...");
 				//open chat
+				$('#chat-windows').append(
+					'<div class="messages-container">                        \
+						<h4>Chat with ' + username + ', age ' + age + '</h4> \
+						<ul class="messages">                                \
+							<li class="user-message">' + content + '</li>    \
+							<li class="sent-message">Sent by ' + username + ' at ' + created_ts + '</li> \
+						</ul>                                                \
+						<form class="message-form" action = "" data-chat="' + chat_id + '">              \
+							<input class="message" autocomplete="off" />     \
+							<button class="btn">Send</button>                \
+						</form>                                              \
+					</div>');
+
 				//connect so socket
 			},
 			error       : function() {

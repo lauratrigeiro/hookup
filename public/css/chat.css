@@ -79,3 +79,11 @@ body {
 .sexpert-message {
 	color: red;
 }
+
+/* sexpert chat */
+#chat-windows .messages-container {
+	display: inline-block;
+	width: 45%;
+	height: 10em;
+}
+}
