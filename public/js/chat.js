@@ -10,10 +10,10 @@ $(document).ready(function() {
 			$.ajax({
 				type        : 'GET',
 				url         : '/chats/first?id=' + chat_id,
-				contentType : "application/json",
+		//		contentType : "application/json",
 				success     : function(result) {
-					$('#messages').append($('<li class="user-message">').text(result.content));
-					$('#messages').append($('<li class="sent-message">').text('Sent by ' + username + ' at ' + result.created_ts));
+					$('.messages').append($('<li class="user-message">').text(result.content));
+					$('.messages').append($('<li class="sent-message">').text('Sent by ' + username + ' at ' + result.created_ts));
 					// connect to socket
 				},
 				error       : function() {
@@ -21,6 +21,40 @@ $(document).ready(function() {
 				}
 			});
 		}
+
+		
 	}
 
+	var socket = io();
+
+	$('.message-form').submit(function (e) {
+		e.preventDefault();
+		send_message();
+	});
+
+	// $("#message").keyup(function(e) {
+ //        if(e.keyCode == 13) {
+ //            $('#message-form').submit();
+ //        }
+ //    });
+
+	socket.on('new message', function(data) {
+		var message_class = 'user-message';
+		// if (data.username == username) {
+		// 	message_class = 'my-message';
+		// } else {
+		// 	message_class = 'other-message';
+		// }
+
+		$('.messages').append($('<li class="' + message_class + '">').text(data.message));
+	});
+
+	function send_message() {
+		socket.emit('send message', //{
+		//	username : username,
+		/*	message :*/ $('.message').val()
+		/*}*/ );
+
+		$('.message').val('');
+	}
 });

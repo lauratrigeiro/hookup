@@ -10,7 +10,7 @@ $(document).ready(function() {
 			data.forEach(function(row) {
 				appendString += '<li class="waiting-item"><a href="#" class="connect" data-chat-id="'
 					+ row.chat_id + '" data-user-id="' + row.user_id + '">' + row.username
-					+ '</a><span class="age">' + row.age || '?' + '</span><span class="created-ts">'
+					+ '</a><span class="age">' + (row.age || '?') + '</span><span class="created-ts">'
 					+ row.created_ts + '</span><span class="content">' + row.content + '</span></li>';
 			});
 
@@ -61,4 +61,37 @@ $(document).ready(function() {
 			}  
 		});
 	});
+
+	var socket = io();
+
+	$('#chat-windows').on('submit', '.message-form', function (e) {
+		e.preventDefault();
+		send_message();
+	});
+
+	// $("#message").keyup(function(e) {
+ //        if(e.keyCode == 13) {
+ //            $('#message-form').submit();
+ //        }
+ //    });
+
+	socket.on('new message', function(data) {
+		var message_class = 'user-message';
+		// if (data.username == username) {
+		// 	message_class = 'my-message';
+		// } else {
+		// 	message_class = 'other-message';
+		// }
+
+		$('#chat-windows .messages').append($('<li class="' + message_class + '">').text(data.message));
+	});
+
+	function send_message() {
+		socket.emit('send message', //{
+		//	username : username,
+		/*	message :*/ $('#chat-windows .message').val()
+		/*}*/ );
+
+		$('#chat-windows .message').val('');
+	}
 });

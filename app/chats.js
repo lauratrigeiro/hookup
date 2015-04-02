@@ -305,7 +305,7 @@ function get_first_message(req, res) {
 		}
 
 		var chat_id = req.query.id;
-		var querystring = 'SELECT content, created_ts FROM messages a  \
+		var querystring = 'SELECT a.content, a.created_ts FROM messages a  \
 			INNER JOIN chats b           \
 				ON a.chat_id = b.chat_id \
 			WHERE a.chat_id = ?          \
