@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$('#check-credentials').click(function(e) {
 		e.preventDefault();
-		var username = $('#username').val();
+		var username = $('#username-input').val();
 		$.ajax({
 			type        : 'GET',
 			url         : '/admin/users?name=' + username,
@@ -30,7 +30,7 @@ $(document).ready(function() {
 
 	$('#submit-type').click(function(e) {
 		e.preventDefault();
-		var username = $('#username').val();
+		var username = $('#username-input').val();
 		var user_type = $('#user-type').val();
 		$.ajax({
 			type        : 'POST',
@@ -51,7 +51,7 @@ $(document).ready(function() {
 
 	$('#submit-profile').click(function(e) {
 		e.preventDefault();
-		var username = $('#username').val();
+		var username = $('#username-input').val();
 		var experience = $('#experience').val();
 		var bio = $('#bio').val().trim();
 		$.ajax({
