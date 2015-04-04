@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	var sexpert_name = $('#username').text();
-	var sexpert_id = $('#this_sexpert_id').val();
+	var sexpert_id = $('#this_user_id').val();
 
 	$.ajax({
 		type        : 'GET',
@@ -9,8 +9,8 @@ $(document).ready(function() {
 		success     : function(data) {
 			var appendString = '';
 			data.forEach(function(row) {
-				appendString += '<li class="waiting-item"><a href="#" class="connect" data-chat-id="'
-					+ row.chat_id + '" data-user-id="' + row.user_id + '">' + row.username
+				appendString += '<li class="waiting-item"><a href="#" class="connect" data-chat_id="'
+					+ row.chat_id + '" data-user_id="' + row.user_id + '">' + row.username
 					+ '</a><span class="age">' + (row.age || '?') + '</span><span class="created-ts">'
 					+ row.created_ts + '</span><span class="content">' + row.content + '</span></li>';
 			});
@@ -26,8 +26,8 @@ $(document).ready(function() {
 
 	$('#waiting').on('click', '.connect', function(e) {
 		e.preventDefault();
-		var chat_id = $(this).data('chat-id');
-		var user_id = $(this).data('user-id');
+		var chat_id = $(this).data('chat_id');
+		var user_id = $(this).data('user_id');
 		var username = $(this).text();
 		var $waitingItem = $(this).closest('.waiting-item');
 		var age = $waitingItem.find('.age').text();
@@ -43,7 +43,7 @@ $(document).ready(function() {
 			}),
 			contentType : "application/json",
 			success     : function(data) {
-				$('#alert').html("Please wait to hookup...");
+		//		$('#alert').html("Please wait to hookup...");
 				//open chat
 				$('#chat-windows').append(
 					'<div class="messages-container">                        \
@@ -69,7 +69,14 @@ $(document).ready(function() {
 
 	$('#chat-windows').on('submit', '.message-form', function (e) {
 		e.preventDefault();
-		send_message();
+		$message = $(this).find('input');
+	//	alert('chat_id: ' + $(this).data('chat') + ', message: ' + $message.val());
+		socket.emit('sexpert message', {
+			chat_id : $(this).data('chat'),
+			message : $message.val()
+		});
+		$(this).prev('.messages').append($('<li class="sexpert-message">').text($message.val()));
+		$message.val('');
 	});
 
 	// $("#message").keyup(function(e) {
@@ -80,23 +87,9 @@ $(document).ready(function() {
 
 	socket.on('new message', function(data) {
 		var message_class = 'user-message';
-		// if (data.username == username) {
-		// 	message_class = 'my-message';
-		// } else {
-		// 	message_class = 'other-message';
-		// }
-
-		$('#chat-windows .messages').append($('<li class="' + message_class + '">').text(data));
+		var $chat_form = $('#chat-windows form[data-chat="' + data.chat_id + '"]');
+		$chat_form.prev('.messages').append($('<li class="' + message_class + '">').text(data.message));
 	});
-
-	function send_message() {
-		socket.emit('sexpert message', //{
-		//	username : username,
-		/*	message :*/ $('#chat-windows .message').val()
-		/*}*/ );
-
-		$('#chat-windows .message').val('');
-	}
 
 	socket.on('user disconnected', function() {
 		alert('user disconnected!');

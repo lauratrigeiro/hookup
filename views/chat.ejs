@@ -4,12 +4,19 @@
 	<% include ./partials/head %>
 	<script type='text/javascript' src='/public/js/chat.js'></script>
 	<script src='/socket.io/socket.io.js'></script>
+	<link href="/public/css/master.css" rel="stylesheet" type="text/css" />
 	<link href="/public/css/chat.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<input type="hidden" id="username" value= <%= user.username %> />
+<div class="container">
+<header>
+    <% include ./partials/header %>
+    <div id="sexpert-profile"></div>
+</header>
+
 Chat!
 <p id="alert">Waiting to hookup...</p>
 <% include ./partials/messages %>
+</div>
 </body>
 </html>

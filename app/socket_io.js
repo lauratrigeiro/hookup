@@ -27,7 +27,7 @@ function init(server) {
 
 		socket.on('sexpert join', function(data) {
 			var chat_id = data.chat_id;
-			socket.chat_id = chat_id;
+	//		socket.chat_id = chat_id;
 			socket.type = 'sexpert';
 			chats[chat_id]['sexpert'] = socket;
 			for (var key_2 in chats) {
@@ -35,6 +35,7 @@ function init(server) {
 					console.log("chat: " + key_2 + " , " + i_2);
 				}
 			}
+			console.log('sexpert join: ' + data.sexpert_id);
 			chats[chat_id]['user'].emit('connected to sexpert', data.sexpert_id);
 
 		});
@@ -42,7 +43,8 @@ function init(server) {
 		socket.on('user message', function(data) {
 			// check if user already connected
 			// add user to db connected table	-> callback(true/false)
-			chats[socket.chat_id]['sexpert'].emit('new message', data);
+			console.log('user message: ' + socket.chat_id + ', ' + data);
+			chats[socket.chat_id]['sexpert'].emit('new message', { message : data, chat_id : socket.chat_id });
 			// io.emit('new message', {	// private: use specific socket.emit instead of io
 			// 	username : socket.username,
 			// 	message  : data.question
@@ -50,7 +52,8 @@ function init(server) {
 		});
 
 		socket.on('sexpert message', function(data) {
-			chats[socket.chat_id]['user'].emit('new message', data);
+			console.log('sexpert message: ' + data.chat_id + ', ' + data.message);
+			chats[data.chat_id]['user'].emit('new message', data.message);
 		});
 		// 	io.emit('new message', {
 		// //		username : socket.username,

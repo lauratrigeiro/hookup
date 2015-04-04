@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var username = $('#username').val();
+	var username = $('#username').text();
 	var chat_id;
 	var split_query = window.location.search.split('=');
 	if (split_query[0] !== '?id') {
@@ -35,8 +35,13 @@ $(document).ready(function() {
  //        }
  //    });
 
+	socket.on('connected to sexpert', function(data) {
+		$('#alert').html('');
+		$('#sexpert-profile').append('<p>Sexpert id: ' + data + '</p>');
+	});
+
 	socket.on('new message', function(data) {
-		var message_class = 'user-message';
+		var message_class = 'sexpert-message';
 		// if (data.username == username) {
 		// 	message_class = 'my-message';
 		// } else {
@@ -47,11 +52,9 @@ $(document).ready(function() {
 	});
 
 	function send_message() {
-		socket.emit('user message', //{
-		//	username : username,
-		/*	message :*/ $('.message').val()
-		/*}*/ );
-
+		var message_to_send = $('.message').val();
+		socket.emit('user message', message_to_send);
+		$('.messages').append($('<li class="user-message">').text(message_to_send));
 		$('.message').val('');
 	}
 
