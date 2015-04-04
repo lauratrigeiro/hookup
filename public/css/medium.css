@@ -1,6 +1,28 @@
-/* ---------------------- Header ------------------------ */    
+/* ---------------------- Basics ------------------------- */
+.c2l, .c2r { float: none; width: auto; }
 
+/* ---------------------- Header ------------------------ */    
+#menu-toggle { display: block; }  
+  
+#nav-content { display: none; }
 
 /* ----------------------- Main ------------------------- */
-.question { width: 65%; }
+#chat h1 { display: none; }
 
+.conversation { padding-left: 0; }
+.conversation li { margin: 0px auto 20px auto; padding: 10px 15px; width: 75%; }
+.conversation .sexpert { float: none; }
+.conversation .user { float: none; }
+
+#home.landing #content, #home.member #content, #home.public #content { height: 70%; padding: 0px 30px; }
+#home.landing #about, #home.landing #fresh, #home.landing #signup  { padding: 20px 40px; }
+#home.landing #features { height: 1900px; } 
+#home.landing #features img { width: 90%; }
+
+#home.member #features .c2l, #home.member #features .c2r { float: none; width: auto; }
+
+#home.public #content #intro { padding: 0; }
+
+.question.ask { width: 65%; }
+
+.sexpert-profile { margin-top: 0; }

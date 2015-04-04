@@ -1,12 +1,22 @@
+/* ---------------------- Basics ------------------------- */
+.c2l, .c2r { float: none; width: auto; }
+
 /* ---------------------- Header ------------------------ */    
-#menu-toggle { display: block; }  
-  
-#nav-content { display: none; }
 
-/* ----------------------- Main ------------------------- */
-#content-ask { padding-top: 40px; }
 
-#description { height: 60vh !important; }
+/* ----------------------- Main ------------------------ */
+#chat h1 { display: none; }
 
-.question { width: 85%; }
+.conversation { padding-left: 0; }
+.conversation li { margin: 0px auto 20px auto; padding: 10px 15px; width: 90%; }
+.conversation .sexpert { float: none; }
+.conversation .user { float: none; }
 
+.question.ask #description { height: 90% !important; }
+.question.ask { width: 85%; }
+
+.question.chat { width: 97%; }
+
+.question-form h4 { display: none; }
+
+.sexpert-profile { margin-top: 0; width: 90%; }
