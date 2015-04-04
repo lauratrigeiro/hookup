@@ -26,3 +26,6 @@
       
     </div>
 </nav>
+<% if (is_logged_in) { %>
+    <input type="hidden" id="this_user_id" value= <%= user.id %> />
+<% } %>

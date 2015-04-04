@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	var sexpert_name = $('#username').text();
+	var sexpert_id = $('#this_sexpert_id').val();
 
 	$.ajax({
 		type        : 'GET',
@@ -21,6 +22,8 @@ $(document).ready(function() {
 		}  
 	});
 
+	var socket = io();
+
 	$('#waiting').on('click', '.connect', function(e) {
 		e.preventDefault();
 		var chat_id = $(this).data('chat-id');
@@ -30,6 +33,7 @@ $(document).ready(function() {
 		var age = $waitingItem.find('.age').text();
 		var created_ts = $waitingItem.find('.created-ts').text();
 		var content = $waitingItem.find('.content').text();
+
 
 		$.ajax({
 			type        : 'POST',
@@ -55,14 +59,13 @@ $(document).ready(function() {
 					</div>');
 
 				//connect so socket
+				socket.emit('sexpert join', { chat_id : chat_id, sexpert_id : sexpert_id });
 			},
 			error       : function() {
 				$('#alert').html("Sorry, an error occurred.");
 			}  
 		});
 	});
-
-	var socket = io();
 
 	$('#chat-windows').on('submit', '.message-form', function (e) {
 		e.preventDefault();
@@ -83,15 +86,19 @@ $(document).ready(function() {
 		// 	message_class = 'other-message';
 		// }
 
-		$('#chat-windows .messages').append($('<li class="' + message_class + '">').text(data.message));
+		$('#chat-windows .messages').append($('<li class="' + message_class + '">').text(data));
 	});
 
 	function send_message() {
-		socket.emit('send message', //{
+		socket.emit('sexpert message', //{
 		//	username : username,
 		/*	message :*/ $('#chat-windows .message').val()
 		/*}*/ );
 
 		$('#chat-windows .message').val('');
 	}
+
+	socket.on('user disconnected', function() {
+		alert('user disconnected!');
+	});
 });
