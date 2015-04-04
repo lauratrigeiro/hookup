@@ -2,8 +2,6 @@
 <html>
 <head>
 	<% include ./partials/head %>
-    <script type='text/javascript' src='/public/js/sexpert.js'></script>
-    <script src='/socket.io/socket.io.js'></script>
     <link href="/public/css/chat.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -25,6 +23,8 @@
     </div>
     <footer>
         <% include ./partials/footer %>
+        <script src='/socket.io/socket.io.js'></script>
+        <script type='text/javascript' src='/public/js/sexpert.js'></script>
     </footer>
 </body>
 </html>

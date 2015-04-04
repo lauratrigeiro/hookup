@@ -70,5 +70,5 @@ $(document).ready(function() {
 				$('#message').html("Sorry, an error occurred.");
 			}
 		});
-	})
+	});
 });
