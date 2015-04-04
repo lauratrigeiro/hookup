@@ -1,25 +1,26 @@
 <!-- views/index.ejs -->
 <!doctype html>
 <html>
-<head>
-	<% include ./partials/head %>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <% include ./partials/header %>
-        </header>
-        <div class="jumbotron text-center">
-            <h1><span class="fa fa-lock"></span> Welcome to Hookup!</h1>
-
-            <p>Login or Register with:</p>
-
-            <a href="/tn/login" class="btn btn-default"><span class="fa fa-user"></span> Local Login</a>
-            <a href="/tn/signup" class="btn btn-default"><span class="fa fa-user"></span> Local Signup</a>
-        </div>
+    <head>
+      <% include ./partials/head %>
+    </head>
+    <body id="home" class="public">
+    <div id="header">
+      <div id="logo"><a href="/tn"><img src="/public/images/logo.png"></a></div>
+      <div id="nav">
+      </div>
+      <div class="clear"></div>
+    </div>
+    
+    <div id="content">
+      <div id="intro">
+        <h1>Sex ed sucks. Try us.</h1>         
+        <p>We're Hookup, and we'll answer all your sex-related questions. We're in a beta testing period, and we chose our Tennessee home for first dibs. Go Vols!</p>
+        <p id="join"><a class="btn" href="/tn/login">Login</a> <a class="btn" href="/tn/signup" id="signup">Signup</a></p>
+      </div>
     </div>
     <footer>
         <% include ./partials/footer %>
     </footer>
-</body>
+  </body>
 </html>

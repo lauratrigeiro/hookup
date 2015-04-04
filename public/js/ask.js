@@ -7,7 +7,7 @@
 var AskSexpert = (function ($) {
   var sexpertCount = Math.floor(Math.random() * 4); //generating random data for testing
   var $form = $('.question-form');
-  var $submit = $form.find('#submit-question');
+  var $submit = $form.find('#submit');
   var $questionField = $form.find('#description');
   var $editButton = $form.find('#edit-question');
   var $availableSexperts = $form.find('#available-sexperts');

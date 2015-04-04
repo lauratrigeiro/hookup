@@ -1,31 +1,33 @@
 <html>
 	<head>
-	  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-		<title>Hookup</title>
-		<link rel="stylesheet" type="text/css" href="/public/css/master.css" />
-		<link rel="stylesheet" type="text/css" media="(max-width: 750px)" href="/public/css/medium.css" />
-		<link rel="stylesheet" type="text/css" media="(max-width: 550px)"  href="/public/css/narrow.css" />
-		<!-- <link rel="icon" type="image/png" href="../images/favicon.png"> -->
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+	  <% include ./partials/head %>
 	</head>
-	<body>
+	<body id="ask">
     <div id="header">
-      <div id="logo"><a href="./home.html"><img src="../images/logo.png"></a></div>
+      <div id="logo"><a href="/tn/home"><img src="/public/images/logo.png"></a></div>
       <div id="nav">
         <ul id="nav-content">
           <li>
             <a class="nav-trigger-site" href="#">Hookup <i class="fa fa-caret-down"></i></a>
             <ul class="dropdown" style="display: none;">
-              <li><a href="#">Ask a sexpert</a></li>
-              <li><a href="#">Share your story</a></li>
+              <li><a href="/tn/ask">Ask a sexpert</a></li>
+              <li><a href="/tn/share">Share your story</a></li>
             </ul>
           </li>
+          <% if (is_logged_in) { %>
           <li>
-            <a class="nav-trigger-account" href="#"><img src="../images/pinkbunny_small.png"/> Pinkbunny <i class="fa fa-caret-down"></i></a>
+            <a class="nav-trigger-account" href="#"><img src="/public/images/pinkbunny_small.png"/> <%= user.username %> <i class="fa fa-caret-down"></i></a>
             <ul class="dropdown" style="display: none;">
-              <li><a href="#">Settings</a></li>
+              <% if (user.sexpert || user.admin) { %>
+              <li><a href="/tn/sexpert">Sexpert</a></li>
+            <% } %>
+            <% if (user.employee || user.admin) { %>
+              <li><a href="/tn/admin">Admin</a></li>
+            <% } %>
+              <li><a href="/logout">Logout</a></li>
             </ul>
           </li>
+          <% } %>
         </ul>
         
         <p id="menu-toggle"><a href="#"><i class="fa fa-bars fa-2x"></i></a></p>
@@ -33,37 +35,46 @@
           <li>
             <a class="nav-trigger-site" href="#">Hookup <i class="fa fa-caret-down"></i></a>
             <ul class="dropdown">
-              <li><a href="#">Ask a sexpert</a></li>
-              <li><a href="#">Share your story</a></li>
+              <li><a href="/tn/ask">Ask a sexpert</a></li>
+              <li><a href="/tn/share">Share your story</a></li>
             </ul>
           </li>
+          <% if (is_logged_in) { %>
           <li>
-            <a class="nav-trigger-account" href="#">Pinkbunny <i class="fa fa-caret-down"></i></a>
+            <a class="nav-trigger-account" href="#" id="username"><%= user.username %><i class="fa fa-caret-down"></i></a>
             <ul class="dropdown">
-              <li><a href="#">Settings</a></li>
+              <% if (user.sexpert || user.admin) { %>
+                <li><a href="/tn/sexpert">Sexpert</a></li>
+              <% } %>
+              <% if (user.employee || user.admin) { %>
+                <li><a href="/tn/admin">Admin</a></li>
+              <% } %>
+              <li><a href="/logout">Logout</a></li>
             </ul>
           </li>
+          <% } %>
         </ul>
       </div>
       <div class="clear"></div>
     </div>
     
-    <div id="content-ask">
-      <div class="question">
+    <div id="content">
+      <div class="question ask">
         <div class="question-form">
           <h4>Ask a sexpert anonymously</h4>
           <p><textarea id="description" placeholder="Ask about relationships, STI's, condoms, orgasms, or consent, etc." rows="5"></textarea></p>
           <p id="edit-question" style="display:none;"><a href="#">edit text</a></p>
           <p id="available-sexperts" style="display:none;"><span id="sexpert-count"></span> sexperts available</p>
-          <p id="sexpert-queue" style="display:none;"></p>          
-          <input class="btn" id="submit-question" type="button" value="Hookup" />
+          <p class="sexpert-queue" style="display:none;"></p>          
+          <input class="btn" id="submit" type="button" value="Hookup" />
         </div>
       </div>
     </div>
-    
-    <script src="/public/js/jquery-1.11.2.min.js" type="text/javascript"></script>
-    <script src="/public/js/autosize.js" type="text/javascript"></script>
-    <script src="/public/js/master.js" type="text/javascript"></script>    
-    <script src="/public/js/ask.js" type="text/javascript"></script>
+    <footer>
+        <script src="/public/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+		<script src="/public/js/autosize.js" type="text/javascript"></script>
+		<script src="/public/js/master.js" type="text/javascript"></script>
+        <script src="/public/js/ask.js" type="text/javascript"></script>
+    </footer>
   </body>
 </html>

@@ -1,24 +1,55 @@
-<!doctype html>
 <html>
-<head>
-	<% include ./partials/head %>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <% include ./partials/header %>
-        </header>
-        <div class="jumbotron text-center">
-            <h1><span class="fa fa-lock"></span>Hookup Home</h1>
-
-            <p>Pages:</p>
-
-            <a href="/tn/ask" class="btn btn-default">Ask a Sexpert</a>
-            <a href="/tn/share" class="btn btn-default">Share Your Story</a>
-        </div>
+    <head>
+      <% include ./partials/head %>
+    </head>
+    <body id="home" class="member">
+    <div id="header">
+      <div id="logo"><a href="/tn/home"><img src="/public/images/logo.png"></a></div>
+      <div id="nav">
+        <ul id="nav-content">
+          <li><a href="/tn/home">Home</a></li>
+          <li><a href="/tn/ask">Ask a sexpert</a></li>
+          <li><a href="/tn/share">Share your story</a></li>
+        </ul>
+        
+        <p id="menu-toggle"><a href="#"><i class="fa fa-bars fa-2x"></i></a></p>
+        <ul id="menu-content">
+          <li><a href="/tn/home">Home</a></li>
+          <li><a href="/tn/ask">Ask a sexpert</a></li>
+          <li><a href="/tn/share">Share your story</a></li>
+        </ul>
+      </div>
+      <div class="clear"></div>
     </div>
+    
+    <div id="content">
+      <div id="intro">
+        <h1>Welcome to hookup!</h1>
+        <p>Thanks to Sex Week UT for supporting us through our beta test launch! Hey, congrats! You’re kind of our new best friend. We want to give you early access plus all our love. Follow us and tell your bestie, the bae, people on the  street—basically anyone except your mother. We believe in an open dialog and accessible information about sex, sexuality, health, etc is important.</p>
+        <p id="signature">xoxo, <br/><img height="28px" src="/public/images/logo.png" /></p>
+      </div>
+    </div>
+    <div class="clear"></div>
+    
+    <div id="features">
+      <div class="c2l">
+        <p><img src="/public/images/condom_home.png" /></p>
+        <h3>Ask A Sexpert</h3>
+        <p class="description">Ask a sexpert any question you have about sex or relationships. Avoid the awkward convo with a teacher or your parent with our staff trained sexperts.</p>
+        <p><a class="btn" href="/tn/ask">Ask a Sexpert</a></p>
+      </div>
+      <div class="c2r">
+        <p><img src="/public/images/grape_home.png" /></p>
+        <h3>Share your story</h3>
+        <p class="description">Read others' funny, embarassing, and moving stories about sex and relationships. Upvote favorites and share your own.</p>
+        <p><a class="btn" href="/tn/share">Read stories</a></p>
+      </div>
+    </div>
+    
+    <div class="clear"></div>
+    
     <footer>
         <% include ./partials/footer %>
-    </footer>
-</body>
+    </footer>  
+  </body>
 </html>
