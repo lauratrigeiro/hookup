@@ -2,19 +2,23 @@
 <!doctype html>
 <html>
 <head>
-	<title>Node Authentication</title>
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
-	<style>
-		body 		{ padding-top:80px; }
-	</style>
+	<% include ./partials/head %>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
 </head>
 <body>
-<div class="container">
-
-<div class="col-sm-6 col-sm-offset-3">
-
-	<h1><span class="fa fa-sign-in"></span> Signup</h1>
+<body id="login" class="signup">
+    <div id="content">
+	<header>
+        <div id="header">
+          <div id="logo"><a href="/tn"><img src="/public/images/logo.png"></a></div>
+          <div id="nav">
+          </div>
+          <div class="clear"></div>
+        </div>
+    </header>
+	<div class="col-sm-6 col-sm-offset-3">
+	<h1>Signup</h1>
 
 	<!-- show any messages that come back with authentication -->
 	<% if (message.length > 0) { %>
@@ -43,17 +47,21 @@
 			<label>Age</label>
 			<input type="number" min="1" max="130" class="form-control" name="age">
 		</div>
-
+		<p>By signing up, you agree to our <a href="/tn/terms">terms of use</a></p>
 		<button type="submit" class="btn btn-warning btn-lg">Signup</button>
 	</form>
 
 	<hr>
 
-	<p>Already have an account? <a href="/tn/login">Login</a></p>
+	<p>Already have an account? <a href="/tn/login">Login here</a></p>
 	<p>Or go <a href="/tn">home</a>.</p>
 
-</div>
+	</div>
 
-</div>
+	<div class="clear"></div>
+  </div>
+  <footer>
+     <% include ./partials/footer %>
+  </footer>
 </body>
 </html>

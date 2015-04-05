@@ -13,10 +13,12 @@
 .conversation .user { float: none; }
 
 .question.ask #description { height: 90% !important; }
-.question.ask { width: 85%; }
+.question.ask { width: 90%; }
 
 .question.chat { width: 97%; }
 
 .question-form h4 { display: none; }
 
 .sexpert-profile { margin-top: 0; width: 90%; }
+
+#login .btn { width: 50%; }

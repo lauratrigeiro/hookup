@@ -50,7 +50,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 
 #header { width: 100%; }
 
-#logo { float: left; padding: 40px; }
+#logo { float: left; padding: 32px; }
 #logo img { max-height: 45px; }
 
 #menu-toggle { display: none; margin: 0; }
@@ -95,6 +95,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 
 /* ----------------------- Main ------------------------- */
 .teal-background { background: #24B1B1; height: 100%; }
+#admin-container { padding: 2%; }
 
 #available-sexperts { color: #267F9E; }
 #available-sexperts #sexpert-count { background: #FE7B80; color: #fff; border-radius: 20px; padding: 3px 8px; }
@@ -117,7 +118,11 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home #content { padding: 0px 80px; }
 #home h1 { font-size: 48px; font-weight: normal; line-height: 48px; }
 
-#home.landing { background: url('/public/images/bg-home-member.png'); }
+#home.landing { background: url('/public/images/bg-home-member.png') no-repeat center center fixed;
+    -webkit-background-size: cover; /* For WebKit*/
+    -moz-background-size: cover;    /* Mozilla*/
+    -o-background-size: cover;      /* Opera*/
+    background-size: cover; }
 #home.landing #about { background: #d61240; line-height: 30px; padding: 100px 350px; }
 #home.landing #features { background: #37B1B2; padding: 100px 50px; }
 #home.landing #features dd { margin: 0 0 20px 0px; }
@@ -133,7 +138,11 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home.landing #nav { padding-top: 24px; padding-bottom: 24px; }
 #home.landing h1 { font-weight: bold; }
 
-#home.member { background: url('/public/images/bg-home-member.png'); }
+#home.member { background: url('/public/images/bg-home-member.png') no-repeat center center fixed;
+    -webkit-background-size: cover; /* For WebKit*/
+    -moz-background-size: cover;    /* Mozilla*/
+    -o-background-size: cover;      /* Opera*/
+    background-size: cover; }
 #home.member #content { line-height: 26px; padding: 0px 200px; }
 #home.member #content #signature { margin: 100px 0px; }
 #home.member #features { width: 100%; }
@@ -150,6 +159,16 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home.public #intro #join { margin: 40px 0px; }
 #home.public #intro #join .btn { line-height: 28px; margin: 10px 30px; min-width: 120px; }
 #home.public #intro #join #signup { background: #37B1B2; } 
+
+#login { background: url('/public/images/bg-home-member.png') no-repeat center center fixed;
+    -webkit-background-size: cover; /* For WebKit*/
+    -moz-background-size: cover;    /* Mozilla*/
+    -o-background-size: cover;      /* Opera*/
+    background-size: cover;         /* Generic*/
+    color: #fff; height: 100%; width: 100%; }
+#login h1 { margin-bottom: .5em; }
+#login .btn { width: 25%; border-radius: none; margin-top: 1em; }
+#login #footer { text-align: center; }
 
 .question { margin: auto; max-width: 500px; text-align: center; }
 .question-form { background: #fff; border-radius: 3px; padding-top: 15px; position: relative; }
