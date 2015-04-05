@@ -39,6 +39,18 @@ $(document).ready(function() {
 		$('#description').val('');
 	});
 
+	$('#end-chat').click(function() {
+		socket.emit('user end chat');
+		$('.conversation').append('<li class="sexpert"><p>You ended this chat. Thanks for hooking up!</p>\
+			<p class="byline"><span class="author">' + sexpert_name + '</span> \
+			 answered at ' + getCurrentTime(new Date()) + '</p>\
+			 <p class="avatar"><img src="' + sexpert_src + '"/></p></li>');
+		$('#description').prop('disabled', true);
+		$('#submit').prop('disabled', true);
+		$('#end-chat').prop('disabled', true);
+		socket.disconnect();
+	});
+
 	// $("#message").keyup(function(e) {
  //        if(e.keyCode == 13) {
  //            $('#message-form').submit();
@@ -69,10 +81,30 @@ $(document).ready(function() {
 			 <p class="avatar"><img src="' + sexpert_src + '"/></p></li>'); //
 	});
 
-	
+	socket.on('sexpert end chat', function() {
+		$('.conversation').append('<li class="sexpert"><p>Sexpert has left this chat.</p>\
+			<p class="byline"><span class="author">' + sexpert_name + '</span> \
+			 answered at ' + getCurrentTime(new Date()) + '</p>\
+			 <p class="avatar"><img src="' + sexpert_src + '"/></p></li>');
+		$('#description').prop('disabled', true);
+		$('#submit').prop('disabled', true);
+		$('#end-chat').prop('disabled', true);
+		socket.disconnect();
+	});
 
 	socket.on('sexpert disconnected', function() {
-		alert('sexpert disconnected!');
+		$('.conversation').append('<li class="sexpert"><p>Sexpert was disconnected.</p>\
+			<p class="byline"><span class="author">' + sexpert_name + '</span> \
+			 answered at ' + getCurrentTime(new Date()) + '</p>\
+			 <p class="avatar"><img src="' + sexpert_src + '"/></p></li>');
+	});
+
+	socket.on('error', function(err) {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log('socket user error');
+		}
 	});
 });
 

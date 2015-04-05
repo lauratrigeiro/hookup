@@ -5,6 +5,7 @@ $(document).ready(function() {
 	refreshWaiting();
 
 	var socket = io();
+	socket.emit('new sexpert');
 
 	$('#waiting').on('click', '.connect', function(e) {
 		e.preventDefault();
@@ -43,7 +44,6 @@ $(document).ready(function() {
 
 				//connect to socket
 				socket.emit('sexpert join', { chat_id : chat_id, sexpert_id : sexpert_id });
-				refreshWaiting();
 			},
 			error       : function() {
 				$('#alert').html("Sorry, an error occurred.");
@@ -55,11 +55,11 @@ $(document).ready(function() {
 		refreshWaiting();
 	});
 
-	$('chats-toggle').click(function() {
+	$('#chats-toggle').click(function() {
 		if ($('.messages-container.ended:hidden').length > 0) {
-			$('.messages-container.ended').hide();
-		} else {
 			$('.messages-container.ended').css('display', 'inline-block');
+		} else {
+			$('.messages-container.ended').hide();
 		}
 	});
 
@@ -88,7 +88,14 @@ $(document).ready(function() {
 		var $messages_container = $(this).closest('.messages-container');
 		$messages_container.removeClass('active');
 		$messages_container.addClass('ended');
+		$messages_container.find('.send-chat').prop('disabled', true);
+		$messages_container.find('.message').prop('disabled', true);
+		$(this).prop('disabled', true);
 		$messages_container.hide();
+		refreshWaiting();
+	});
+
+	socket.on('update waiting', function() {
 		refreshWaiting();
 	});
 
@@ -101,8 +108,31 @@ $(document).ready(function() {
 
 	});
 
-	socket.on('user disconnected', function() {
-		alert('user disconnected!');
+	socket.on('user end chat', function(data) {
+		var $chat_form = $('#chat-windows form[data-chat="' + data + '"]');
+		$chat_form.prev('.messages').append('<li>User ended the chat.</li>    \
+			<li class="user-message">Sent by ' + $chat_form.data('user') + ' at ' + getCurrentTime(new Date()) + '</li>');
+		var $messages_container = $chat_form.closest('.messages-container');
+		$messages_container.removeClass('active');
+		$messages_container.addClass('ended');
+		$chat_form.find('.send-chat').prop('disabled', true);
+		$chat_form.find('.end-chat').prop('disabled', true);
+		$messages_container.find('.message').prop('disabled', true);
+		refreshWaiting();
+	});
+
+	socket.on('user disconnected', function(data) {
+		var $chat_form = $('#chat-windows form[data-chat="' + data + '"]');
+		$chat_form.prev('.messages').append('<li>User was disconnected.</li>    \
+			<li class="user-message">Sent by ' + $chat_form.data('user') + ' at ' + getCurrentTime(new Date()) + '</li>');
+	});
+
+	socket.on('error', function(err) {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log('socket sexpert error');
+		}
 	});
 });
 
@@ -121,7 +151,11 @@ function refreshWaiting() {
 					+ getCurrentTime(new Date(row.created_ts)) + ': </span><span class="content">' + row.content + '</span></li>';
 			});
 
-			$('#waiting').append(appendString);
+			if (!appendString) {
+				$('#alert').html("There are currently no users waiting to hookup.");
+			} else {
+				$('#waiting').append(appendString);
+			}
 		},
 		error       : function() {
 			$('#alert').html("Sorry, an error occurred.");

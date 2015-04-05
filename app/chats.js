@@ -53,47 +53,72 @@ function create_chat(req, res) {
 	});
 }
 
-function new_message(req, res) {
-	if (!req.body || !req.body.chat_id || !req.body.content) {
-		return res.status(400).send({
-			error      : 'Request must include chat_id, content',
-			details    : { request : req.body },
-			error_type : 'bad request'
-		});
+function new_message(chat_id, sender, content, callback) {
+	if (!chat_id || !content) {
+		return callback("Arguments must be valid: " + chat_id + ', ' + content);
 	}
 
 	db.get_connection(function(error, conn) {
 		if (error) {
 			conn.release();
-			return res.status(502).send({
-				error      : 'database error',
-				details    : error,
-				error_type : 'database connection'
-			});
+			return callback(error);
 		}
 
 		var message_id = utils.uuid();
-		var sender = 0;
-		if (req.user.sexpert) {
-			sender = 1;
-		}
-
 		var querystring = 'INSERT INTO messages (message_id, chat_id, sender, content) VALUES (?, ?, ?, ?)';
-		var params = [message_id, req.body.chat_id, sender, req.body.content];
+		var params = [message_id, chat_id, sender, content];
 		conn.query(querystring, params, function(err, rows, fields) {
 			conn.release();
 			if (err) {
-				return res.status(502).send({
-					error      : 'database error',
-					details    : err,
-					error_type : 'database query'
-				});
+				return callback(err);
 			}
 
-			return res.status(201).send({ message_id : message_id, content : content });
+			callback(null, message_id);
 		});
 	});
 }
+
+// function new_message(req, res) {
+// 	if (!req.body || !req.body.chat_id || !req.body.content) {
+// 		return res.status(400).send({
+// 			error      : 'Request must include chat_id, content',
+// 			details    : { request : req.body },
+// 			error_type : 'bad request'
+// 		});
+// 	}
+
+// 	db.get_connection(function(error, conn) {
+// 		if (error) {
+// 			conn.release();
+// 			return res.status(502).send({
+// 				error      : 'database error',
+// 				details    : error,
+// 				error_type : 'database connection'
+// 			});
+// 		}
+
+// 		var message_id = utils.uuid();
+// 		var sender = 0;
+// 		if (req.user.sexpert) {
+// 			sender = 1;
+// 		}
+
+// 		var querystring = 'INSERT INTO messages (message_id, chat_id, sender, content) VALUES (?, ?, ?, ?)';
+// 		var params = [message_id, req.body.chat_id, sender, req.body.content];
+// 		conn.query(querystring, params, function(err, rows, fields) {
+// 			conn.release();
+// 			if (err) {
+// 				return res.status(502).send({
+// 					error      : 'database error',
+// 					details    : err,
+// 					error_type : 'database query'
+// 				});
+// 			}
+
+// 			return res.status(201).send({ message_id : message_id, content : content });
+// 		});
+// 	});
+// }
 
 function connect(req, res) {
 	if (!req.body || !req.body.chat_id) {
@@ -131,38 +156,25 @@ function connect(req, res) {
 	});
 }
 
-function disconnect(req, res) {
-	if (!req.body || !req.body.chat_id) {
-		return res.status(400).send({
-			error      : 'Request must include chat_id',
-			details    : { request : req.body },
-			error_type : 'bad request'
-		});
+function disconnect(chat_id, callback) {
+	if (!chat_id) {
+		return callback("Not a valid chat_id");
 	}
 
 	db.get_connection(function(error, conn) {
 		if (error) {
 			conn.release();
-			return res.status(502).send({
-				error      : 'database error',
-				details    : error,
-				error_type : 'database connection'
-			});
+			return callback(error);
 		}
 
-		var chat_id = req.body.chat_id;
 		var querystring = 'UPDATE chats SET closed_ts = CURRENT_TIMESTAMP WHERE chat_id = ?';
 		conn.query(querystring, [chat_id], function(err, rows, fields) {
 			conn.release();
 			if (err) {
-				return res.status(502).send({
-					error      : 'database error',
-					details    : err,
-					error_type : 'database query'
-				});
+				return callback(err);
 			}
 
-			return res.status(200).send({ chat_id : chat_id });
+			callback();
 		});
 	});
 }
@@ -339,7 +351,7 @@ function get_first_message(req, res) {
 			var row = rows[0];
 			var data = {
 				content    : row.content,
-				created_ts : row.created_ts
+				created_ts : row.created_ts.toString().slice(0, 25) + 'UTC'
 			};
 
 			return res.status(200).send(data);
