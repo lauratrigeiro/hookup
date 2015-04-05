@@ -94,7 +94,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #footer-nav a { color: #fff; text-decoration: none; }
 
 /* ----------------------- Main ------------------------- */
-#ask { background: #24B1B1; height: 100%; }
+.teal-background { background: #24B1B1; height: 100%; }
 
 #available-sexperts { color: #267F9E; }
 #available-sexperts #sexpert-count { background: #FE7B80; color: #fff; border-radius: 20px; padding: 3px 8px; }
@@ -117,7 +117,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home #content { height: 65%; padding: 0px 120px; }
 #home h1 { font-size: 48px; font-weight: normal; }
 
-#home.landing { background: url('../images/bg-home-member.png'); }
+#home.landing { background: url('/public/images/bg-home-member.png'); }
 #home.landing #about { background: #d61240; height: 400px; line-height: 30px; padding: 100px 350px; }
 #home.landing #content { height: 70%; }
 #home.landing #features { background: #37B1B2; height: 1100px; padding: 100px 50px; }
@@ -133,7 +133,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home.landing #nav { padding-top: 24px; padding-bottom: 24px; }
 #home.landing h1 { font-weight: bold; }
 
-#home.member { background: url('../images/bg-home-member.png'); }
+#home.member { background: url('/public/images/bg-home-member.png'); }
 #home.member #content { line-height: 26px; padding: 0px 240px; }
 #home.member #content #signature { margin: 100px 0px; }
 #home.member #features { width: 100%; }
@@ -144,7 +144,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home.member #features .c2l { background: #8B4D8E; }
 #home.member #features .c2r { background: #37B1B2; }
 
-#home.public { background: url('../images/bg-home-public.png'); }
+#home.public { background: url('/public/images/bg-home-public.png'); }
 #home.public #intro { padding: 0px 120px; }
 #home.public #intro p { line-height: 40px; }
 #home.public #intro #join { margin: 40px 0px; }
@@ -171,6 +171,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
   }
 
 .sexpert-profile { background: #fff; margin: -80px auto 40px; padding: 5px 15px; text-align: center; width: 75%; }
+.sexpert-profile #sexpert-content { display: none; }
 .sexpert-profile #name { color: #267F9E; }
 .sexpert-profile #bio { margin-bottom: 40px; }
 

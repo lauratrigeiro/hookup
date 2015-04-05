@@ -4,20 +4,21 @@
 	<% include ./partials/head %>
     <link href="/public/css/chat.css" rel="stylesheet" type="text/css" />
 </head>
-<body>
-    <div class="container">
+<body class="teal-background">
+    <div id="content">
         <header>
             <% include ./partials/header %>
         </header>
         <div class="jumbotron text-center">
             <h1><span class="fa fa-lock"></span>Sexpert Page</h1>
+            <h3>Users waiting to chat <button id="refresh-waiting" class="btn">refresh</button></h3>
         </div>
         <div id="waiting-container">
         	<ol id="waiting">
         	</ol>
         </div>
         <p id="alert"></p>
-        <h3>Chat Windows</h3>
+        <h3>Chat Windows <button id="chats-toggle" class="btn">show/hide all chats from this session</button></h3>
         <div id="chat-windows">
         </div>
     </div>

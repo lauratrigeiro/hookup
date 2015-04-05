@@ -2,25 +2,7 @@ $(document).ready(function() {
 	var sexpert_name = $('#username').text();
 	var sexpert_id = $('#this_user_id').val();
 
-	$.ajax({
-		type        : 'GET',
-		url         : '/chats/waiting',
-		contentType : "application/json",
-		success     : function(data) {
-			var appendString = '';
-			data.forEach(function(row) {
-				appendString += '<li class="waiting-item"><a href="#" class="connect" data-chat_id="'
-					+ row.chat_id + '" data-user_id="' + row.user_id + '">' + row.username
-					+ '</a><span class="age">' + (row.age || '?') + '</span><span class="created-ts">'
-					+ row.created_ts + '</span><span class="content">' + row.content + '</span></li>';
-			});
-
-			$('#waiting').append(appendString);
-		},
-		error       : function() {
-			$('#alert').html("Sorry, an error occurred.");
-		}  
-	});
+	refreshWaiting();
 
 	var socket = io();
 
@@ -46,20 +28,22 @@ $(document).ready(function() {
 		//		$('#alert').html("Please wait to hookup...");
 				//open chat
 				$('#chat-windows').append(
-					'<div class="messages-container">                        \
+					'<div class="messages-container active">                        \
 						<h4>Chat with ' + username + ', age ' + age + '</h4> \
 						<ul class="messages">                                \
-							<li class="user-message">' + content + '</li>    \
-							<li class="sent-message">Sent by ' + username + ' at ' + created_ts + '</li> \
+							<li>' + content + '</li>    \
+							<li class="user-message">Sent by ' + username + ' at ' + created_ts + '</li> \
 						</ul>                                                \
-						<form class="message-form" action = "" data-chat="' + chat_id + '">              \
-							<input class="message" autocomplete="off" />     \
-							<button class="btn">Send</button>                \
+						<form class="message-form" action = "" data-chat="' + chat_id + '" data-user="' + username + '"> \
+							<textarea class="message" autocomplete="off" maxlength="600"></textarea>     \
+							<button class="btn send-chat">Send</button>      \
+							<button type="button" class="btn end-chat">End Chat</button>   \
 						</form>                                              \
 					</div>');
 
-				//connect so socket
+				//connect to socket
 				socket.emit('sexpert join', { chat_id : chat_id, sexpert_id : sexpert_id });
+				refreshWaiting();
 			},
 			error       : function() {
 				$('#alert').html("Sorry, an error occurred.");
@@ -67,16 +51,30 @@ $(document).ready(function() {
 		});
 	});
 
+	$('#refresh-waiting').click(function() {
+		refreshWaiting();
+	});
+
+	$('chats-toggle').click(function() {
+		if ($('.messages-container.ended:hidden').length > 0) {
+			$('.messages-container.ended').hide();
+		} else {
+			$('.messages-container.ended').css('display', 'inline-block');
+		}
+	});
+
 	$('#chat-windows').on('submit', '.message-form', function (e) {
 		e.preventDefault();
-		$message = $(this).find('input');
+		$message = $(this).find('textarea');
 	//	alert('chat_id: ' + $(this).data('chat') + ', message: ' + $message.val());
 		socket.emit('sexpert message', {
 			chat_id : $(this).data('chat'),
 			message : $message.val()
 		});
-		$(this).prev('.messages').append($('<li class="sexpert-message">').text($message.val()));
+		$(this).prev('.messages').append('<li>' + $message.val() + '</li>    \
+			<li class="sexpert-message">Sent by ' + sexpert_name + ' at ' + getCurrentTime(new Date()) + '</li>');
 		$message.val('');
+		$(this).closest('.messages-container').removeClass('active');
 	});
 
 	// $("#message").keyup(function(e) {
@@ -85,13 +83,59 @@ $(document).ready(function() {
  //        }
  //    });
 
+	$('#chat-windows').on('click', '.end-chat', function() {
+		socket.emit('sexpert end chat', $(this).closest('.message-form').data('chat'));
+		var $messages_container = $(this).closest('.messages-container');
+		$messages_container.removeClass('active');
+		$messages_container.addClass('ended');
+		$messages_container.hide();
+		refreshWaiting();
+	});
+
 	socket.on('new message', function(data) {
 		var message_class = 'user-message';
 		var $chat_form = $('#chat-windows form[data-chat="' + data.chat_id + '"]');
-		$chat_form.prev('.messages').append($('<li class="' + message_class + '">').text(data.message));
+		$chat_form.prev('.messages').append('<li>' + data.message + '</li>    \
+			<li class="user-message">Sent by ' + $chat_form.data('user') + ' at ' + getCurrentTime(new Date()) + '</li>');
+		$chat_form.closest('.messages-container').addClass('active');
+
 	});
 
 	socket.on('user disconnected', function() {
 		alert('user disconnected!');
 	});
 });
+
+function refreshWaiting() {
+	$('#waiting').html('');
+	$.ajax({
+		type        : 'GET',
+		url         : '/chats/waiting',
+		contentType : "application/json",
+		success     : function(data) {
+			var appendString = '';
+			data.forEach(function(row) {
+				appendString += '<li class="waiting-item"><a href="#" class="connect" data-chat_id="'
+					+ row.chat_id + '" data-user_id="' + row.user_id + '">' + row.username
+					+ '</a>, <span class="age"> age: ' + (row.age || '?') + ', </span><span class="created-ts">sent: '
+					+ getCurrentTime(new Date(row.created_ts)) + ': </span><span class="content">' + row.content + '</span></li>';
+			});
+
+			$('#waiting').append(appendString);
+		},
+		error       : function() {
+			$('#alert').html("Sorry, an error occurred.");
+		}  
+	});
+}
+
+function getCurrentTime(date) {
+	var hours = date.getHours();
+	var minutes = date.getMinutes();
+	var ampm = hours >= 12 ? 'pm' : 'am';
+	hours = hours % 12;
+	hours = hours ? hours : 12; // the hour '0' should be '12'
+	minutes = minutes < 10 ? '0'+minutes : minutes;
+	var strTime = hours + ':' + minutes + ' ' + ampm;
+	return strTime;
+}

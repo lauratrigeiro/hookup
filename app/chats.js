@@ -223,9 +223,16 @@ function get_sexpert_info(req, res) {
 				});
 			}
 
+			var experience;
+			if (user.experience === 1) {
+				experience = '1 year';
+			} else {
+				experience = user.experience + ' years';
+			}
+
 			var data = {
 				username       : user.username,
-				experience     : user.experience,
+				experience     : experience,
 				bio            : user.bio
 			};
 
@@ -273,7 +280,7 @@ function get_waiting_chats(req, res) {
 				return {
 					chat_id    : row.chat_id,
 					user_id    : row.user_id,
-					created_ts : row.created_ts,
+					created_ts : row.created_ts.toString().slice(0, 25) + 'UTC',
 					username   : row.username,
 					age        : row.age,
 					content    : row.content
