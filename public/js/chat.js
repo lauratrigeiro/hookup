@@ -12,7 +12,7 @@ $(document).ready(function() {
 			url         : '/chats/first?id=' + chat_id,
 	//		contentType : "application/json",
 			success     : function(result) {
-				$('.conversation').append('<li class="user"><p>' + result.content + '</p>\
+				$('.conversation').append('<li class="user"><p>' + showReturns(result.content) + '</p>\
 					<p class="byline"><span class="author">' + username + '</span> \
 					 asked at ' + getCurrentTime(new Date(result.created_ts)) + '</p>\
 					 <p class="avatar"><img src="' + user_src + '"/></p></li>');
@@ -32,7 +32,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		var message_to_send = $('#description').val();
 		socket.emit('user message', message_to_send);
-		$('.conversation').append('<li class="user"><p>' + message_to_send + '</p>\
+		$('.conversation').append('<li class="user"><p>' + showReturns(message_to_send) + '</p>\
 			<p class="byline"><span class="author">' + username + '</span> \
 			 asked at ' + getCurrentTime(new Date()) + '</p>\
 			 <p class="avatar"><img src="' + user_src + '"/></p></li>');
@@ -44,7 +44,7 @@ $(document).ready(function() {
 		$('.conversation').append('<li class="sexpert"><p>You ended this chat. Thanks for hooking up!</p>\
 			<p class="byline"><span class="author">' + sexpert_name + '</span> \
 			 answered at ' + getCurrentTime(new Date()) + '</p>\
-			 <p class="avatar"><img src="' + sexpert_src + '"/></p></li>');
+			 <p class="avatar"><img src="' + sexpert_src + '-small.png" /></p></li>');
 		$('#description').prop('disabled', true);
 		$('#submit').prop('disabled', true);
 		$('#end-chat').prop('disabled', true);
@@ -65,8 +65,13 @@ $(document).ready(function() {
 				$('#alert').html('');
 				$('#sexpert-content').show();
 				sexpert_name = result.username;
-				sexpert_src = '/public/images/kristy_profile.png'; // temporary. use + sexpert_name + '_profile'
-				$('#pic').attr('src', sexpert_src);
+				sexpert_src = '/public/images/sexperts/' + sexpert_name.toLowerCase();
+				//temporary
+				var sexpert_names = ['jake', 'kaitlin', 'tory']
+				if (sexpert_names.indexOf(sexpert_name.toLowerCase()) < 0) {
+					sexpert_src = '/public/images/sexperts/kristy_profile';
+				}
+				$('#pic').attr('src', sexpert_src + '.png');
 				$('#name').html(sexpert_name);
 				$('#experience').html(result.experience);
 				$('#bio').html(result.bio);
@@ -75,17 +80,17 @@ $(document).ready(function() {
 	});
 
 	socket.on('new message', function(data) {
-		$('.conversation').append('<li class="sexpert"><p>' + data + '</p>\
+		$('.conversation').append('<li class="sexpert"><p>' + showReturns(data) + '</p>\
 			<p class="byline"><span class="author">' + sexpert_name + '</span> \
 			 answered at ' + getCurrentTime(new Date()) + '</p>\
-			 <p class="avatar"><img src="' + sexpert_src + '"/></p></li>'); //
+			 <p class="avatar"><img src="' + sexpert_src + '-small.png" /></p></li>'); //
 	});
 
 	socket.on('sexpert end chat', function() {
 		$('.conversation').append('<li class="sexpert"><p>Sexpert has left this chat.</p>\
 			<p class="byline"><span class="author">' + sexpert_name + '</span> \
 			 answered at ' + getCurrentTime(new Date()) + '</p>\
-			 <p class="avatar"><img src="' + sexpert_src + '"/></p></li>');
+			 <p class="avatar"><img src="' + sexpert_src + '-small.png" /></p></li>');
 		$('#description').prop('disabled', true);
 		$('#submit').prop('disabled', true);
 		$('#end-chat').prop('disabled', true);
@@ -96,7 +101,7 @@ $(document).ready(function() {
 		$('.conversation').append('<li class="sexpert"><p>Sexpert was disconnected.</p>\
 			<p class="byline"><span class="author">' + sexpert_name + '</span> \
 			 answered at ' + getCurrentTime(new Date()) + '</p>\
-			 <p class="avatar"><img src="' + sexpert_src + '"/></p></li>');
+			 <p class="avatar"><img src="' + sexpert_src + '-small.png" /></p></li>');
 	});
 
 	socket.on('error', function(err) {
@@ -117,4 +122,8 @@ function getCurrentTime(date) {
 	minutes = minutes < 10 ? '0'+minutes : minutes;
 	var strTime = hours + ':' + minutes + ' ' + ampm;
 	return strTime;
+}
+
+function showReturns(str) {
+	return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
 }

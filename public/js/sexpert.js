@@ -32,7 +32,7 @@ $(document).ready(function() {
 					'<div class="messages-container active">                        \
 						<h4>Chat with ' + username + ', age ' + age + '</h4> \
 						<ul class="messages">                                \
-							<li>' + content + '</li>    \
+							<li>' + showReturns(content) + '</li>    \
 							<li class="user-message">Sent by ' + username + ' at ' + created_ts + '</li> \
 						</ul>                                                \
 						<form class="message-form" action = "" data-chat="' + chat_id + '" data-user="' + username + '"> \
@@ -71,7 +71,7 @@ $(document).ready(function() {
 			chat_id : $(this).data('chat'),
 			message : $message.val()
 		});
-		$(this).prev('.messages').append('<li>' + $message.val() + '</li>    \
+		$(this).prev('.messages').append('<li>' + showReturns($message.val()) + '</li>    \
 			<li class="sexpert-message">Sent by ' + sexpert_name + ' at ' + getCurrentTime(new Date()) + '</li>');
 		$message.val('');
 		$(this).closest('.messages-container').removeClass('active');
@@ -102,7 +102,7 @@ $(document).ready(function() {
 	socket.on('new message', function(data) {
 		var message_class = 'user-message';
 		var $chat_form = $('#chat-windows form[data-chat="' + data.chat_id + '"]');
-		$chat_form.prev('.messages').append('<li>' + data.message + '</li>    \
+		$chat_form.prev('.messages').append('<li>' + showReturns(data.message) + '</li>    \
 			<li class="user-message">Sent by ' + $chat_form.data('user') + ' at ' + getCurrentTime(new Date()) + '</li>');
 		$chat_form.closest('.messages-container').addClass('active');
 
@@ -172,4 +172,8 @@ function getCurrentTime(date) {
 	minutes = minutes < 10 ? '0'+minutes : minutes;
 	var strTime = hours + ':' + minutes + ' ' + ampm;
 	return strTime;
+}
+
+function showReturns(str) {
+	return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
 }

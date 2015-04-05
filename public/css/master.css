@@ -50,7 +50,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 
 #header { width: 100%; }
 
-#logo { float: left; padding: 40px 70px; }
+#logo { float: left; padding: 40px; }
 #logo img { max-height: 45px; }
 
 #menu-toggle { display: none; margin: 0; }
@@ -71,7 +71,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #menu-content li { padding: 5px 10px; }
 #menu-content li a { color: #fff; }
 
-#nav { display: inline-block; float: right; padding: 50px 70px; }
+#nav { display: inline-block; float: right; padding: 45px; }
 #nav-content, #menu-content { list-style: none; }
 #nav-content > li > a { color: #fff; }
 #nav-content li { float: left; margin-right: 20px; }
@@ -105,7 +105,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #content { padding: 30px; }
 
 .conversation { list-style: none; }
-.conversation li { background: #fff; margin-bottom: 40px; padding: 10px 20px; width: 70%; }
+.conversation li { background: #fff; margin-bottom: 40px; padding: 10px 20px; width: 70%; overflow-wrap: break-word; }
 .conversation .avatar { margin-bottom: 0px; }
 .conversation .avatar img { margin-top: 8px; max-width: 30px; }
 .conversation .byline { color: gray; float: right; font-size: 0.8em; }
@@ -114,33 +114,33 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 .conversation .user { float: left; }
 
 #home { color: #fff; height: 100%; text-align: center; width: 100%; }
-#home #content { height: 65%; padding: 0px 120px; }
-#home h1 { font-size: 48px; font-weight: normal; }
+#home #content { padding: 0px 80px; }
+#home h1 { font-size: 48px; font-weight: normal; line-height: 48px; }
 
 #home.landing { background: url('/public/images/bg-home-member.png'); }
-#home.landing #about { background: #d61240; height: 400px; line-height: 30px; padding: 100px 350px; }
-#home.landing #content { height: 70%; }
-#home.landing #features { background: #37B1B2; height: 1100px; padding: 100px 50px; }
+#home.landing #about { background: #d61240; line-height: 30px; padding: 100px 350px; }
+#home.landing #features { background: #37B1B2; padding: 100px 50px; }
 #home.landing #features dd { margin: 0 0 20px 0px; }
 #home.landing #features dl { line-height: 30px; text-align: left; width: 80%; }
 #home.landing #features dt { text-decoration: underline; }
 #home.landing #features hr { margin-bottom: 40px; }
-#home.landing #features img { margin-bottom: 50px; }
-#home.landing #fresh { background: #F1A50B; height: 500px; padding: 100px 50px; }
+#home.landing #features img { margin-bottom: 50px; width: 100%; }
+#home.landing #fresh { background: #F1A50B; padding: 100px 50px; }
 #home.landing #fresh dd { margin-bottom: 60px; }
 #home.landing #fresh h3 { margin-bottom: 40px; }
-#home.landing #signup { background: #d61240; height: 400px; line-height: 30px; padding: 100px 350px;}
+#home.landing #preview img { max-width: 100%; vertical-align: bottom; }
+#home.landing #signup { background: #d61240; line-height: 30px; padding: 100px 350px; }
 #home.landing #nav { padding-top: 24px; padding-bottom: 24px; }
 #home.landing h1 { font-weight: bold; }
 
 #home.member { background: url('/public/images/bg-home-member.png'); }
-#home.member #content { line-height: 26px; padding: 0px 240px; }
+#home.member #content { line-height: 26px; padding: 0px 200px; }
 #home.member #content #signature { margin: 100px 0px; }
 #home.member #features { width: 100%; }
 #home.member #features .description { min-height: 100px; }
 #home.member #features h3 { color: #fff; text-transform: none; }
 #home.member #features p { line-height: 32px; padding: 0px 50px; }
-#home.member #features .c2l, #home.member #features .c2r { padding: 30px 0px; width: 50%; }
+#home.member #features .c2l, #home.member #features .c2r { height: 100%; max-height: 500px; padding: 30px 0px; width: 50%; }
 #home.member #features .c2l { background: #8B4D8E; }
 #home.member #features .c2r { background: #37B1B2; }
 
