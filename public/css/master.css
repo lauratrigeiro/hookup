@@ -118,7 +118,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home #content { padding: 0px 80px; }
 #home h1 { font-size: 48px; font-weight: normal; line-height: 48px; }
 
-#home.landing { background: url('/public/images/bg-home-member.png') no-repeat center center fixed;
+#home.landing { background: url('/public/images/hookupBG.png') no-repeat center center fixed;
     -webkit-background-size: cover; /* For WebKit*/
     -moz-background-size: cover;    /* Mozilla*/
     -o-background-size: cover;      /* Opera*/
@@ -138,7 +138,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home.landing #nav { padding-top: 24px; padding-bottom: 24px; }
 #home.landing h1 { font-weight: bold; }
 
-#home.member { background: url('/public/images/bg-home-member.png') no-repeat center center fixed;
+#home.member { background: url('/public/images/hookupBG.png') no-repeat center center fixed;
     -webkit-background-size: cover; /* For WebKit*/
     -moz-background-size: cover;    /* Mozilla*/
     -o-background-size: cover;      /* Opera*/
@@ -160,7 +160,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home.public #intro #join .btn { line-height: 28px; margin: 10px 30px; min-width: 120px; }
 #home.public #intro #join #signup { background: #37B1B2; } 
 
-#login { background: url('/public/images/bg-home-member.png') no-repeat center center fixed;
+#login { background: url('/public/images/hookupBG.png') no-repeat center center fixed;
     -webkit-background-size: cover; /* For WebKit*/
     -moz-background-size: cover;    /* Mozilla*/
     -o-background-size: cover;      /* Opera*/
@@ -169,6 +169,23 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #login h1 { margin-bottom: .5em; }
 #login .btn { width: 25%; border-radius: none; margin-top: 1em; }
 #login #footer { text-align: center; }
+
+#share { background: #8B4D8E; text-align: center; color: #FFFFFF;}
+#share #share-section { margin-bottom: 4em; }
+#share #share-section a { color: #16D3D5;;}
+#share #share-button { text-align: center; background: #F1A50B;
+  border: 1px solid #E19B29; border-radius: 2px; width: 33%; }
+#share #read-section { background: #efefef; height: 100%; }
+#share img.overlap { margin-top: -2em; }
+#share .story-container { padding: 1em 4%; width: 85%; background: #FFFFFF;
+  margin: 2em auto; text-align: left; }
+#share #read-section h3 { color: #8B4D8E; }
+#share .story { color: #313131; display: inline-block; position: relative;
+  width: 85%; margin-bottom: 1em; }
+#share .votes { display: inline-block; float: right; color: #8B4D8E; }
+#share .upvotes { margin-right: 5px; }
+#share .votes img { margin-bottom: -2px; vertical-align: center; }
+#share .byline { color: #8E8E8E; font-size: .8em; display: inline-block; position: relative; width: 85%; }
 
 .question { margin: auto; max-width: 500px; text-align: center; }
 .question-form { background: #fff; border-radius: 3px; padding-top: 15px; position: relative; }

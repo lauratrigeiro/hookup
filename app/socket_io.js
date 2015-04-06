@@ -17,6 +17,10 @@ function init(server) {
 
 		socket.on('user join', function(data) {
 			var chat_id = data;
+			if (!chat_id) {
+				console.log('user join with an invalid chat_id');
+				return;
+			}
 			socket.chat_id = chat_id;
 			socket.type = 'user';
 			chats[chat_id] = {};
@@ -34,14 +38,21 @@ function init(server) {
 
 		socket.on('sexpert join', function(data) {
 			var chat_id = data.chat_id;
-	//		socket.chat_id = chat_id;
-			socket.type = 'sexpert';
-			chats[chat_id]['sexpert'] = socket;
-			for (var key_2 in chats) {
-				for (var i_2 in chats[key_2]) {
-					console.log("chat: " + key_2 + " , " + i_2);
-				}
+			if (!chat_id) {
+				console.log('sexpert join with an invalid chat_id');
+				return;
 			}
+			socket.type = 'sexpert';
+			if (!chats[chat_id]) {
+				console.log('sexpert join before user join');	// need to wait?
+				return;
+			}
+			chats[chat_id]['sexpert'] = socket;
+			// for (var key_2 in chats) {
+			// 	for (var i_2 in chats[key_2]) {
+			// 		console.log("chat: " + key_2 + " , " + i_2);
+			// 	}
+			// }
 			console.log('sexpert join: ' + data.sexpert_id);
 			chats[chat_id]['user'].emit('connected to sexpert', data.sexpert_id);
 			io.to('sexperts').emit('update waiting');
@@ -49,8 +60,19 @@ function init(server) {
 		});
 
 		socket.on('user message', function(data) {
-			// check if user already connected
-			// add user to db connected table	-> callback(true/false)
+			if (!socket.chat_id) {
+				console.log('user tried to end chat with undefined chat_id on socket');
+				return;
+			}
+
+			if (!data) {
+				console.log('user message with undefined data (messasge)');
+				return;
+			}
+			if (!chats[socket.chat_id] || !chats[socket.chat_id]['sexpert']) {
+				console.log('users message has undefined users object');
+				return;
+			}
 			console.log('user message: ' + socket.chat_id + ', ' + data);
 			chats[socket.chat_id]['sexpert'].emit('new message', { message : data, chat_id : socket.chat_id });
 			chats_api.new_message(socket.chat_id, 0, data, function(err, result) {
@@ -60,14 +82,19 @@ function init(server) {
 					console.log("new user message: " + result);
 				}
 			});
-			// io.emit('new message', {	// private: use specific socket.emit instead of io
-			// 	username : socket.username,
-			// 	message  : data.question
-			// });
 		});
 
 		socket.on('sexpert message', function(data) {
+			if (!data || !data.chat_id || !data.message) {
+				console.log('sexpert message data must contain valid chat_id and message');
+				if (data) { console.log('chat_id: ' + data.chat_id + ', message: ' + data.message); }
+				return;
+			}
 			console.log('sexpert message: ' + data.chat_id + ', ' + data.message);
+			if (!chats[data.chat_id] || !chats[data.chat_id]['user']) {
+				console.log('sexpert message has undefined users object');
+				return;
+			}
 			chats[data.chat_id]['user'].emit('new message', data.message);
 			chats_api.new_message(data.chat_id, 1, data.message, function(err, result) {
 				if (err) {
@@ -77,20 +104,20 @@ function init(server) {
 				}
 			});
 		});
-		// 	io.emit('new message', {
-		// //		username : socket.username,
-		// 		message  : data
-		// 	});
-		// });
 
 		socket.on('user end chat', function() {
 			var chat_id = socket.chat_id;
+			if (!chat_id) {
+				console.log('user tried to end chat with undefined chat_id on socket');
+				return;
+			}
+
 			chats_api.disconnect(chat_id, function(err) {
 				if (err) {
 					console.log(err);
 				}
 
-				if (chats[chat_id]['sexpert']) {
+				if (chats[chat_id] && chats[chat_id]['sexpert']) {
 					chats[chat_id]['sexpert'].emit('user end chat', chat_id);
 				}
 
@@ -100,12 +127,17 @@ function init(server) {
 		});
 
 		socket.on('sexpert end chat', function(chat_id) {
+			if (!chat_id) {
+				console.log('sexpert tried to end chat with undefined chat_id');
+				return;
+			}
+
 			chats_api.disconnect(chat_id, function(err) {
 				if (err) {
 					console.log(err);
 				}
 
-				if (chats[chat_id]['user']) {
+				if (chats[chats_id] && chats[chat_id]['user']) {
 					chats[chat_id]['user'].emit('sexpert end chat');
 				}
 
