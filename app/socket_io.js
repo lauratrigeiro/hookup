@@ -45,6 +45,7 @@ function init(server) {
 			socket.type = 'sexpert';
 			if (!chats[chat_id]) {
 				console.log('sexpert join before user join');	// need to wait?
+				socket.emit('user status', false);
 				return;
 			}
 			chats[chat_id]['sexpert'] = socket;
@@ -54,6 +55,7 @@ function init(server) {
 			// 	}
 			// }
 			console.log('sexpert join: ' + data.sexpert_id);
+			socket.emit('user status', true);
 			chats[chat_id]['user'].emit('connected to sexpert', data.sexpert_id);
 			io.to('sexperts').emit('update waiting');
 
@@ -137,7 +139,7 @@ function init(server) {
 					console.log(err);
 				}
 
-				if (chats[chats_id] && chats[chat_id]['user']) {
+				if (chats[chat_id] && chats[chat_id]['user']) {
 					chats[chat_id]['user'].emit('sexpert end chat');
 				}
 

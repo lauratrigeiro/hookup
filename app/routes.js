@@ -18,6 +18,19 @@ module.exports = function(app, passport) {
 		});
 	});
 
+	app.get(subroute + '/privacy', function(req, res) {
+		var data_to_send;
+		if (req.isAuthenticated()) {
+			data_to_send = {
+				user : req.user,
+				is_logged_in : true
+			};
+		} else {
+			data_to_send = { is_logged_in : false };
+		}
+		res.render('privacy.ejs', data_to_send);
+	});
+
 	// =====================================
 	// LOGIN ===============================
 	// =====================================

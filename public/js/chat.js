@@ -87,7 +87,7 @@ $(document).ready(function() {
 	});
 
 	socket.on('sexpert end chat', function() {
-		$('.conversation').append('<li class="sexpert"><p>Sexpert has left this chat.</p>\
+		$('.conversation').append('<li class="sexpert"><p>Sexpert has left this chat. You may close this window when you are ready.</p>\
 			<p class="byline"><span class="author">' + sexpert_name + '</span> \
 			 answered at ' + getCurrentTime(new Date()) + '</p>\
 			 <p class="avatar"><img src="' + sexpert_src + '-small.png" /></p></li>');

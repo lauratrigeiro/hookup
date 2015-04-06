@@ -16,11 +16,11 @@ var Hookup = (function ($) {
       $('#menu-content').toggleClass('active');
     });
     
-    $('html').on('click touchstart', function (e) {
-      if(!$('.fa-bars').is(e.target) && !$('a[class^="nav-trigger"]').is(e.target)){
-        $('#menu-content').removeClass('active');
-      }   
-    });
+    // $('html').on('click touchstart', function (e) {
+    //   if(!$('.fa-bars').is(e.target) && !$('a[class^="nav-trigger"]').is(e.target)){
+    //     $('#menu-content').removeClass('active');
+    //   }   
+    // });
   };
   
   var initNavDropdowns = function(){
@@ -34,11 +34,11 @@ var Hookup = (function ($) {
       $targetSubmenu.toggle();
     }); 
     
-    $('html').on('click touchstart', function (e) {
-      if(!$('a[class^="nav-trigger"]').is(e.target)){
-        $('.dropdown').hide();
-      }
-    });
+    // $('html').on('click touchstart', function (e) {
+    //   if(!$('a[class^="nav-trigger"]').is(e.target)){
+    //     $('.dropdown').hide();
+    //   }
+    // });
   };
   
   var initTextareaResizer = function(){

@@ -5,6 +5,7 @@
   <div id="nav">
     <ul id="nav-content">
       <li><a href="/tn/home">home</a></li>
+      <% if (is_logged_in) { %>
       <li>
         <a class="nav-trigger-site" href="#">features <i class="fa fa-caret-down"></i></a>
         <ul class="dropdown" style="display: none;">
@@ -12,7 +13,6 @@
           <li><a href="/tn/share">Share your story</a></li>
         </ul>
       </li>
-      <% if (is_logged_in) { %>
       <li>
         <a class="nav-trigger-account" href="#"><img src="/public/images/pinkbunny_small.png"/> <%= user.username %> <i class="fa fa-caret-down"></i></a>
         <ul class="dropdown" style="display: none;">
@@ -31,6 +31,7 @@
     <p id="menu-toggle"><a href="#"><i class="fa fa-bars fa-2x"></i></a></p>
     <ul id="menu-content">
       <li><a href="/tn/home">home</a></li>
+       <% if (is_logged_in) { %>
       <li>
         <a class="nav-trigger-site" href="#">features <i class="fa fa-caret-down"></i></a>
         <ul class="dropdown">
@@ -38,7 +39,7 @@
           <li><a href="/tn/share">Share your story</a></li>
         </ul>
       </li>
-      <% if (is_logged_in) { %>
+     
       <li>
         <a class="nav-trigger-account" href="#" id="username"><%= user.username %><i class="fa fa-caret-down"></i></a>
         <ul class="dropdown">

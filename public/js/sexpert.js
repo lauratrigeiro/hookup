@@ -17,37 +17,44 @@ $(document).ready(function() {
 		var created_ts = $waitingItem.find('.created-ts').text();
 		var content = $waitingItem.find('.content').text();
 
+		socket.emit('sexpert join', { chat_id : chat_id, sexpert_id : sexpert_id });
+		socket.on('user status', function(data) {
+			if (!data) {
+				$('#alert').html("Please wait this user is not connected yet.");
+			} else {
+				$.ajax({
+					type        : 'POST',
+					url         : '/chats/connect',
+					data        : JSON.stringify({
+						chat_id : chat_id
+					}),
+					contentType : "application/json",
+					success     : function(data) {
+				//		$('#alert').html("Please wait to hookup...");
+						//open chat
+						$('#chat-windows').append(
+							'<div class="messages-container active">                        \
+								<h4>Chat with ' + username + ', age ' + age + '</h4> \
+								<ul class="messages">                                \
+									<li>' + showReturns(content) + '</li>    \
+									<li class="user-message">Sent by ' + username + ' at ' + created_ts + '</li> \
+								</ul>                                                \
+								<form class="message-form" action = "" data-chat="' + chat_id + '" data-user="' + username + '"> \
+									<textarea class="message" autocomplete="off" maxlength="600"></textarea>     \
+									<button class="btn send-chat">Send</button>      \
+									<button type="button" class="btn end-chat">End Chat</button>   \
+								</form>                                              \
+							</div>');
 
-		$.ajax({
-			type        : 'POST',
-			url         : '/chats/connect',
-			data        : JSON.stringify({
-				chat_id : chat_id
-			}),
-			contentType : "application/json",
-			success     : function(data) {
-		//		$('#alert').html("Please wait to hookup...");
-				//open chat
-				$('#chat-windows').append(
-					'<div class="messages-container active">                        \
-						<h4>Chat with ' + username + ', age ' + age + '</h4> \
-						<ul class="messages">                                \
-							<li>' + showReturns(content) + '</li>    \
-							<li class="user-message">Sent by ' + username + ' at ' + created_ts + '</li> \
-						</ul>                                                \
-						<form class="message-form" action = "" data-chat="' + chat_id + '" data-user="' + username + '"> \
-							<textarea class="message" autocomplete="off" maxlength="600"></textarea>     \
-							<button class="btn send-chat">Send</button>      \
-							<button type="button" class="btn end-chat">End Chat</button>   \
-						</form>                                              \
-					</div>');
+						//connect to socket
+						
+					},
+					error       : function() {
+						$('#alert').html("Sorry, an error occurred.");
+					}  
+				});				
+			}
 
-				//connect to socket
-				socket.emit('sexpert join', { chat_id : chat_id, sexpert_id : sexpert_id });
-			},
-			error       : function() {
-				$('#alert').html("Sorry, an error occurred.");
-			}  
 		});
 	});
 
