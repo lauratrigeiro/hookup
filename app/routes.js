@@ -153,6 +153,13 @@ module.exports = function(app, passport) {
 		});
 	});
 
+	app.get(subroute + '/approve', isSexpert, function(req, res) {
+		res.render('approve.ejs', {
+			is_logged_in : true,
+			user : req.user
+		});
+	});
+
 	// ADMIN
 	app.get(subroute + '/admin', isEmployee, function(req, res) {
 		res.render('admin.ejs', {

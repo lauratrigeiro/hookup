@@ -18,6 +18,7 @@
         <ul class="dropdown" style="display: none;">
           <% if (user.sexpert || user.admin) { %>
           <li><a href="/tn/sexpert">Sexpert</a></li>
+          <li><a href="/tn/approve">Approve</a></li>
         <% } %>
         <% if (user.employee || user.admin) { %>
           <li><a href="/tn/admin">Admin</a></li>
@@ -45,6 +46,7 @@
         <ul class="dropdown">
           <% if (user.sexpert || user.admin) { %>
             <li><a href="/tn/sexpert">Sexpert</a></li>
+            <li><a href="/tn/approve">Approve</a></li>
           <% } %>
           <% if (user.employee || user.admin) { %>
             <li><a href="/tn/admin">Admin</a></li>

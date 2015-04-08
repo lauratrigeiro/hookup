@@ -13,9 +13,10 @@
       <div id="share-section">
         <h2>Share your story</h2>         
         <p>It is anonymous and will be up within 24 hours.</p>
-        <h3>Full feature coming soon! E-mail your stories to <a href="mailto:hookupsexed@gmail.com?Subject=Share%20your%20story" style="color: #16D3D5;" >hookupsexed@gmail.com</a>.</h3>
         <div id="share-form">
-        	<a id="share-button" class="btn" href="mailto:hookupsexed@gmail.com?Subject=Share%20your%20story">spill</a>
+        	<textarea id="story-input" class="story-textarea" autocomplete="off" maxlength="500" placeholder="What happened last night?" rows="1"></textarea>
+        	<button type="button" id="share-button" class="btn">spill</button>
+        	<div id="share-alert"></div>
         </div>
       </div>
       <div id="read-section">
@@ -140,6 +141,7 @@ But I’ve never been less afraid of love
     </div>
     <footer>
         <% include ./partials/footer %>
+        <script type='text/javascript' src='/public/js/share.js'></script> 
     </footer>
   </body>
 </html>

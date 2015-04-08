@@ -26,7 +26,7 @@ function create_story(req, res) {
 		var story_id = utils.uuid();
 		var user_id = req.user.id;
 		var content = req.body.content;
-		var querystring = 'INSERT INTO stories (story_id, user_id, content) VALUES (?, ?, ?)';
+		var querystring = 'INSERT INTO stories_unapproved (story_id, user_id, content) VALUES (?, ?, ?)';
 		conn.query(querystring, [story_id, user_id, content], function(err, rows, fields) {
 			conn.release();
 			if (err) {
@@ -91,10 +91,15 @@ function upvote(req, res, approve) {
 				});
 			}
 
-			var upvote_id = utils.uuid();
-			var querystring = 'INSERT INTO upvotes (upvote_id, story_id, user_id) VALUES (?, ?, ?)';
-			var params = [upvote_id, story_id, user_id];
-			conn.query(querystring, params, function(err, rows, fields) {
+			if (!approve) {
+				querystring = 'UPDATE stories_approved SET upvotes = upvotes + 1, approved = 1 WHERE story_id = ?';
+			} else {
+				querystring = 'INSERT INTO stories_approved (story_id, user_id, content, created_ts) \
+					SELECT story_id, user_id, content, created_ts from stories_unapproved \
+					WHERE story_id = ?';
+			}
+
+			conn.query(querystring, [story_id], function(err, rows, fields) {
 				if (err) {
 					conn.release();
 					return res.status(502).send({
@@ -104,15 +109,12 @@ function upvote(req, res, approve) {
 					});
 				}
 
-				if (approve) {
-					querystring = 'UPDATE stories SET upvotes = upvotes + 1, approved = 1 WHERE story_id = ?'
-				} else {
-					querystring = 'UPDATE stories SET upvotes = upvotes + 1 WHERE story_id = ?';
-				}
-
-				conn.query(querystring, [story_id], function(err, rows, fields) {
-					conn.release();
+				var upvote_id = utils.uuid();
+				var querystring = 'INSERT INTO upvotes (upvote_id, story_id, user_id) VALUES (?, ?, ?)';
+				var params = [upvote_id, story_id, user_id];
+				conn.query(querystring, params, function(err, rows, fields) {
 					if (err) {
+						conn.release();
 						return res.status(502).send({
 							error      : 'database error',
 							details    : err,
@@ -120,7 +122,24 @@ function upvote(req, res, approve) {
 						});
 					}
 
-					res.status(201).send({ message : 'story upvoted successfully' });
+					if (!approve) {
+						conn.release();
+						return res.status(201).send({ message : 'story upvoted successfully' });
+					}
+
+					querystring = 'DELETE FROM stories_unapproved WHERE story_id = ?';
+					conn.query(querystring, [story_id], function(err, rows, fields) {
+						conn.release();
+						if (err) {
+							return res.status(502).send({
+								error      : 'database error',
+								details    : err,
+								error_type : 'database query'
+							});
+						}
+
+						res.status(201).send({ message : 'story approved successfully' });
+					});
 				});
 			});
 		});
@@ -141,7 +160,7 @@ function get_stories(req, res, approved) {
 		}
 
 		if ('offset' in req.query && req.query.offset && parseInt(req.query.offset) >= 0) {
-			offset = req.query.offset;
+			offset = parseInt(req.query.offset);
 		} else {
 			offset = 0;
 		}
@@ -149,10 +168,10 @@ function get_stories(req, res, approved) {
 		var querystring;
 		if (approved) {
 			querystring = 'SELECT story_id, content, upvotes, UNIX_TIMESTAMP(created_ts) created \
-				FROM stories WHERE approved = 1 ORDER BY created_ts DESC LIMIT 10 OFFSET ?';
+				FROM stories_approved ORDER BY created_ts DESC LIMIT 10 OFFSET ?';
 		} else {
 			querystring = 'SELECT story_id, content, UNIX_TIMESTAMP(created_ts) created \
-				FROM stories WHERE approved = 0 ORDER BY created_ts ASC LIMIT 10 OFFSET ?';
+				FROM stories_unapproved ORDER BY created_ts ASC LIMIT 10 OFFSET ?';
 		}
 
 		conn.query(querystring, [offset], function(err, rows, fields) {
@@ -167,7 +186,7 @@ function get_stories(req, res, approved) {
 
 			var data = rows.map(function(row) {
 				row_data = {
-					story_id   : row.chat_id,
+					story_id   : row.story_id,
 					content    : row.content,
 					created    : row.created
 				};
