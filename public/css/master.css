@@ -192,7 +192,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
   width: 85%; margin-bottom: 1em; }
 #share .votes { display: inline-block; float: right; color: #8B4D8E; }
 #share .upvotes { margin-right: 5px; }
-#share .votes img { margin-bottom: -2px; vertical-align: center; }
+#share .votes img { margin-bottom: -2px; vertical-align: center; cursor: pointer; }
 #share .byline { color: #8E8E8E; font-size: .8em; display: inline-block; position: relative; width: 85%; }
 
 #share #share-alert { margin-top: .5em; }

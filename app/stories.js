@@ -92,7 +92,7 @@ function upvote(req, res, approve) {
 			}
 
 			if (!approve) {
-				querystring = 'UPDATE stories_approved SET upvotes = upvotes + 1, approved = 1 WHERE story_id = ?';
+				querystring = 'UPDATE stories_approved SET upvotes = upvotes + 1 WHERE story_id = ?';
 			} else {
 				querystring = 'INSERT INTO stories_approved (story_id, user_id, content, created_ts) \
 					SELECT story_id, user_id, content, created_ts from stories_unapproved \
