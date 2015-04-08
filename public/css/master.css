@@ -155,6 +155,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home.member #features .c2l, #home.member #features .c2r { height: 100%; max-height: 500px; padding: 30px 0px; width: 50%; }
 #home.member #features .c2l { background: #8B4D8E; }
 #home.member #features .c2r { background: #37B1B2; }
+#home.member #signup-message { font-weight: bold; color: #8B4D8E; background-color: white; }
 
 #home.public { background: url('/public/images/bg-home-public.png'); }
 #home.public #intro { padding: 0px 120px; }
