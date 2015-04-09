@@ -30,3 +30,8 @@
 #share .story-container { width: 92%; }
 #share .story { width: 100%; }
 #share .author { display: none; }
+
+
+#home.landing #nav-content.landing .nav-btn { font-size: 14px; }
+#home.landing #nav { padding-left: 0px; padding-right: 5%; }
+#home.landing #logo { padding: 5%; }

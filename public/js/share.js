@@ -19,7 +19,7 @@ $(document).ready(function() {
 			}),
 			contentType : "application/json",
 			success     : function(data) {
-				$('#share-alert').html("Thanks for submitting! Other people will find this helpful. You're beautiful.");
+				$('#share-alert').html("Cool story, bro. It'll be up soon.");
 				$storyInput.css('height', '');
 				$storyInput.prop('rows', '1');
 				$storyInput.val('');
