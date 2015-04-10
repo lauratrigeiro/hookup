@@ -1,0 +1,24 @@
+<!-- views/index.ejs -->
+<!doctype html>
+<html>
+    <head>
+      <% include ./partials/head %>
+    </head>
+    <body id="share" class="approve">
+    <header>
+        <% include ./partials/header %>
+    </header>  
+    <div id="share-content">
+      <div id="read-section">
+      	<img class="overlap" src="/public/images/grape_icon.png" />
+      	<h3>Stories to Approve</h3>
+      	<div id="stories"></div>
+      	<input type="button" id="load-more" class="btn" value="Show me more!" data-offset />
+	  </div>
+    </div>
+    <footer>
+        <% include ./partials/footer %>
+        <script type='text/javascript' src='/public/js/approve.js'></script> 
+    </footer>
+  </body>
+</html>

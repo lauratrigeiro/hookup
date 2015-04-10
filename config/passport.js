@@ -6,6 +6,7 @@ var LocalStrategy   = require('passport-local').Strategy;
 // load up the user model
 var bcrypt = require('bcrypt-nodejs');
 var db = require('../config/database');
+var mailchimp = require('../app/mailchimp');
 var utils = require('../app/utils')
 //var connection = mysql.createConnection(dbconfig.connection);
 
@@ -97,7 +98,13 @@ module.exports = function(passport) {
 
                         conn.query(insertQuery,[new_user.id, new_user.username, new_user.password, new_user.email, new_user.age],function(err, rows) {
                             conn.release();
-                            return done(null, new_user);
+                            mailchimp.subscribe_new_user(new_user.username, new_user.email, function(err) {
+                                if (err) {
+                                    console.log(err);
+                                }
+
+                                return done(null, new_user);
+                            });
                         });
                     }
                 });

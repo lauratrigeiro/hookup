@@ -155,6 +155,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home.member #features .c2l, #home.member #features .c2r { height: 100%; max-height: 500px; padding: 30px 0px; width: 50%; }
 #home.member #features .c2l { background: #8B4D8E; }
 #home.member #features .c2r { background: #37B1B2; }
+#home.member #signup-message { font-weight: bold; color: #8B4D8E; background-color: white; }
 
 #home.public { background: url('/public/images/bg-home-public.png'); }
 #home.public #intro { padding: 0px 120px; }
@@ -178,8 +179,10 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 
 #share { background: #8B4D8E; text-align: center; color: #FFFFFF;}
 #share #share-section { margin-bottom: 4em; }
+#share #share-form { width: 40%; margin: 0 auto; }
+#share #story-input.story-textarea { width: 90%; padding: .5em 2.5%; }
 #share #share-button { text-align: center; background: #F1A50B;
-  border: 1px solid #E19B29; border-radius: 2px; width: 33%; }
+  border: 1px solid #E19B29; border-radius: 2px; width: 95%; }
 #share #read-section { background: #efefef; height: 100%; }
 #share img.overlap { margin-top: -2em; }
 #share .story-container { padding: 1em 4%; width: 85%; background: #FFFFFF;
@@ -189,8 +192,12 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
   width: 85%; margin-bottom: 1em; }
 #share .votes { display: inline-block; float: right; color: #8B4D8E; }
 #share .upvotes { margin-right: 5px; }
-#share .votes img { margin-bottom: -2px; vertical-align: center; }
+#share .votes img { margin-bottom: -2px; vertical-align: center; cursor: pointer; }
 #share .byline { color: #8E8E8E; font-size: .8em; display: inline-block; position: relative; width: 85%; }
+
+#share #share-alert { margin-top: .5em; }
+#share #load-more { margin-bottom: 1em; }
+#share.approve .approve-button.disabled { background-color: gray; cursor: default; }
 
 .question { margin: auto; max-width: 500px; text-align: center; }
 .question-form { background: #fff; border-radius: 3px; padding-top: 15px; position: relative; }

@@ -25,8 +25,13 @@
 
 #share { font-size: 14px; }
 #share #share-section { text-align: left; margin-left: 2%; margin-right: 2%; }
-#share #share-section #share-form { text-align: center; }
-#share #share-section .btn { width: 75%; }
+#share #share-section #share-form { text-align: center; width: 95%; }
+/*#share #share-section .btn { width: 75%; }*/
 #share .story-container { width: 92%; }
 #share .story { width: 100%; }
 #share .author { display: none; }
+
+
+#home.landing #nav-content.landing .nav-btn { font-size: 14px; }
+#home.landing #nav { padding-left: 0px; padding-right: 5%; }
+#home.landing #logo { padding: 5%; }

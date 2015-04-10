@@ -2,6 +2,7 @@
 var admin = require('./admin');
 var chats = require('./chats');
 var mailchimp = require('./mailchimp');
+var stories = require('./stories');
 
 var subroute = '/tn';
 
@@ -75,7 +76,7 @@ module.exports = function(app, passport) {
 
 	// process the signup form
 	app.post('/signup', passport.authenticate('local-signup', {
-		successRedirect : subroute + '/home', // redirect to the secure profile section
+		successRedirect : subroute + '/home?new=1', // redirect to the secure profile section
 		failureRedirect : subroute + '/signup', // redirect back to the signup page if there is an error
 		failureFlash : true // allow flash messages
 	}));
@@ -87,6 +88,13 @@ module.exports = function(app, passport) {
 	app.get('/chats/sexpert', isLoggedIn, chats.sexpert);
 	app.get('/chats/waiting', isSexpert, chats.waiting);
 	app.get('/chats/first', isLoggedIn, chats.first);
+
+	// SHARE YOUR STORY
+	app.post('/stories/create', isLoggedIn, stories.create);
+	app.post('/stories/approve', isSexpert, stories.approve);
+	app.post('/stories/upvote', isLoggedIn, stories.upvote);
+	app.get('/stories/approved', isLoggedIn, stories.get_approved);
+	app.get('/stories/unapproved', isSexpert, stories.get_unapproved);
 
 	// Site pages
 	app.get(subroute + '/home', isLoggedIn, function(req, res) {
@@ -140,6 +148,13 @@ module.exports = function(app, passport) {
 	// SEXPERT
 	app.get(subroute + '/sexpert', isSexpert, function(req, res) {
 		res.render('sexpert.ejs', {
+			is_logged_in : true,
+			user : req.user
+		});
+	});
+
+	app.get(subroute + '/approve', isSexpert, function(req, res) {
+		res.render('approve.ejs', {
 			is_logged_in : true,
 			user : req.user
 		});
