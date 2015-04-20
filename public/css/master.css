@@ -95,6 +95,10 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #footer-nav li { display: inline-block; margin: 0px 3px; } 
 #footer-nav a { color: #fff; text-decoration: none; }
 
+#footer.early { background: none; }
+#footer.early h2 { font-size: 2em; }
+#footer.early #social .fa-stack-1x { color: rgb(214, 18, 64); }
+
 /* ----------------------- Main ------------------------- */
 .teal-background { background: #24B1B1; height: 100%; }
 #admin-container { padding: 2%; }
@@ -120,6 +124,8 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home #content { padding: 0px 80px; }
 #home h1 { font-size: 48px; font-weight: normal; line-height: 48px; }
 
+#home.early #nav-content .btn { background-color: #37B1B2; }
+
 #home.landing { background: url('/public/images/hookupBG.png') no-repeat center center fixed;
     -webkit-background-size: cover; /* For WebKit*/
     -moz-background-size: cover;    /* Mozilla*/
@@ -138,7 +144,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home.landing #fresh h3 { margin-bottom: 40px; }
 #home.landing #preview img { max-width: 100%; vertical-align: bottom; }
 #home.landing #signup { background: #d61240; line-height: 30px; padding: 100px 350px; }
-#home.landing #nav { padding-top: 24px; padding-bottom: 24px; }
+#home.landing #nav, #home.early #nav { padding-top: 24px; padding-bottom: 24px; }
 #home.landing h1 { font-weight: bold; }
 
 #home.member, #home.privacy { background: url('/public/images/hookupBG.png') no-repeat center center fixed;

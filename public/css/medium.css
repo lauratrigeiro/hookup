@@ -5,7 +5,7 @@
 #menu-toggle { display: block; }  
   
 #nav-content { display: none; }
-#home.landing #nav-content.landing { display: inline-block; }
+#header.landing #nav-content.landing { display: inline-block; }
 
 /* ----------------------- Main ------------------------- */
 #chat h1 { display: none; }

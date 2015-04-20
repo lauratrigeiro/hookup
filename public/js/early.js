@@ -1,8 +1,4 @@
 $(document).ready(function() {
-	$('#about-button').click(function(e) {
-		window.location.href = '/';
-	});
-
 	$('#mailchimp-form').submit(function(e) {
 		e.preventDefault();
 		$('#alert-message').addClass('error');
