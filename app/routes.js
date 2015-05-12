@@ -89,6 +89,7 @@ module.exports = function(app, passport) {
 	app.get('/chats/waiting', isSexpert, chats.waiting);
 	app.get('/chats/first', isLoggedIn, chats.first);
 	app.get('/chats/:id', chats.get_chat_messages);
+	app.get('/chats', chats.get_all_chats);
 
 	// SHARE YOUR STORY
 	app.post('/stories/create', isLoggedIn, stories.create);

@@ -393,7 +393,8 @@ function get_chat_messages(req, res) {
 				ON a.sexpert_id = c.id     \
 			INNER JOIN messages d        \
 				ON a.chat_id = d.chat_id   \
-			WHERE a.chat_id = ?';
+			WHERE a.chat_id = ?          \
+			ORDER BY created_ts ASC';
 
 		conn.query(querystring, [chat_id], function(err, rows) {
 			conn.release();
@@ -439,6 +440,59 @@ function get_chat_messages(req, res) {
 	});
 }
 
+function get_all_chats(req, res) {
+db.get_connection(function(error, conn) {
+		if (error) {
+			conn.release();
+			return res.status(502).send({
+				error      : 'database error',
+				details    : error,
+				error_type : 'database connection'
+			});
+		}
+
+		var querystring = 'SELECT      \
+			a.chat_id,                   \
+			d.age AS user_age,           \
+			c.username AS sexpert_username, \
+			(SELECT COUNT(b.message_id)  \
+				FROM messages b            \
+				WHERE a.chat_id = b.chat_id) AS messages, \
+			UNIX_TIMESTAMP(d.created_ts) as created_ts, \
+			UNIX_TIMESTAMP(a.closed_ts) as closed_ts    \
+			FROM chats a                 \
+			LEFT JOIN users c            \
+				ON a.sexpert_id = c.id     \
+			INNER JOIN users d           \
+				ON a.user_id = d.id        \
+			ORDER BY created_ts DESC';
+
+		conn.query(querystring, [], function(err, rows) {
+			conn.release();
+			if (err) {
+				return res.status(502).send({
+					error      : 'database error',
+					details    : err,
+					error_type : 'database query'
+				});
+			}
+
+			var data = rows.map(function(row) {
+				return {
+					chat_id          : row.chat_id,
+					user_age         : row.user_age,
+					sexpert_username : row.sexpert_username,
+					messages         : row.messages,
+					created_ts       : row.created_ts,
+					closed_ts        : row.closed_ts
+				};
+			});
+
+			return res.status(200).send(data);
+		});
+	});
+}
+
 exports.create = create_chat;
 exports.new_message = new_message;
 exports.connect = connect;
@@ -447,3 +501,4 @@ exports.sexpert = get_sexpert_info;
 exports.waiting = get_waiting_chats;
 exports.first = get_first_message;
 exports.get_chat_messages = get_chat_messages;
+exports.get_all_chats = get_all_chats;
