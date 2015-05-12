@@ -359,6 +359,86 @@ function get_first_message(req, res) {
 	});
 }
 
+function get_chat_messages(req, res) {
+	db.get_connection(function(error, conn) {
+		if (!req.params || !req.params.id) {
+			return res.status(400).send({
+				error      : 'Request must include id',
+				details    : { request : req.params },
+				error_type : 'bad request'
+			});
+		}
+
+		if (error) {
+			conn.release();
+			return res.status(502).send({
+				error      : 'database error',
+				details    : error,
+				error_type : 'database connection'
+			});
+		}
+
+		var chat_id = req.params.id;
+		var querystring = 'SELECT      \
+			UNIX_TIMESTAMP(a.closed_ts) as closed_ts, \
+			b.age as user_age,           \
+			c.username as sexpert_username, \
+			d.sender,                    \
+			d.content,                   \
+			UNIX_TIMESTAMP(d.created_ts) as created_ts \
+			FROM chats a                 \
+			INNER JOIN users b           \
+				ON a.user_id = b.id        \
+			INNER JOIN users c           \
+				ON a.sexpert_id = c.id     \
+			INNER JOIN messages d        \
+				ON a.chat_id = d.chat_id   \
+			WHERE a.chat_id = ?';
+
+		conn.query(querystring, [chat_id], function(err, rows) {
+			conn.release();
+			if (err) {
+				return res.status(502).send({
+					error      : 'database error',
+					details    : err,
+					error_type : 'database query'
+				});
+			}
+
+			if (!rows || !rows.length) {
+				return res.status(400).send({
+					error      : 'No messages associated with this chat id',
+					details    : { request : chat_id },
+					error_type : 'bad request'
+				});
+			}
+
+			var data = {};
+			var first_row = rows[0];
+			data.closed_ts = first_row.closed_ts;
+			data.user_age = first_row.user_age;
+			data.sexpert_username = first_row.sexpert_username;
+
+			data.messages = rows.map(function(row) {
+				var sender;
+				if (row.sender) {
+					sender = 'Sexpert';
+				} else {
+					sender = 'User';
+				}
+
+				return {
+					sender     : sender,
+					content    : row.content,
+					created_ts : row.created_ts
+				};
+			});
+
+			return res.status(200).send(data);
+		});
+	});
+}
+
 exports.create = create_chat;
 exports.new_message = new_message;
 exports.connect = connect;
@@ -366,3 +446,4 @@ exports.disconnect = disconnect;
 exports.sexpert = get_sexpert_info;
 exports.waiting = get_waiting_chats;
 exports.first = get_first_message;
+exports.get_chat_messages = get_chat_messages;
