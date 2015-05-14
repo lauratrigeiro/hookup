@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<% include ./partials/head %>
+<style>
+td {
+    padding: .5em;
+}
+</style>
+</head>
+<body class="">
+    <div id="admin-container" class="container">
+        <header class="teal-background">
+            <% include ./partials/header %>
+        </header>
+        <h1>Chat</h1>
+        <p>User age: <span id="user_age"></span></p>
+        <p>Sexpert: <span id="sexpert"></span></p>
+        <p>Closed timestamp: <span id="closed_ts"></span>
+        <table id="messages">
+            <thead>
+                <tr>
+                    <th>Author</th>
+                    <th>Content</th>
+                    <th>Timestamp (local)</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <footer>
+        <% include ./partials/footer %>
+        <script type='text/javascript' src='/public/js/chat_messages.js'></script>
+    </footer>
+</body>
+</html>

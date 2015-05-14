@@ -170,6 +170,20 @@ module.exports = function(app, passport) {
 		});
 	});
 
+	app.get(subroute + '/admin/chats', isEmployee, function(req, res) {
+		res.render('chats_list.ejs', {
+			is_logged_in : true,
+			user : req.user
+		});
+	});
+
+	app.get(subroute + '/admin/chats/:id', isEmployee, function(req, res) {
+		res.render('chat_messages.ejs', {
+			is_logged_in : true,
+			user : req.user
+		});
+	});
+
 	app.get('/admin/users', isAdmin, admin.get_user);
 	app.post('/admin/users', isAdmin, admin.upgrade_user);
 	app.post('/admin/sexperts', isAdmin, admin.add_profile);

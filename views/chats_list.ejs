@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<% include ./partials/head %>
+<style>
+.listjs table {
+ /*   table-layout: fixed; */
+    width: 100%;
+}
+
+.list td {
+    border:solid 1px #eee;
+}
+
+.list td.table-link {
+    text-decoration: underline;
+    color: #428bca;
+    cursor: pointer;
+}
+
+.listjs input {
+    border: solid 1px #ccc;
+    border-radius: 5px;
+    padding: 7px 14px;
+    margin-bottom: 10px
+}
+
+.listjs input:focus {
+    outline: none;
+    border-color:#aaa;
+}
+
+.pagination {
+    display: inline-block;
+}
+
+.pagination li {
+    list-style-type: none;
+    display: inline-block;
+    padding: 0 .5em;
+}
+
+.pagination li.active {
+    list-style-type: none;
+    display: inline-block;
+    padding: 0 .5em;
+}
+
+.pagination li.active .page {
+    text-decoration: none;
+    color: #428bca;
+    cursor: default;
+}
+
+.page {
+    font-weight: bold;
+    color: black;
+}
+
+.sort {
+    cursor: pointer;
+}
+
+.sort:hover, .sort.asc, .sort.desc {
+    text-decoration: underline;
+    color: #428bca;
+}
+
+.sort:after {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    content: "";
+    position: relative;
+    top: -10px;
+    right: -5px;
+}
+
+.sort.asc:after {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #428bca;
+    content: "";
+    position: relative;
+    top: 4px;
+    right: -5px;
+}
+
+.sort.desc:after {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #428bca;
+    content: "";
+    position: relative;
+    top: -4px;
+    right: -5px;
+}
+
+.user_age, .sexpert, .messages {
+    text-align: center;
+}
+</style>
+</head>
+<body>
+    <div id="admin-container" class="container">
+        <header class="teal-background">
+            <% include ./partials/header %>
+        </header>
+        <div id="chats" class="listjs">
+        <h1>All Chats</h1>
+        <p>Total: <span id="total"></span></p>
+            <input class="search" placeholder="Search" />
+            <ul class="pagination-top pagination"></ul>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="sort" data-sort="created_ts">Created ts - Local Time</th>
+                        <th class="sort" data-sort="user_age">User Age</th>
+                        <th class="sort" data-sort="sexpert">Sexpert</th>
+                        <th class="sort" data-sort="messages">Message Total</th>
+                        <th class="sort" data-sort="closed_ts">Closed ts</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                </tbody>
+            </table>
+            <input class="search" placeholder="Search" />
+            <ul class="pagination-bottom pagination"></ul>
+        </div>
+    </div>
+    <footer>
+        <% include ./partials/footer %>
+        <script type='text/javascript' src='/public/vendor/list.min.js'></script>
+        <script type='text/javascript' src='/public/vendor/list.pagination.min.js'></script>
+        <script type='text/javascript' src='/public/js/chats_list.js'></script>
+    </footer>
+</body>
+</html>
