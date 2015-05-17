@@ -10,8 +10,7 @@
         </header>
         <div class="jumbotron text-center">
             <h1><span class="fa fa-lock"></span>Admin Page</h1>
-            <a href="/tn/admin/chats" class="btn btn-default">View All Chats</a>
-            <a href="/tn/approve" class="btn btn-default">Approve Stories</a>
+            <a href="/admin/chats" class="btn btn-default">View All Chats</a>
             <% if (user.admin) { %>
                 <% include ./partials/admin_only %>
             <% } %>

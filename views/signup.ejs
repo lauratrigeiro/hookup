@@ -11,7 +11,7 @@
     <div id="content">
 	<header>
         <div id="header">
-          <div id="logo"><a href="/tn"><img src="/public/images/logo.png"></a></div>
+          <div id="logo"><a href=<%= route %>><img src="/public/images/logo.png"></a></div>
           <div class="clear"></div>
         </div>
     </header>
@@ -24,7 +24,7 @@
 	<% } %>
 
 	<!-- LOGIN FORM -->
-	<form action="/signup" method="post">
+	<form action="/signup<%= route %>" method="post">
 		<div class="form-group">
 			<label>Email</label>
 			<input type="email" class="form-control" name="email">
@@ -45,14 +45,14 @@
 			<label>Age</label>
 			<input type="number" min="1" max="130" class="form-control" name="age">
 		</div>
-		<p>By signing up, you agree to our <a href="/tn/privacy">terms of use</a></p>
+		<p>By signing up, you agree to our <a href="<%= route %>/privacy">terms of use</a></p>
 		<button type="submit" class="btn btn-warning btn-lg">Signup</button>
 	</form>
 
 	<hr>
 
-	<p>Already have an account? <a href="/tn/login">Login here</a></p>
-	<p>Or go <a href="/tn">home</a>.</p>
+	<p>Already have an account? <a href="<%= route %>/login">Login here</a></p>
+	<p>Or go <a href=<%= route %>>home</a>.</p>
 
 	</div>
 

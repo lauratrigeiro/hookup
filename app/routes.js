@@ -4,7 +4,8 @@ var chats = require('./chats');
 var mailchimp = require('./mailchimp');
 var stories = require('./stories');
 
-var subroute = '/tn';
+var subroutes = '^(\/tn|\/launch)';
+var admin_default_subroute = '/launch';
 
 module.exports = function(app, passport) {
 	// Landing pages (Mailchimp)
@@ -13,21 +14,35 @@ module.exports = function(app, passport) {
 	// =====================================
 	// HOME PAGE (with login links) ========
 	// =====================================
-	app.get(subroute + '/', redirectIfLoggedIn, function(req, res) {
+	app.get(new RegExp(subroutes + '$'), getSubroute, redirectIfLoggedIn, function(req, res) {
+		var welcome_message;
+		if (req.subroute === '/tn') {
+			welcome_message = "We're Hookup, and we'll answer all your sex-related questions. \
+				We're in a beta testing period, and we chose our Tennessee home for first dibs. Go Vols!";
+		} else if (req.subroute === '/launch') {
+			welcome_message = "We're Hookup, and we'll answer all your sex-related questions. \
+				We're in a beta testing period, and we chose New Orleans!";
+		} else {
+			welcome_message = "We're Hookup, and we'll answer all your sex-related questions.";
+		}
+
 		res.render('index.ejs', {
-			is_logged_in : false
+			is_logged_in    : false,
+			route           : req.subroute,
+			welcome_message : welcome_message
 		});
 	});
 
-	app.get(subroute + '/privacy', function(req, res) {
+	app.get(new RegExp(subroutes + '\/privacy$'), getSubroute, function(req, res) {
 		var data_to_send;
 		if (req.isAuthenticated()) {
 			data_to_send = {
 				user : req.user,
-				is_logged_in : true
+				is_logged_in : true,
+				route        : req.subroute
 			};
 		} else {
-			data_to_send = { is_logged_in : false };
+			data_to_send = { is_logged_in : false, route : req.subroute };
 		}
 		res.render('privacy.ejs', data_to_send);
 	});
@@ -36,48 +51,69 @@ module.exports = function(app, passport) {
 	// LOGIN ===============================
 	// =====================================
 	// show the login form
-	app.get(subroute + '/login', redirectIfLoggedIn, function(req, res) {
+	app.get(new RegExp(subroutes + '\/login$'), getSubroute, redirectIfLoggedIn, function(req, res) {
 
 		// render the page and pass in any flash data if it exists
 		res.render('login.ejs', { 
 			message: req.flash('loginMessage'),
-			is_logged_in : false
+			is_logged_in : false,
+			route        : req.subroute
 		});
 	});
 
 	// process the login form
-	app.post('/login', passport.authenticate('local-login', {
-            successRedirect : subroute + '/home', // redirect to the secure profile section
-            failureRedirect : subroute + '/login', // redirect back to the signup page if there is an error
+	app.post('/login/tn', passport.authenticate('local-login', {
+            successRedirect : '/tn/home', // redirect to the secure profile section
+            failureRedirect : '/tn/login', // redirect back to the signup page if there is an error
             failureFlash : true // allow flash messages
 		}),
-        function(req, res) {
-            console.log("hello");
+    function(req, res) {
+      if (req.body.remember) {
+        req.session.cookie.maxAge = 1000 * 60 * 3;
+      } else {
+        req.session.cookie.expires = false;
+      }
+    }
+  );
 
-            if (req.body.remember) {
-              req.session.cookie.maxAge = 1000 * 60 * 3;
-            } else {
-              req.session.cookie.expires = false;
-            }
-        res.redirect(subroute + '/');
-    });
+	app.post('/login/launch', passport.authenticate('local-login', {
+            successRedirect : '/launch/home', // redirect to the secure profile section
+            failureRedirect : '/launch/login', // redirect back to the signup page if there is an error
+            failureFlash : true // allow flash messages
+		}),
+    function(req, res) {
+      if (req.body.remember) {
+        req.session.cookie.maxAge = 1000 * 60 * 3;
+      } else {
+        req.session.cookie.expires = false;
+      }
+    }
+  );
 
 	// =====================================
 	// SIGNUP ==============================
 	// =====================================
 	// show the signup form
-	app.get(subroute + '/signup', redirectIfLoggedIn, function(req, res) {
+	app.get(new RegExp(subroutes + '\/signup$'), getSubroute, redirectIfLoggedIn, function(req, res) {
 		// render the page and pass in any flash data if it exists
 		res.render('signup.ejs', {
 			message: req.flash('signupMessage'),
-			is_logged_in : false
+			is_logged_in : false,
+			route        : req.subroute
 		});
 	});
 
 	// process the signup form
-	app.post('/signup', passport.authenticate('local-signup', {
-		successRedirect : subroute + '/home?new=1', // redirect to the secure profile section
-		failureRedirect : subroute + '/signup', // redirect back to the signup page if there is an error
+	app.post('/signup/tn', passport.authenticate('local-signup', {
+		successRedirect : '/tn/home?new=1', // redirect to the secure profile section
+		failureRedirect : '/tn/signup', // redirect back to the signup page if there is an error
+		failureFlash : true // allow flash messages
+	}));
+
+
+	app.post('/signup/launch', passport.authenticate('local-signup', {
+		successRedirect : '/launch/home?new=1', // redirect to the secure profile section
+		failureRedirect : '/launch/signup', // redirect back to the signup page if there is an error
 		failureFlash : true // allow flash messages
 	}));
 
@@ -99,31 +135,47 @@ module.exports = function(app, passport) {
 	app.get('/stories/unapproved', isSexpert, stories.get_unapproved);
 
 	// Site pages
-	app.get(subroute + '/home', isLoggedIn, function(req, res) {
+	app.get(new RegExp(subroutes + '\/home$'), getSubroute, isLoggedIn, function(req, res) {
+		var home_message;
+		if (req.subroute === '/tn') {
+			home_message = "Thanks for being our Hookup virgins! \
+				And shout out to Sex Week UT for supporting our beta test launch.";
+		} else if (req.subroute === '/launch') {
+			home_message = "Thanks for being our Hookup virgins! \
+				And shout out to New Orleans for supporting our beta test launch.";
+		} else {
+			home_message = "Thanks for being our Hookup virgins!";
+		}
+
 		res.render('home.ejs', {
 			is_logged_in : true,
-			user : req.user // get the user out of session and pass to template
+			user : req.user, // get the user out of session and pass to template
+			route        : req.subroute,
+			home_message : home_message
 		});
 	});
 
-	app.get(subroute + '/ask', isLoggedIn, function(req, res) {
+	app.get(new RegExp(subroutes + '\/ask$'), getSubroute, isLoggedIn, function(req, res) {
 		res.render('ask.ejs', {
 			user : req.user,
-			is_logged_in : true
+			is_logged_in : true,
+			route        : req.subroute
 		});
 	});
 
-	app.get(subroute + '/chat', isLoggedIn, function(req, res) {
+	app.get(new RegExp(subroutes + '\/chat$'), getSubroute, isLoggedIn, function(req, res) {
 		res.render('chat.ejs', {
 			user : req.user,
-			is_logged_in : true
+			is_logged_in : true,
+			route        : req.subroute
 		});
 	});
 
-	app.get(subroute + '/share', isLoggedIn, function(req, res) {
+	app.get(new RegExp(subroutes + '\/share$'), getSubroute, isLoggedIn, function(req, res) {
 		res.render('share.ejs', {
 			user : req.user,
-			is_logged_in : true
+			is_logged_in : true,
+			route        : req.subroute
 		});
 	});
 
@@ -132,10 +184,11 @@ module.exports = function(app, passport) {
 	// =====================================
 	// we will want this protected so you have to be logged in to visit
 	// we will use route middleware to verify this (the isLoggedIn function)
-	app.get(subroute + '/profile', isLoggedIn, function(req, res) {
+	app.get(new RegExp(subroutes + '\/profile$'), getSubroute, isLoggedIn, function(req, res) {
 		res.render('profile.ejs', {
 			is_logged_in : true,
-			user : req.user // get the user out of session and pass to template
+			user : req.user, // get the user out of session and pass to template
+			route        : req.subroute
 		});
 	});
 
@@ -143,44 +196,51 @@ module.exports = function(app, passport) {
 	// LOGOUT ==============================
 	// =====================================
 	app.get('/logout', function(req, res) {
+		var base_url_length = ('http://' + req.headers.host + '/').length;
+		var path = '/' + req.headers.referer.slice(base_url_length).split('/')[0];
 		req.logout();
-		res.redirect(subroute + '/');
+		res.redirect(path);
 	});
 
 	// SEXPERT
-	app.get(subroute + '/sexpert', isSexpert, function(req, res) {
+	app.get(new RegExp(subroutes + '\/sexpert$'), getSubroute, isSexpert, function(req, res) {
 		res.render('sexpert.ejs', {
 			is_logged_in : true,
-			user : req.user
+			user : req.user,
+			route        : req.subroute
 		});
 	});
 
-	app.get(subroute + '/approve', isSexpert, function(req, res) {
+	app.get(new RegExp(subroutes + '\/approve$'), getSubroute, isSexpert, function(req, res) {
 		res.render('approve.ejs', {
 			is_logged_in : true,
-			user : req.user
+			user : req.user,
+			route        : req.subroute
 		});
 	});
 
 	// ADMIN
-	app.get(subroute + '/admin', isEmployee, function(req, res) {
+	app.get('/admin', isEmployee, function(req, res) {
 		res.render('admin.ejs', {
 			is_logged_in : true,
-			user : req.user
+			user : req.user,
+			route        : admin_default_subroute
 		});
 	});
 
-	app.get(subroute + '/admin/chats', isEmployee, function(req, res) {
+	app.get('/admin/chats', isEmployee, function(req, res) {
 		res.render('chats_list.ejs', {
 			is_logged_in : true,
-			user : req.user
+			user : req.user,
+			route        : admin_default_subroute
 		});
 	});
 
-	app.get(subroute + '/admin/chats/:id', isEmployee, function(req, res) {
+	app.get('/admin/chats/:id', isEmployee, function(req, res) {
 		res.render('chat_messages.ejs', {
 			is_logged_in : true,
-			user : req.user
+			user : req.user,
+			route        : admin_default_subroute
 		});
 	});
 
@@ -190,14 +250,18 @@ module.exports = function(app, passport) {
 };
 
 // route middleware to make sure
-function isLoggedIn(req, res, next) {
+function getSubroute(req, res, next) {
+	req.subroute = '/' + req.originalUrl.slice(1).split('/')[0];
+	next();
+}
 
+function isLoggedIn(req, res, next) {
 	// if user is authenticated in the session, carry on
 	if (req.isAuthenticated())
 		return next();
 
 	// if they aren't redirect them to the home page
-	res.redirect(subroute + '/');
+	res.redirect(req.subroute);
 }
 
 function redirectIfLoggedIn(req, res, next) {
@@ -206,7 +270,7 @@ function redirectIfLoggedIn(req, res, next) {
 		return next();
 
 	// if they are redirect them to the home page
-	res.redirect(subroute + '/home');
+	res.redirect(req.subroute + '/home');
 }
 
 function isSexpert(req, res, next) {
@@ -214,11 +278,11 @@ function isSexpert(req, res, next) {
 		if (req.user.sexpert) {
 			return next();
 		} else {
-			res.redirect(subroute + '/home');
+			res.redirect(req.subroute + '/home');
 		}
 	}
 
-	res.redirect(subroute + '/');
+	res.redirect(req.subroute);
 }
 
 function isEmployee(req, res, next) {
@@ -226,11 +290,11 @@ function isEmployee(req, res, next) {
 		if (req.user.employee) {
 			return next();
 		} else {
-			res.redirect(subroute + '/home');
+			res.redirect(admin_default_subroute + '/home');
 		}
 	}
 
-	res.redirect(subroute + '/');
+	res.redirect(admin_default_subroute);
 }
 
 function isAdmin(req, res, next) {
@@ -238,9 +302,9 @@ function isAdmin(req, res, next) {
 		if (req.user.admin) {
 			return next();
 		} else {
-			res.redirect(subroute + '/home');
+			res.redirect(admin_default_subroute + '/home');
 		}
 	}
 
-	res.redirect(subroute + '/');
+	res.redirect(admin_default_subroute);
 }

@@ -10,7 +10,7 @@
     <div id="content">
         <header>
             <div id="header">
-              <div id="logo"><a href="/tn"><img src="/public/images/logo.png"></a></div>
+              <div id="logo"><a href=<%= route %>><img src="/public/images/logo.png"></a></div>
               <div class="clear"></div>
             </div>
         </header>
@@ -23,7 +23,7 @@
             <% } %>
 
             <!-- LOGIN FORM -->
-            <form action="/login" method="post">
+            <form action="/login<%= route %>" method="post">
                 <div class="form-group">
                     <label>Username (not your real name!)</label>
                     <input type="text" class="form-control" name="username">
@@ -42,8 +42,8 @@
 
             <hr>
 
-            <p>Need an account? <a href="/tn/signup">Sign up here</a></p>
-            <p>Or go <a href="/tn">home</a>.</p>
+            <p>Need an account? <a href="<%= route %>/signup">Sign up here</a></p>
+            <p>Or go <a href=<%= route %>>home</a>.</p>
         </div>
         <div class="clear"></div>
     </div>

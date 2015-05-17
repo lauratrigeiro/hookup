@@ -10,7 +10,7 @@
     <div id="content">
       <div id="intro">
         <h1>Welcome to hookup!</h1>
-        <p>Thanks for being our Hookup virgins! And shout out to Sex Week UT for supporting our beta test launch.</p>
+        <p><%= home_message %></p>
         <p id="signup-message"></p>
         <p id="signature">xoxo, <br/><img height="28px" src="/public/images/logo.png" /></p>
         <div class="clear"></div>
@@ -22,13 +22,13 @@
         <p><img src="/public/images/condom_home.png" /></p>
         <h3>Ask A Sexpert</h3>
         <p class="description">Ask a sexpert any question you have about sex or relationships.</p>
-        <p><a class="btn" href="/tn/ask">Ask a Sexpert</a></p>
+        <p><a class="btn" href="<%= route %>/ask">Ask a Sexpert</a></p>
       </div>
       <div class="c2r">
         <p><img src="/public/images/grape_home.png" /></p>
         <h3>Share your story</h3>
         <p class="description">Read others' funny, embarassing, and moving stories about sex and relationships. Upvote favorites and share your own.</p>
-        <p><a class="btn" href="/tn/share">Story Time</a></p>
+        <p><a class="btn" href="<%= route %>/share">Story Time</a></p>
       </div>
       <div class="clear"></div>
     </div>
