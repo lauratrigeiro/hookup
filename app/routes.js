@@ -180,6 +180,14 @@ module.exports = function(app, passport) {
 		});
 	});
 
+	app.get(new RegExp(subroutes + '\/select$'), getSubroute, /*isLoggedIn,*/ function(req, res) {
+		res.render('select_sexpert.ejs', {
+			user         : /*req.user*/ { username : 'test' },
+			is_logged_in : true,
+			route        : req.subroute
+		});
+	});
+
 	// =====================================
 	// PROFILE SECTION =========================
 	// =====================================
@@ -220,7 +228,7 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.get('/sexperts', isLoggedIn, sexperts.get);
+	app.get('/sexperts',/* isLoggedIn,*/ sexperts.get);
 	app.get('/sexperts/active', isLoggedIn, sexperts.get_active);
 	app.put('/sexperts/active', isSexpert, sexperts.change_active_status);
 

@@ -230,3 +230,40 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 .sexpert-profile #bio { margin-bottom: 40px; }
 
 .sexpert-queue { color: #267F9E; font-size: 12px; margin-left: 85px; margin-top: -10px; }
+
+.sexpert-container {
+  background-color: #fff;
+  margin: 2em;
+  padding: 1em;
+}
+
+.sexpert-container h2 {
+  color: #24B1B1;
+  text-align: center;
+}
+
+.sexpert-list-item {
+  color: black;
+}
+
+.sexpert-container .sexpert-list-item span.username {
+  color: #24B1B1;
+}
+
+.sexpert-container .photo img {
+  width: 100px;
+}
+
+.sexpert-container .sexpert-list-item {
+  width: 100%;
+}
+
+.sexpert-container .sexpert-list-item span {
+  width: 15%;
+  display: inline-block;
+  margin: 1em .75em;
+}
+
+.sexpert-container .second-row {
+  display: inline-block;
+}

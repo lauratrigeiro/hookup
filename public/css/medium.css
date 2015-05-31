@@ -26,3 +26,7 @@
 .question.ask { width: 65%; }
 
 .sexpert-profile { margin-top: 0; }
+
+.sexpert-container { margin: 1em; }
+.sexpert-container ol { list-style: none; padding-left: 0px; }
+.sexpert-container .sexpert-list-item span { margin: 1em .5em; }

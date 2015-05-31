@@ -11,7 +11,7 @@ function get_sexperts(req, res) {
 			});
 		}
 
-		var querystring = 'SELECT a.*, b.username from sexperts a \
+		var querystring = 'SELECT a.*, b.username, b.age from sexperts a \
 			INNER JOIN users b \
 			ON a.sexpert_id = b.id \
 			WHERE test = 0';
@@ -36,8 +36,12 @@ function get_sexperts(req, res) {
 				return {
 					sexpert_id : row.sexpert_id,
 					username   : row.username,
+					age        : row.age,
 					experience : experience,
 					bio        : row.bio,
+					gender     : row.gender,
+					city       : row.city,
+					state      : row.state,
 					active     : row.active ? true : false
 				};
 			});

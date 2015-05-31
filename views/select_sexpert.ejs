@@ -1,0 +1,22 @@
+<html>
+	<head>
+	  <% include ./partials/head %>
+	</head>
+	<body class="teal-background">
+    <header>
+        <% include ./partials/header %>
+        <input type="hidden" id="route" value=<%= route %> />
+    </header>
+    <div class="sexpert-container">
+      <h2>Choose an available sexpert</h2>
+      <ol id="sexpert-list"></ol>
+    </div>
+    <footer>
+        <script src="/public/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+		<script src="/public/js/autosize.js" type="text/javascript"></script>
+		<script src="/public/js/master.js" type="text/javascript"></script>
+        <script src="/public/js/select_sexpert.js" type="text/javascript"></script>
+        <% include ./partials/analytics %>  
+    </footer>
+  </body>
+</html>
