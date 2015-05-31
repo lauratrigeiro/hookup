@@ -92,3 +92,11 @@ body {
 	width: 25%;
 	font-size: 1em;
 }
+
+.hidden-btn {
+	display: none;
+}
+
+button.online-status {
+	border: 2px solid #FF5600;
+}

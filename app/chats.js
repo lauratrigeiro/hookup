@@ -360,15 +360,15 @@ function get_first_message(req, res) {
 }
 
 function get_chat_messages(req, res) {
-	db.get_connection(function(error, conn) {
-		if (!req.params || !req.params.id) {
-			return res.status(400).send({
-				error      : 'Request must include id',
-				details    : { request : req.params },
-				error_type : 'bad request'
-			});
-		}
+	if (!req.params || !req.params.id) {
+		return res.status(400).send({
+			error      : 'Request must include id',
+			details    : { request : req.params },
+			error_type : 'bad request'
+		});
+	}
 
+	db.get_connection(function(error, conn) {
 		if (error) {
 			conn.release();
 			return res.status(502).send({
@@ -381,6 +381,8 @@ function get_chat_messages(req, res) {
 		var chat_id = req.params.id;
 		var querystring = 'SELECT      \
 			UNIX_TIMESTAMP(a.closed_ts) as closed_ts, \
+			a.user_id,                   \
+			a.sexpert_id,                \
 			b.age as user_age,           \
 			c.username as sexpert_username, \
 			d.sender,                    \
@@ -414,8 +416,16 @@ function get_chat_messages(req, res) {
 				});
 			}
 
-			var data = {};
 			var first_row = rows[0];
+			if (!req.user.employee && ((req.user.sexpert && req.user.id !== first_row.sexpert_id) || (!req.user.sexpert && req.user.id !== first_row.user_id))) {
+				return res.status(403).send({
+					error      : 'User does not have permission to view this chat',
+					details    : null,
+					error_type : 'forbidden'
+				});
+			}
+
+			var data = {};
 			data.closed_ts = first_row.closed_ts;
 			data.user_age = first_row.user_age;
 			data.sexpert_username = first_row.sexpert_username;

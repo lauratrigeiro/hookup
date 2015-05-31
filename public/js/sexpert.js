@@ -7,6 +7,23 @@ $(document).ready(function() {
 	var socket = io();
 	socket.emit('new sexpert');
 
+	$('.online-status').click(function() {
+		var active = (this.id === 'online');
+		var $this = $(this);
+		$.ajax({
+			type        : 'PUT',
+			url         : '/sexperts/active',
+			data        : JSON.stringify({
+				active : active
+			}),
+			contentType : 'application/json',
+			success     : function() {
+				$('.online-status.hidden-btn').removeClass('hidden-btn');
+				$this.addClass('hidden-btn');
+			}
+		});
+	});
+
 	$('#waiting').on('click', '.connect', function(e) {
 		e.preventDefault();
 		var chat_id = $(this).data('chat_id');

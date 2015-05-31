@@ -9,7 +9,7 @@ $(document).ready(function() {
 		chat_id = split_query[1];
 		$.ajax({
 			type        : 'GET',
-			url         : '/chats/first?id=' + chat_id,
+			url         : '/chats/' + chat_id,
 	//		contentType : "application/json",
 			success     : function(result) {
 				$('.conversation').append('<li class="user"><p>' + showReturns(result.content) + '</p>\

@@ -2,6 +2,7 @@
 var admin = require('./admin');
 var chats = require('./chats');
 var mailchimp = require('./mailchimp');
+var sexperts = require('./sexperts');
 var stories = require('./stories');
 
 var subroutes = '^(\/tn|\/launch)';
@@ -124,7 +125,7 @@ module.exports = function(app, passport) {
 	app.get('/chats/sexpert', isLoggedIn, chats.sexpert);
 	app.get('/chats/waiting', isSexpert, chats.waiting);
 	app.get('/chats/first', isLoggedIn, chats.first);
-	app.get('/chats/:id', isEmployee, chats.get_chat_messages);
+	app.get('/chats/:id', isLoggedIn, chats.get_chat_messages);
 	app.get('/chats', isEmployee, chats.get_all_chats);
 
 	// SHARE YOUR STORY
@@ -219,6 +220,10 @@ module.exports = function(app, passport) {
 		});
 	});
 
+	app.get('/sexperts', isLoggedIn, sexperts.get);
+	app.get('/sexperts/active', isLoggedIn, sexperts.get_active);
+	app.put('/sexperts/active', isSexpert, sexperts.change_active_status);
+
 	// ADMIN
 	app.get('/admin', isEmployee, function(req, res) {
 		res.render('admin.ejs', {
@@ -261,7 +266,7 @@ function isLoggedIn(req, res, next) {
 		return next();
 
 	// if they aren't redirect them to the home page
-	res.redirect(req.subroute);
+	res.redirect(req.subroute || admin_default_subroute + '/login');
 }
 
 function redirectIfLoggedIn(req, res, next) {
