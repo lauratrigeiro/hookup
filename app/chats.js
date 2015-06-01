@@ -120,6 +120,51 @@ function new_message(chat_id, sender, content, callback) {
 // 	});
 // }
 
+function select_sexpert(req, res) {
+	if (!req.body || !req.body.chat_id || !req.body.sexpert_id) {
+		return res.status(400).send({
+			error      : 'Request must include chat_id, user_id, sexpert_id',
+			details    : { request : req.body },
+			error_type : 'bad request'
+		});
+	}
+
+	db.get_connection(function(error, conn) {
+		if (error) {
+			conn.release();
+			return res.status(502).send({
+				error      : 'database error',
+				details    : error,
+				error_type : 'database connection'
+			});
+		}
+
+		var chat_id = req.body.chat_id;
+		var sexpert_id = req.body.sexpert_id;
+		var querystring = 'UPDATE chats SET sexpert_id = ? WHERE chat_id = ? AND user_id = ?';
+		conn.query(querystring, [sexpert_id, chat_id, req.user.id], function(err, rows) {
+			conn.release();
+			if (err) {
+				return res.status(502).send({
+					error      : 'database error',
+					details    : err,
+					error_type : 'database query'
+				});
+			}
+
+			if (!rows.changedRows) {
+				return res.status(403).send({
+					error      : 'User does not have permission to view this chat',
+					details    : null,
+					error_type : 'forbidden'
+				});
+			}
+
+			return res.status(200).send({ chat_id : chat_id, sexpert_id : sexpert_id });
+		});
+	});
+}
+
 function connect(req, res) {
 	if (!req.body || !req.body.chat_id) {
 		return res.status(400).send({
@@ -512,3 +557,4 @@ exports.waiting = get_waiting_chats;
 exports.first = get_first_message;
 exports.get_chat_messages = get_chat_messages;
 exports.get_all_chats = get_all_chats;
+exports.select_sexpert = select_sexpert;

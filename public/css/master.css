@@ -258,6 +258,10 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
   width: 100%;
 }
 
+.sexpert-container li .second-row span.gender {
+  width: 25%;
+}
+
 .sexpert-container .sexpert-list-item span {
   width: 15%;
   display: inline-block;

@@ -1,5 +1,25 @@
 $(document).ready(function() {
 	display_sexperts();
+
+	$('#sexpert-list').on('click', '.select-sexpert-btn', function() {
+		// TODO: add sexpert_id to chat --> adapt chats.connect
+		alert($(this).data('sexpert_id'));
+		$.ajax({
+      type        : 'POST',
+      url         : '/chats/create',
+      contentType : "application/json",
+      data        : JSON.stringify({
+        content   : $questionField.val()
+      }),
+      success     : function(result) {
+        window.open($('#route').val() + '/chat?id=' + result.chat_id, 'blank');
+      },
+      error       : function() {
+        $('#message').html("Sorry, an error occurred.");
+      },
+      async: false
+    });  
+  };
 });
 
 function display_sexperts() {
@@ -23,7 +43,7 @@ function display_sexperts() {
 	    			<span class="age">' + sexpert.age + ' years old</span>\
 	    			<span class=gender">' + sexpert.gender + '</span>\
 	    		</div>\
-    			<button class="select-sexpert-btn btn">Select</button>\
+    			<button class="select-sexpert-btn btn" data-sexpert_id="' + sexpert.sexpert_id + '">Select</button>\
     		</li>');
 			});	
 		}

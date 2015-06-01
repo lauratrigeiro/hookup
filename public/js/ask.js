@@ -5,7 +5,7 @@
 })(jQuery);
 
 var AskSexpert = (function ($) {
-  var sexpertCount = Math.floor(Math.random() * 4); //generating random data for testing
+//  var sexpertCount = Math.floor(Math.random() * 4); //generating random data for testing
   var $form = $('.question-form');
   var $submit = $form.find('#submit');
   var $questionField = $form.find('#description');
@@ -14,6 +14,7 @@ var AskSexpert = (function ($) {
   var $sexpertQueue = $form.find('#sexpert-queue');
   
   var init = function (){
+    getAvailableSexperts();
     $editButton.click(editQuestion);
     $submit.click(submitQuestion);
   };
@@ -52,6 +53,16 @@ var AskSexpert = (function ($) {
       async: false
     });  
   };
+
+  var getAvailableSexperts() {
+    $.ajax({
+      type        : 'GET',
+      url         : '/sexperts/active',
+      success     : function(data) {
+        $('#sexpert-count').text(data.active);
+      }
+    });
+  }
   
   var myPublic = {
     init: init
