@@ -1,10 +1,10 @@
-(function ($) {	
-  $(function(){
+(function($) {
+  $(function() {
     AskSexpert.init();
   });  
 })(jQuery);
 
-var AskSexpert = (function ($) {
+var AskSexpert = (function($) {
 //  var sexpertCount = Math.floor(Math.random() * 4); //generating random data for testing
   var $form = $('.question-form');
   var $submit = $form.find('#submit');
@@ -12,23 +12,24 @@ var AskSexpert = (function ($) {
   var $editButton = $form.find('#edit-question');
   var $availableSexperts = $form.find('#available-sexperts');
   var $sexpertQueue = $form.find('#sexpert-queue');
-  
+
   var init = function (){
-    getAvailableSexperts();
+ //   getAvailableSexperts();
+
     $editButton.click(editQuestion);
     $submit.click(submitQuestion);
   };
-  
+
   var editQuestion = function(e){
     $editButton.hide();
     $availableSexperts.hide();
     $sexpertQueue.hide();
-    $questionField.prop('disabled', false).focus(); 
+    $questionField.prop('disabled', false).focus();
     $submit.val('Hookup');
     return false;
     e.stopImmediatePropagation();
   };
-  
+
   var submitQuestion = function(){
     $submit.val('Just a moment to hookup...');
     $questionField.prop('disabled', true);
@@ -45,28 +46,33 @@ var AskSexpert = (function ($) {
         content   : $questionField.val()
       }),
       success     : function(result) {
-        window.open($('#route').val() + '/chat?id=' + result.chat_id, 'blank');
+   //     if ($group === 'A') {
+          window.location.href = $('#route').val() + '/select?id=' + result.chat_id;
+        // } else {
+        //   window.open($('#route').val() + '/chat?id=' + result.chat_id, 'blank');
+        // }
       },
       error       : function() {
         $('#message').html("Sorry, an error occurred.");
       },
       async: false
-    });  
+    });
   };
 
-  var getAvailableSexperts() {
+  var getAvailableSexperts = function() {
     $.ajax({
       type        : 'GET',
       url         : '/sexperts/active',
       success     : function(data) {
         $('#sexpert-count').text(data.active);
+        $availableSexperts.show();
       }
     });
-  }
-  
+  };
+
   var myPublic = {
     init: init
   };
-  
+
   return myPublic;
 })(jQuery);

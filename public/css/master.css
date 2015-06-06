@@ -108,6 +108,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 
 #chat { background: #37B1B2; height: 100%; }
 #chat h1 { color: #fff; font-size: 3em; margin-left: 35px; }
+#chat #end-chat { background-color: #FF5600; color: #fff; font-size: 18px; width: 100%; padding: 30px 0; margin: 3em 0; border: none; }
 
 #content { padding: 30px; }
 

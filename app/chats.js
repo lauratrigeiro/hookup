@@ -429,6 +429,7 @@ function get_chat_messages(req, res) {
 			a.user_id,                   \
 			a.sexpert_id,                \
 			b.age as user_age,           \
+			b.username,                  \
 			c.username as sexpert_username, \
 			d.sender,                    \
 			d.content,                   \
@@ -472,7 +473,9 @@ function get_chat_messages(req, res) {
 
 			var data = {};
 			data.closed_ts = first_row.closed_ts;
+			data.username = first_row.username;
 			data.user_age = first_row.user_age;
+			data.sexpert_id = first_row.sexpert_id;
 			data.sexpert_username = first_row.sexpert_username;
 
 			data.messages = rows.map(function(row) {
