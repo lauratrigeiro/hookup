@@ -78,18 +78,24 @@ module.exports = function(app, passport) {
   );
 
 	app.post('/login/launch', passport.authenticate('local-login', {
-            successRedirect : '/launch/home', // redirect to the secure profile section
+   //         successRedirect : '/launch/home', // redirect to the secure profile section
             failureRedirect : '/launch/login', // redirect back to the signup page if there is an error
             failureFlash : true // allow flash messages
 		}),
-    function(req, res) {
-      if (req.body.remember) {
-        req.session.cookie.maxAge = 1000 * 60 * 3;
-      } else {
-        req.session.cookie.expires = false;
-      }
-    }
-  );
+		function(req, res) {
+			if (req.body.remember) {
+				req.session.cookie.maxAge = 1000 * 60 * 3;
+			} else {
+				req.session.cookie.expires = false;
+			}
+
+			if (req.body.redirect_url) {
+				res.redirect('/launch/chat?id=' + req.body.redirect_url);
+			} else {
+				res.redirect('/launch/home');
+			}
+		}
+	);
 
 	// =====================================
 	// SIGNUP ==============================
@@ -165,7 +171,7 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.get(new RegExp(subroutes + '\/chat$'), getSubroute, isLoggedIn, function(req, res) {
+	app.get(new RegExp(subroutes + '\/chat$'), getSubroute, isLoggedInAndRedirectBack, function(req, res) {
 		res.render('chat.ejs', {
 			user : req.user,
 			is_logged_in : true,
@@ -267,6 +273,20 @@ module.exports = function(app, passport) {
 function getSubroute(req, res, next) {
 	req.subroute = '/' + req.originalUrl.slice(1).split('/')[0];
 	next();
+}
+
+function isLoggedInAndRedirectBack(req, res, next) {
+	// if user is authenticated in the session, carry on
+	if (req.isAuthenticated())
+		return next();
+
+	var redirect_url = '';
+	if (req.query && req.query.id) {
+		redirect_url = req.query.id;
+	}
+
+	// if they aren't redirect them to the home page
+	res.redirect(req.subroute + '/login?id=' + redirect_url || admin_default_subroute + '/login?id=' + redirect_url);
 }
 
 function isLoggedIn(req, res, next) {

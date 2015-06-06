@@ -36,7 +36,7 @@
                     <label>Remember Me</label>
                     <input type="checkbox" class="form-control" name="remember" value="yes">
                 </div>
-
+                <input type="hidden" id="redirect-url" name="redirect_url" value="" />
                 <button type="submit" class="btn btn-warning btn-lg">Login</button>
             </form>
 
@@ -50,6 +50,14 @@
     <footer>
         <% include ./partials/footer %>
         <% include ./partials/analytics %>
+        <script>
+        $(document).ready(function() {
+            var split_query = window.location.search.split('=');
+            if (split_query[0] === '?id') {
+                $('#redirect-url').val(split_query[1]);
+            }
+        });
+        </script>
     </footer>
 </body>
 </html>
