@@ -100,3 +100,8 @@ body {
 button.online-status {
 	border: 2px solid #FF5600;
 }
+
+span.awaiting-response {
+	color: #fff;
+}
+

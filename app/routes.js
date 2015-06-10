@@ -131,6 +131,7 @@ module.exports = function(app, passport) {
 	app.post('/chats/select_sexpert', isLoggedIn, chats.select_sexpert);
 	app.get('/chats/sexpert', isLoggedIn, chats.sexpert);
 	app.get('/chats/waiting', isSexpert, chats.waiting);
+	app.get('/chats/open', isSexpert, chats.get_open_chats_by_sexpert);
 	app.get('/chats/first', isLoggedIn, chats.first);
 	app.get('/chats/:id', isLoggedIn, chats.get_chat_messages);
 	app.get('/chats', isEmployee, chats.get_all_chats);
