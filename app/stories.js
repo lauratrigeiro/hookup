@@ -224,9 +224,49 @@ function get_unapproved(req, res) {
 	get_stories(req, res, false);
 }
 
+function edit_story(req, res) {
+  var story_id = req.body.story_id;
+  var content = req.body.content;
+
+  connect_to_db(function(conn){
+    var querystring = 'UPDATE stories_unapproved SET content = ? WHERE story_id = ?';
+
+    conn.query(querystring, [content, story_id], function(err, rows, fields) {
+      if (err) return generic_query_error(err, conn);
+    });
+    return res.status(200).send({});
+  });
+}
+
+
+function connect_to_db(callback){
+	db.get_connection(function(error, conn) {
+		if (error) {
+			conn.release();
+			return res.status(502).send({
+				error      : 'database error',
+				details    : error,
+				error_type : 'database connection'
+			});
+		} else {
+      callback(conn);
+    }
+  });
+}
+
+function generic_query_error(err,conn){
+  conn.release();
+  return res.status(502).send({
+    error      : 'database error',
+    details    : err,
+    error_type : 'database query'
+  });
+}
+
 exports.create = create_story;
 exports.approve = approve_story;
 exports.deny = deny_story;
 exports.upvote = user_upvote;
 exports.get_approved = get_approved;
 exports.get_unapproved = get_unapproved;
+exports.edit = edit_story;

@@ -139,6 +139,7 @@ module.exports = function(app, passport) {
 	app.post('/stories/create', isLoggedIn, stories.create);
 	app.post('/stories/approve', isSexpert, stories.approve);
 	app.post('/stories/deny', isSexpert, stories.deny);
+	app.post('/stories/edit', isSexpert, stories.edit);
 	app.post('/stories/upvote', isLoggedIn, stories.upvote);
 	app.get('/stories/approved', isLoggedIn, stories.get_approved);
 	app.get('/stories/unapproved', isSexpert, stories.get_unapproved);
