@@ -46,12 +46,15 @@ function create_story(req, res) {
 function approve_story(req, res) {
 	upvote(req, res, true);
 }
+function deny_story(req, res) {
+  upvote(req, res, true, true);
+}
 
 function user_upvote(req, res) {
 	upvote(req, res, false);
 }
 
-function upvote(req, res, approve) {
+function upvote(req, res, approve, deny) {
 	if (!req.body || !req.body.story_id) {
 		return res.status(400).send({
 			error      : 'Request must include story_id',
@@ -91,6 +94,7 @@ function upvote(req, res, approve) {
 				});
 			}
 
+
 			if (!approve) {
 				querystring = 'UPDATE stories_approved SET upvotes = upvotes + 1 WHERE story_id = ?';
 			} else {
@@ -108,6 +112,15 @@ function upvote(req, res, approve) {
 						error_type : 'database query'
 					});
 				}
+
+      if (deny){
+        querystring = 'UPDATE stories_approved SET upvotes = 0 where story_id = ?';
+        conn.query(querystring, [story_id], function(err){
+          if (err) {
+            conn.release();
+          }
+        });
+      }
 
 				var upvote_id = utils.uuid();
 				var querystring = 'INSERT INTO upvotes (upvote_id, story_id, user_id) VALUES (?, ?, ?)';
@@ -168,7 +181,7 @@ function get_stories(req, res, approved) {
 		var querystring;
 		if (approved) {
 			querystring = 'SELECT story_id, content, upvotes, UNIX_TIMESTAMP(created_ts) created \
-				FROM stories_approved ORDER BY created_ts DESC LIMIT 10 OFFSET ?';
+				FROM stories_approved WHERE upvotes > 0 ORDER BY created_ts DESC LIMIT 10 OFFSET ?';
 		} else {
 			querystring = 'SELECT story_id, content, UNIX_TIMESTAMP(created_ts) created \
 				FROM stories_unapproved ORDER BY created_ts ASC LIMIT 10 OFFSET ?';
@@ -213,6 +226,7 @@ function get_unapproved(req, res) {
 
 exports.create = create_story;
 exports.approve = approve_story;
+exports.deny = deny_story;
 exports.upvote = user_upvote;
 exports.get_approved = get_approved;
 exports.get_unapproved = get_unapproved;

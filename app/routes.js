@@ -55,7 +55,7 @@ module.exports = function(app, passport) {
 	app.get(new RegExp(subroutes + '\/login$'), getSubroute, redirectIfLoggedIn, function(req, res) {
 
 		// render the page and pass in any flash data if it exists
-		res.render('login.ejs', { 
+		res.render('login.ejs', {
 			message: req.flash('loginMessage'),
 			is_logged_in : false,
 			route        : req.subroute
@@ -138,6 +138,7 @@ module.exports = function(app, passport) {
 	// SHARE YOUR STORY
 	app.post('/stories/create', isLoggedIn, stories.create);
 	app.post('/stories/approve', isSexpert, stories.approve);
+	app.post('/stories/deny', isSexpert, stories.deny);
 	app.post('/stories/upvote', isLoggedIn, stories.upvote);
 	app.get('/stories/approved', isLoggedIn, stories.get_approved);
 	app.get('/stories/unapproved', isSexpert, stories.get_unapproved);

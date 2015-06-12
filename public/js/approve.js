@@ -20,8 +20,22 @@ $(document).ready(function() {
 				$approveButton.text('Approved');
 				$approveButton.prop('disabled', true);
 				$approveButton.addClass('disabled');
-			}  
-		});	
+			}
+		});
+	});
+	$('#stories').on('click', '.deny-button', function() {
+		$approveButton = $(this);
+		$.ajax({
+			type         : 'POST',
+			url          : '/stories/deny',
+			data         : JSON.stringify({
+				story_id : $(this).data('story_id')
+			}),
+			contentType  : "application/json",
+			success      : function(data) {
+				$approveButton.parents('.story-container').remove();
+			}
+		});
 	});
 });
 
@@ -33,16 +47,19 @@ function loadStories(offset) {
 			data.forEach(function(story) {
 				$('#stories').append('<div class="story-container">\
 	      			<div class="story">' + showReturns(story.content) + '</div>\
-	      			<div class="votes"><button type="button" class="approve-button btn" data-story_id="' + 
-	      			story.story_id + '">Approve</button></div>\
+	      			<div class="votes"><button type="button" class="approve-button btn" data-story_id="' +
+	      			story.story_id + '">Approve</button>\
+              <button type="button" class="deny-button btn" data-story_id="' +
+	      			story.story_id + '">Deny</button>\
+              </div>\
 	      			<div class="byline">\
 	      				<img src="/public/images/clock.png" /><span class="date">' +
 	      				writeDate(story.created) + '</span><span class="author"></span></div>\
 	      			<div class="clear"></div>\
 	      		</div>');
 			});
-			
-			$('#load-more').data('offset', offset + 10);	
+
+			$('#load-more').data('offset', offset + 10);
 		}
 	});
 }
