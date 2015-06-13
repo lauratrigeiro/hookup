@@ -188,9 +188,9 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.get(new RegExp(subroutes + '\/select$'), getSubroute, /*isLoggedIn,*/ function(req, res) {
+	app.get(new RegExp(subroutes + '\/select$'), getSubroute, isLoggedIn, function(req, res) {
 		res.render('select_sexpert.ejs', {
-			user         : /*req.user*/ { username : 'test' },
+			user         : req.user,
 			is_logged_in : true,
 			route        : req.subroute
 		});

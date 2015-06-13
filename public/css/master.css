@@ -233,6 +233,8 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 
 .sexpert-queue { color: #267F9E; font-size: 12px; margin-left: 85px; margin-top: -10px; }
 
+body.select-sexpert > p, body.select-sexpert > h2 { color: #fff; text-align: center; margin: .25em auto; }
+
 .sexpert-container { background-color: #fff; margin: 2em; padding: 1em; font-size: 16px; }
 .sexpert-container h2 { color: #24B1B1; text-align: center; }
 .sexpert-container ol { list-style: none; padding-left: 0px; }
@@ -244,8 +246,6 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 .sexpert-container .sexpert-list-item span.experience, .sexpert-container .sexpert-list-item span.age { width: 8%; }
 .sexpert-container .sexpert-list-item span.bio { width: 35%; vertical-align: top; padding-top: 1.25em; }
 .sexpert-container .sexpert-list-item button.select-sexpert-btn { border-radius: 5px; }
-
-
 
 .sexpert-container .online-status { text-align: center; width: 60px; margin-left: 0px; }
 .sexpert-container .online-status > span { width: 100%; margin: 0 auto; }
