@@ -9,7 +9,15 @@ var statuses = {
   denied:    2
 }
 
+// Possible personalities for discussion
+var personalities = {
+  drdick: "drdick",
+  susanb: "susanb",
+  jack:   "jack"
+}
+
 // PUBLIC INTERFACE
+exports.personalities = personalities;
 exports.statuses = statuses;
 exports.create = create_story;
 exports.approve = approve_story;
@@ -126,7 +134,7 @@ function get_stories(req, res, story_status) {
     }
 
     var q = '\
-          SELECT story_id, content, upvotes, UNIX_TIMESTAMP(created_ts) created \
+          SELECT story_id, content, upvotes, discussion, UNIX_TIMESTAMP(created_ts) created \
           FROM stories_approved WHERE status = ? ORDER BY created_ts DESC \
           LIMIT 10 OFFSET ?';
 
@@ -136,7 +144,8 @@ function get_stories(req, res, story_status) {
           story_id   : row.story_id,
           content    : row.content,
           created    : row.created,
-          upvotes    : row.upvotes
+          upvotes    : row.upvotes,
+          discussion : row.discussion
         };
       });
 
