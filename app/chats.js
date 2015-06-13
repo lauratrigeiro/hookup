@@ -1,4 +1,4 @@
-var mailer = require('./mailer');
+var mandrill = require('./mandrill');
 var utils = require('./utils');
 
 var db = require('../config/database');
@@ -128,9 +128,9 @@ function new_message(chat_id, sender, content, user_online, callback) {
 
 				// Otherwise send email to recipient
 				if (!sender) {
-					mailer.send_sexpert_chat_notification(select_rows[0].email);
+					mandrill.send_sexpert_chat_notification(select_rows[0].email);
 				} else {
-					mailer.send_user_chat_notification(select_rows[0].email, chat_id);
+					mandrill.send_user_chat_notification(select_rows[0].email, chat_id);
 				}
 
 				callback(null, message_id);
@@ -245,7 +245,7 @@ function select_sexpert(req, res) {
 				res.status(200).send({ chat_id : chat_id, sexpert_id : sexpert_id });
 				console.log(req.headers.host);
 				if (req.headers.host !== 'localhost:3000')
-					mailer.send_sexpert_chat_notification(inner_rows[0].email);
+					mandrill.send_sexpert_chat_notification(inner_rows[0].email);
 			});
 		});
 	});

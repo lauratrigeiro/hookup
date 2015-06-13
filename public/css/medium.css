@@ -28,5 +28,8 @@
 .sexpert-profile { margin-top: 0; }
 
 .sexpert-container { margin: 1em; }
-.sexpert-container ol { list-style: none; padding-left: 0px; }
-.sexpert-container .sexpert-list-item span { margin: 1em .5em; }
+.sexpert-container div.row { display: block; width: 100%; }
+.sexpert-container .sexpert-list-item span { margin: 1em .25em; }
+.sexpert-container .sexpert-list-item span.experience, .sexpert-container .sexpert-list-item span.age { width: initial; }
+.sexpert-container .sexpert-list-item span.age { margin-right: 0em; }
+.sexpert-container .sexpert-list-item span.bio { width: 75%; padding-top: 0em; vertical-align: middle; margin-right: 1em; }

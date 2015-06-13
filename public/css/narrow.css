@@ -39,5 +39,7 @@
 .sexpert-container { padding: 1em 0em; }
 .sexpert-container ol { text-align: center; }
 .sexpert-container .select-sexpert-btn { width: 75%; }
-.sexpert-container .second-row { width: 100%; }
+.sexpert-container div.narrow-row { display: block; width: 100%; }
+.sexpert-container .sexpert-list-item { margin: 1em auto; } 
 .sexpert-container .sexpert-list-item span { width: initial; }
+.sexpert-container .online-status span.circle-container { margin-bottom: 1em; }

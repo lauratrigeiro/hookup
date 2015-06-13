@@ -26,7 +26,9 @@ $(document).ready(function() {
 
 	$('#waiting').on('click', '.connect', function(e) {
 		e.preventDefault();
-		if ($('.online-status').attr('id') === 'online') {
+		$('#alert').empty();
+
+		if ($('.online-status.hidden-btn').attr('id') === 'offline') {
 			$('#alert').text('Please change your status to ONLINE before starting a chat');
 			return;
 		}
@@ -97,7 +99,10 @@ $(document).ready(function() {
 
 	$('#chat-windows').on('submit', '.message-form', function(e) {
 		e.preventDefault();
-		if ($('.online-status').attr('id') === 'online') {
+		if ($('#alert').text() !== 'There are currently no users waiting to hookup.') {
+			$('#alert').empty();
+		}
+		if ($('.online-status.hidden-btn').attr('id') === 'offline') {
 			$('#alert').text('Please change your status to ONLINE before sending a message');
 			return;
 		}
