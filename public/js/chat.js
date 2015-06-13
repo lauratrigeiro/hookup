@@ -78,7 +78,7 @@ $(document).ready(function() {
 	});
 
 	$('#end-chat').click(function() {
-		socket.disconnect();
+//		socket.disconnect();
 		socket.emit('user end chat');
 		$('.conversation').append('<li class="sexpert"><p>You ended this chat. Thanks for hooking up!</p>\
 			<p class="byline"><span class="author">' + sexpert_name + '</span> \
@@ -135,6 +135,18 @@ $(document).ready(function() {
 			answered at ' + getCurrentTime(new Date()) + '</p>\
 			<p class="avatar"><img src="' + sexpert_src + '-small.png" /></p></li>');
 		$('#description').prop('disabled', true);
+		$('#submit').prop('disabled', true);
+		$('#end-chat').prop('disabled', true);
+		socket.disconnect();
+	});
+
+	socket.on('chat closed', function() {
+		$('.conversation').append('<li class="sexpert"><p>The previous message did not send. This chat has already been closed.</p>\
+			<p class="byline"><span class="author">' + sexpert_name + '</span> \
+			answered at ' + getCurrentTime(new Date()) + '</p>\
+			<p class="avatar"><img src="' + sexpert_src + '-small.png" /></p></li>');
+		$('#description').prop('disabled', true);
+		$('#description').attr('placeholder', '');
 		$('#submit').prop('disabled', true);
 		$('#end-chat').prop('disabled', true);
 		socket.disconnect();

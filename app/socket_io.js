@@ -12,6 +12,7 @@ function init(server) {
 		console.log('someone connected');
 
 		socket.on('new sexpert', function() {
+			console.log('sexpert join room');
 			socket.join('sexperts');
 		});
 
@@ -29,7 +30,7 @@ function init(server) {
 			if (chats[chat_id] && chats[chat_id].sexpert) {
 				chats[chat_id].user = socket;
 				console.log('user connected');
-				chats[chat_id].sexpert.emit('user connected', { chat_id : chat_id });
+				chats[chat_id].sexpert.emit('user connected', chat_id);
 				socket.emit('connected to sexpert', data.sexpert_id);
 			} else {
 				chats[chat_id] = {};
@@ -58,7 +59,7 @@ function init(server) {
 			// user already joined socket
 			if (chats[chat_id] && chats[chat_id].user) {
 				chats[chat_id].sexpert = socket;
-				socket.emit('user connected', { chat_id : chat_id });
+				socket.emit('user connected', chat_id);
 				chats[chat_id].user.emit('connected to sexpert', data.sexpert_id);
 				return;
 			}
@@ -104,6 +105,10 @@ function init(server) {
 			}
 
 			chats_api.new_message(chat_id, 0, data, false, function(err, result) {
+				if (err && err.closed) {
+					socket.emit('closed chat', chat_id);
+				}
+
 				if (err) {
 					console.log(err);
 				} else {
@@ -133,6 +138,10 @@ function init(server) {
 			}
 
 			chats_api.new_message(chat_id, 1, data.message, chats[chat_id].user, function(err, result) {
+				if (err && err.closed) {
+					socket.emit('closed chat', chat_id);
+				}
+
 				if (err) {
 					console.log(err);
 				} else {
@@ -159,6 +168,7 @@ function init(server) {
 
 				console.log('user end chat ' + chat_id);
 				chats[chat_id] = null;
+				socket.disconnect();
 			});
 		});
 
@@ -184,6 +194,7 @@ function init(server) {
 
 		socket.on('disconnect', function() {
 			console.log('someone disconnected');
+	//		console.log(socket);
 			if (!socket.chat_id || !chats[socket.chat_id]) {
 				console.log('no socket chat_id to disconnect');
 				return;
@@ -192,28 +203,22 @@ function init(server) {
 			var chat_id = socket.chat_id;
 
 			if (socket.type === 'sexpert') {
-				if (!chats[chat_id].sexpert) {
-					console.log('sexpert disconnected without valid chats object');
+				if (!chats[chat_id].user) {
+					console.log('sexpert disconnected without attached user');
 					return;
 				}
 
-				if (chats[chat_id].user) {
-					chats[chat_id].user.emit('sexpert disconnected');
-				}
-
+				chats[chat_id].user.emit('sexpert disconnected');
 				chats[chat_id].sexpert = null;
 				return;
 			}
 
 			if (!chats[chat_id].sexpert) {
-				console.log('user disconnected without valid chats object');
+				console.log('user disconnected without attached sexpert');
 				return;
 			}
 
-			if (chats[chat_id].sexpert) {
-				chats[chat_id].sexpert.emit('user disconnected', chat_id);
-			}
-
+			chats[chat_id].sexpert.emit('user disconnected', chat_id);
 			chats[chat_id].user = null;
 		});
 

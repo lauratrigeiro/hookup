@@ -65,56 +65,63 @@ function new_message(chat_id, sender, content, user_online, callback) {
 			return callback(error);
 		}
 
-		var message_id = utils.uuid();
-		var querystring = 'INSERT INTO messages (message_id, chat_id, sender, content) VALUES (?, ?, ?, ?)';
-		var params = [message_id, chat_id, sender, content];
-		conn.query(querystring, params, function(err, rows) {
-			if (err) {
+		var select_querystring;
+
+		// if sender is a sexpert and user is not online, get user's email
+		if (sender) {
+			select_querystring = 'SELECT \
+			a.closed_ts,             \
+			b.email                  \
+			FROM chats a             \
+			INNER JOIN users b       \
+				ON a.user_id = b.id    \
+			WHERE a.chat_id = ?';
+		// if sender is a user, get sexpert's email and if they're online
+		} else {
+			select_querystring = 'SELECT \
+			a.closed_ts,             \
+			b.email,                 \
+			c.active                 \
+			FROM chats a             \
+			INNER JOIN users b       \
+				ON a.sexpert_id = b.id \
+			INNER JOIN sexperts c    \
+				ON a.sexpert_id = c.sexpert_id \
+			WHERE a.chat_id = ?';
+		}
+
+		conn.query(select_querystring, [chat_id], function(select_err, select_rows) {
+			if (select_err) {
 				conn.release();
-				return callback(err);
+				return callback(select_err);
 			}
 
-			// if sender is a sexpert and user is online, don't send an email
-			if (sender && user_online) {
+			if (!select_rows.length) {
 				conn.release();
-				return callback(null, message_id);
+				return callback('Invalid chat_id');
 			}
 
-			var select_querystring;
-
-			// if sender is a sexpert and user is not online, get user's email
-			if (sender) {
-				select_querystring = 'SELECT \
-				b.email                  \
-				FROM chats a             \
-				INNER JOIN users b       \
-					ON a.user_id = b.id    \
-				WHERE a.chat_id = ?';
-			// if sender is a user, get sexpert's email and if they're online
-			} else {
-				select_querystring = 'SELECT \
-				b.email,                 \
-				c.active                 \
-				FROM chats a             \
-				INNER JOIN users b       \
-					ON a.sexpert_id = b.id \
-				INNER JOIN sexperts c    \
-					ON a.sexpert_id = c.sexpert_id \
-				WHERE a.chat_id = ?';
+			if (select_rows[0].closed_ts) {
+				return callback({ closed : true });
 			}
 
-			conn.query(select_querystring, [chat_id], function(select_err, select_rows) {
+			var recipient = select_rows[0];
+
+			var message_id = utils.uuid();
+			var querystring = 'INSERT INTO messages (message_id, chat_id, sender, content) VALUES (?, ?, ?, ?)';
+			var params = [message_id, chat_id, sender, content];
+			conn.query(querystring, params, function(err, rows) {
 				conn.release();
-				if (select_err) {
-					return callback(select_err);
+				if (err) {
+					return callback(err);
 				}
 
-				if (!select_rows.length) {
-					return callback('Invalid chat_id');
+				// if sender is a sexpert and user is online, don't send an email
+				if (sender && user_online) {
+					return callback(null, message_id);
 				}
 
 				// if sender is a user and sexpert is online, don't need to send email
-				var recipient = select_rows[0];
 				if (!sender && recipient.active) {
 					return callback(null, message_id);
 				}
@@ -195,7 +202,9 @@ function select_sexpert(req, res) {
 
 		var chat_id = req.body.chat_id;
 		var sexpert_id = req.body.sexpert_id;
-		var querystring = 'UPDATE chats SET sexpert_id = ? WHERE chat_id = ? AND user_id = ?';
+		var querystring = 'UPDATE chats SET sexpert_id = ? \
+		WHERE chat_id = ? AND user_id = ? AND sexpert_id IS NULL';
+
 		conn.query(querystring, [sexpert_id, chat_id, req.user.id], function(err, rows) {
 			if (err) {
 				conn.release();
@@ -209,7 +218,7 @@ function select_sexpert(req, res) {
 			if (!rows.changedRows) {
 				conn.release();
 				return res.status(403).send({
-					error      : 'User does not have permission to view this chat',
+					error      : 'User does not have permission to view this chat or sexpert already selected',
 					details    : null,
 					error_type : 'forbidden'
 				});
@@ -280,7 +289,7 @@ function connect(req, res) {
 
 function disconnect(chat_id, callback) {
 	if (!chat_id) {
-		return callback("Not a valid chat_id");
+		return callback('Not a valid chat_id');
 	}
 
 	db.get_connection(function(error, conn) {

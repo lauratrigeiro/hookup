@@ -21,7 +21,7 @@ $(document).ready(function() {
 				sexpert_id : sexpert_id
       }),
       success     : function(result) {
-				window.open($('#route').val() + '/chat?id=' + result.chat_id, 'blank');
+				window.location.href($('#route').val() + '/chat?id=' + result.chat_id, 'blank');
 			},
       error       : function() {
 				$('#message').html('Sorry, an error occurred.');

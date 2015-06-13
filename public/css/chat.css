@@ -34,6 +34,15 @@ body {
 	border: none;
 	padding: 10px;
 }
+
+.message-form textarea:disabled {
+	background-color: #C9CCC8;
+}
+
+.message-form button:disabled {
+	color: red;
+	cursor: default;
+}
 	      
 .messages {
 	list-style-type: none;

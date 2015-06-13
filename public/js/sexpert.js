@@ -26,6 +26,11 @@ $(document).ready(function() {
 
 	$('#waiting').on('click', '.connect', function(e) {
 		e.preventDefault();
+		if ($('.online-status').attr('id') === 'online') {
+			$('#alert').text('Please change your status to ONLINE before starting a chat');
+			return;
+		}
+
 		var chat_id = $(this).data('chat_id');
 		var username = $(this).text();
 		var $waitingItem = $(this).closest('.waiting-item');
@@ -92,12 +97,18 @@ $(document).ready(function() {
 
 	$('#chat-windows').on('submit', '.message-form', function(e) {
 		e.preventDefault();
+		if ($('.online-status').attr('id') === 'online') {
+			$('#alert').text('Please change your status to ONLINE before sending a message');
+			return;
+		}
+
 		var $message = $(this).find('textarea');
 	//	alert('chat_id: ' + $(this).data('chat') + ', message: ' + $message.val());
 		socket.emit('sexpert message', {
 			chat_id : $(this).data('chat'),
 			message : $message.val()
 		});
+
 		$(this).prev('.messages').append('<li>' + showReturns($message.val()) + '</li>    \
 			<li class="sexpert-message">Sent by ' + sexpert_name + ' at ' + getCurrentTime(new Date()) + '</li>');
 		$message.val('');
@@ -123,6 +134,7 @@ $(document).ready(function() {
 	});
 
 	socket.on('update waiting', function() {
+		console.log('refresh waiting');
 		refreshWaiting();
 	});
 
@@ -132,6 +144,19 @@ $(document).ready(function() {
 			<li class="user-message">Sent by ' + $chat_form.data('user') + ' at ' + getCurrentTime(new Date()) + '</li>');
 		$chat_form.closest('.messages-container').addClass('active');
 
+	});
+
+	socket.on('closed chat', function(data) {
+		var $chat_form = $('#chat-windows form[data-chat="' + data + '"]');
+		$chat_form.prev('.messages').append('<li>The previous message did not send. This chat has already been closed.</li>    \
+			<li class="user-message">Sent by ' + $chat_form.data('user') + ' at ' + getCurrentTime(new Date()) + '</li>');
+		var $messages_container = $chat_form.closest('.messages-container');
+		$messages_container.removeClass('active');
+		$messages_container.addClass('ended');
+		$chat_form.find('.send-chat').prop('disabled', true);
+		$chat_form.find('.end-chat').prop('disabled', true);
+		$messages_container.find('.message').prop('disabled', true);
+		refreshWaiting();
 	});
 
 	socket.on('user end chat', function(data) {
@@ -176,14 +201,16 @@ function refreshWaiting() {
 		contentType : 'application/json',
 		success     : function(data) {
 			var appendString = '';
-			data.forEach(function(row) {
-				var awaiting_response = (row.sender === 0) ? '*** awaiting your response' : '';
-				appendString += '<li class="waiting-item"><a href="#" class="connect" data-chat_id="'
-					+ row.chat_id + '" data-user_id="' + row.user_id + '">' + row.username
-					+ '</a>, <span class="age"> age: ' + (row.age || '?') + ', </span><span class="created-ts">sent: '
-					+ getCurrentTime(new Date(row.created_ts), true) + ': </span><span class="content">' + row.content + '</span>\
-					<span class="awaiting-response">' + awaiting_response + '</span></li>';
-			});
+			if (data) {
+				data.forEach(function(row) {
+					var awaiting_response = (row.sender === 0) ? '*** awaiting your response' : '';
+					appendString += '<li class="waiting-item"><a href="#" class="connect" data-chat_id="'
+						+ row.chat_id + '" data-user_id="' + row.user_id + '">' + row.username
+						+ '</a>, <span class="age"> age: ' + (row.age || '?') + ', </span><span class="created-ts">sent: '
+						+ getCurrentTime(new Date(row.created_ts), true) + ': </span><span class="content">' + row.content + '</span>\
+						<span class="awaiting-response">' + awaiting_response + '</span></li>';
+				});
+			}
 
 			if (!appendString) {
 				$('#alert').html('There are currently no users waiting to hookup.');

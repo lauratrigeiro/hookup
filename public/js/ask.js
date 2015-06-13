@@ -47,7 +47,7 @@ var AskSexpert = (function($) {
       }),
       success     : function(result) {
    //     if ($group === 'A') {
-          window.location.href = $('#route').val() + '/select?id=' + result.chat_id;
+          window.open = $('#route').val() + '/select?id=' + result.chat_id;
         // } else {
         //   window.open($('#route').val() + '/chat?id=' + result.chat_id, 'blank');
         // }
