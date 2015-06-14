@@ -1,3 +1,4 @@
+var mandrill = require('./mandrill');
 var utils = require('./utils');
 
 var db = require('../config/database');
@@ -53,9 +54,9 @@ function create_chat(req, res) {
 	});
 }
 
-function new_message(chat_id, sender, content, callback) {
+function new_message(chat_id, sender, content, user_online, callback) {
 	if (!chat_id || !content) {
-		return callback("Arguments must be valid: " + chat_id + ', ' + content);
+		return callback('Arguments must be valid: ' + chat_id + ', ' + content);
 	}
 
 	db.get_connection(function(error, conn) {
@@ -64,16 +65,76 @@ function new_message(chat_id, sender, content, callback) {
 			return callback(error);
 		}
 
-		var message_id = utils.uuid();
-		var querystring = 'INSERT INTO messages (message_id, chat_id, sender, content) VALUES (?, ?, ?, ?)';
-		var params = [message_id, chat_id, sender, content];
-		conn.query(querystring, params, function(err, rows, fields) {
-			conn.release();
-			if (err) {
-				return callback(err);
+		var select_querystring;
+
+		// if sender is a sexpert and user is not online, get user's email
+		if (sender) {
+			select_querystring = 'SELECT \
+			a.closed_ts,             \
+			b.email                  \
+			FROM chats a             \
+			INNER JOIN users b       \
+				ON a.user_id = b.id    \
+			WHERE a.chat_id = ?';
+		// if sender is a user, get sexpert's email and if they're online
+		} else {
+			select_querystring = 'SELECT \
+			a.closed_ts,             \
+			b.email,                 \
+			c.active                 \
+			FROM chats a             \
+			INNER JOIN users b       \
+				ON a.sexpert_id = b.id \
+			INNER JOIN sexperts c    \
+				ON a.sexpert_id = c.sexpert_id \
+			WHERE a.chat_id = ?';
+		}
+
+		conn.query(select_querystring, [chat_id], function(select_err, select_rows) {
+			if (select_err) {
+				conn.release();
+				return callback(select_err);
 			}
 
-			callback(null, message_id);
+			if (!select_rows.length) {
+				conn.release();
+				return callback('Invalid chat_id');
+			}
+
+			if (select_rows[0].closed_ts) {
+				return callback({ closed : true });
+			}
+
+			var recipient = select_rows[0];
+
+			var message_id = utils.uuid();
+			var querystring = 'INSERT INTO messages (message_id, chat_id, sender, content) VALUES (?, ?, ?, ?)';
+			var params = [message_id, chat_id, sender, content];
+			conn.query(querystring, params, function(err, rows) {
+				conn.release();
+				if (err) {
+					return callback(err);
+				}
+
+				// if sender is a sexpert and user is online, don't send an email
+				if (sender && user_online) {
+					return callback(null, message_id);
+				}
+
+				// if sender is a user and sexpert is online, don't need to send email
+				if (!sender && recipient.active) {
+					return callback(null, message_id);
+				}
+
+				// Otherwise send email to recipient
+				if (!sender) {
+					mandrill.send_sexpert_chat_notification(select_rows[0].email);
+				} else {
+					mandrill.send_user_chat_notification(select_rows[0].email, chat_id);
+				}
+
+				callback(null, message_id);
+			});
 		});
 	});
 }
@@ -141,10 +202,12 @@ function select_sexpert(req, res) {
 
 		var chat_id = req.body.chat_id;
 		var sexpert_id = req.body.sexpert_id;
-		var querystring = 'UPDATE chats SET sexpert_id = ? WHERE chat_id = ? AND user_id = ?';
+		var querystring = 'UPDATE chats SET sexpert_id = ? \
+		WHERE chat_id = ? AND user_id = ? AND sexpert_id IS NULL';
+
 		conn.query(querystring, [sexpert_id, chat_id, req.user.id], function(err, rows) {
-			conn.release();
 			if (err) {
+				conn.release();
 				return res.status(502).send({
 					error      : 'database error',
 					details    : err,
@@ -153,14 +216,37 @@ function select_sexpert(req, res) {
 			}
 
 			if (!rows.changedRows) {
+				conn.release();
 				return res.status(403).send({
-					error      : 'User does not have permission to view this chat',
+					error      : 'User does not have permission to view this chat or sexpert already selected',
 					details    : null,
 					error_type : 'forbidden'
 				});
 			}
 
-			return res.status(200).send({ chat_id : chat_id, sexpert_id : sexpert_id });
+			conn.query('SELECT email from users where id = ?', [sexpert_id], function(inner_err, inner_rows) {
+				conn.release();
+				if (inner_err) {
+					return res.status(502).send({
+						error      : 'database error',
+						details    : inner_err,
+						error_type : 'database query'
+					});
+				}
+
+				if (!inner_rows || !inner_rows.length) {
+					return res.status(400).send({
+						error      : 'Invalid sexpert_id',
+						details    : { sexpert_id : sexpert_id },
+						error_type : 'bad request'
+					});
+				}
+
+				res.status(200).send({ chat_id : chat_id, sexpert_id : sexpert_id });
+				console.log(req.headers.host);
+				if (req.headers.host !== 'localhost:3000')
+					mandrill.send_sexpert_chat_notification(inner_rows[0].email);
+			});
 		});
 	});
 }
@@ -203,7 +289,7 @@ function connect(req, res) {
 
 function disconnect(chat_id, callback) {
 	if (!chat_id) {
-		return callback("Not a valid chat_id");
+		return callback('Not a valid chat_id');
 	}
 
 	db.get_connection(function(error, conn) {
@@ -341,6 +427,63 @@ function get_waiting_chats(req, res) {
 					username   : row.username,
 					age        : row.age,
 					content    : row.content
+				};
+			});
+
+			return res.status(200).send(data);
+		});
+	});
+}
+
+function get_open_chats_by_sexpert(req, res) {
+	db.get_connection(function(error, conn) {
+		if (error) {
+			conn.release();
+			return res.status(502).send({
+				error      : 'database error',
+				details    : error,
+				error_type : 'database connection'
+			});
+		}
+
+		var querystring = 'SELECT \
+			a.chat_id,            \
+			a.user_id,            \
+			b.username,           \
+			b.age,                \
+			c.content,            \
+			c.sender,             \
+			c.created_ts          \
+			FROM chats a          \
+			INNER JOIN users b    \
+				ON a.user_id = b.id      \
+			INNER JOIN messages c        \
+				ON a.chat_id = c.chat_id \
+			WHERE a.sexpert_id = ? AND a.closed_ts IS NULL \
+			AND c.created_ts =  (                          \
+				SELECT MAX(d.created_ts) FROM messages d     \
+				WHERE c.chat_id = d.chat_id                  \
+			)                                              \
+			ORDER BY a.created_ts ASC';
+		conn.query(querystring, [req.user.id], function(err, rows) {
+			conn.release();
+			if (err) {
+				return res.status(502).send({
+					error      : 'database error',
+					details    : err,
+					error_type : 'database query'
+				});
+			}
+
+			var data = rows.map(function(row) {
+				return {
+					chat_id    : row.chat_id,
+					user_id    : row.user_id,
+					created_ts : row.created_ts.toString().slice(0, 25) + 'UTC',
+					username   : row.username,
+					age        : row.age,
+					content    : row.content,
+					sender     : row.sender
 				};
 			});
 
@@ -499,7 +642,7 @@ function get_chat_messages(req, res) {
 }
 
 function get_all_chats(req, res) {
-db.get_connection(function(error, conn) {
+	db.get_connection(function(error, conn) {
 		if (error) {
 			conn.release();
 			return res.status(502).send({
@@ -561,3 +704,4 @@ exports.first = get_first_message;
 exports.get_chat_messages = get_chat_messages;
 exports.get_all_chats = get_all_chats;
 exports.select_sexpert = select_sexpert;
+exports.get_open_chats_by_sexpert = get_open_chats_by_sexpert;
