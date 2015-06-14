@@ -3,6 +3,12 @@ var utils = require('./utils');
 
 var db = require('../config/database');
 
+var statuses = {
+  submitted: 0,
+  approved: 1,
+  denied: 2
+};
+
 function create_chat(req, res) {
 	if (!req.body || !req.body.content) {
 		return res.status(400).send({
@@ -620,6 +626,7 @@ function get_chat_messages(req, res) {
 			data.user_age = first_row.user_age;
 			data.sexpert_id = first_row.sexpert_id;
 			data.sexpert_username = first_row.sexpert_username;
+      data.chat_id = chat_id;
 
 			data.messages = rows.map(function(row) {
 				var sender;
@@ -641,7 +648,15 @@ function get_chat_messages(req, res) {
 	});
 }
 
-function get_all_chats(req, res) {
+function get_submitted_chats(req, res) {
+  get_all_chats(req, res, statuses.submitted);
+}
+
+function get_approved_chats(req, res) {
+  get_all_chats(req, res, statuses.approved);
+}
+
+function get_all_chats(req, res, status) {
 	db.get_connection(function(error, conn) {
 		if (error) {
 			conn.release();
@@ -654,6 +669,7 @@ function get_all_chats(req, res) {
 
 		var querystring = 'SELECT      \
 			a.chat_id,                   \
+      a.status, \
 			d.age AS user_age,           \
 			c.username AS sexpert_username, \
 			(SELECT COUNT(b.message_id)  \
@@ -661,16 +677,20 @@ function get_all_chats(req, res) {
 				WHERE a.chat_id = b.chat_id) AS messages, \
 			UNIX_TIMESTAMP(d.created_ts) as created_ts, \
 			UNIX_TIMESTAMP(a.closed_ts) as closed_ts    \
-			FROM chats a                 \
+			FROM chats a                                \
 			LEFT JOIN users c            \
 				ON a.sexpert_id = c.id     \
 			INNER JOIN users d           \
-				ON a.user_id = d.id        \
-			ORDER BY created_ts DESC';
+				ON a.user_id = d.id '
+      if(status || status === 0){
+        querystring += "WHERE a.status = "+status+" ";
+      }
+			querystring += 'ORDER BY created_ts DESC';
 
 		conn.query(querystring, [], function(err, rows) {
 			conn.release();
 			if (err) {
+        console.log(err)
 				return res.status(502).send({
 					error      : 'database error',
 					details    : err,
@@ -685,7 +705,8 @@ function get_all_chats(req, res) {
 					sexpert_username : row.sexpert_username,
 					messages         : row.messages,
 					created_ts       : row.created_ts,
-					closed_ts        : row.closed_ts
+					closed_ts        : row.closed_ts,
+          status           : row.status
 				};
 			});
 
@@ -693,6 +714,42 @@ function get_all_chats(req, res) {
 		});
 	});
 }
+
+function deny_chat(req, res){
+  set_chat_status(req, res, statuses.denied);
+}
+function approve_chat(req, res){
+  set_chat_status(req, res, statuses.approved);
+}
+function set_chat_status(req, res, status){
+  db.get_connection(function(error, conn) {
+      if (error) {
+        conn.release();
+        return res.status(502).send({
+          error      : 'database error',
+          details    : error,
+          error_type : 'database connection'
+        });
+      }
+
+    var chat_id = req.body.chat_id;
+    var querystring = 'UPDATE chats SET status = ? WHERE chat_id = ?';
+
+    conn.query(querystring, [status, chat_id], function(err, rows, fields) {
+      conn.release();
+      if (err) {
+        return res.status(502).send({
+          error      : 'database error',
+          details    : err,
+          error_type : 'database query'
+        });
+      }
+      console.log("got here");
+      res.status(200).send();
+    });
+  });
+}
+
 
 exports.create = create_chat;
 exports.new_message = new_message;
@@ -703,5 +760,9 @@ exports.waiting = get_waiting_chats;
 exports.first = get_first_message;
 exports.get_chat_messages = get_chat_messages;
 exports.get_all_chats = get_all_chats;
+exports.get_pending_chats = get_submitted_chats;
+exports.get_approved_chats = get_approved_chats;
 exports.select_sexpert = select_sexpert;
 exports.get_open_chats_by_sexpert = get_open_chats_by_sexpert;
+exports.approve_chat = approve_chat;
+exports.deny_chat = deny_chat;

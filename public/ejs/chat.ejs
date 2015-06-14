@@ -1,0 +1,29 @@
+<% function showReturns(str) { %>
+<%   return str.replace(/(?:\r\n|\r|\n)/g, '<br />'); %>
+<% } %>
+
+<% function writeDate(timestamp) { %>
+<%   var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; %>
+<%   var date = new Date(timestamp * 1000); %>
+<%   return ' ' + months[date.getMonth()] + ' ' + date.getDate(); %>
+<% } %>
+
+<% var chat = this.data %>
+<div class="chat" data-chat_id="<%= chat.chat_id %>">
+  <% if(status == "pending") {%>
+    <div class="message-controls">
+      <button class="approve btn">Approve</button>
+      <button class="deny btn">Deny</button>
+    </div>
+  <% } %>
+  <% for(var i2 = 0, len2 = chat.messages.length; i2 < len2; i2++) { %>
+    <% var message = chat.messages[i2] %>
+    <div class="message-content"><%= showReturns(message.content) %></div>
+    <div class="message-footer">
+      <span class="message-sender"><%= message.sender == "Sexpert" ? chat.sexpert_username : chat.username %></span>
+      <%= message.sender == "Sexpert" ? "answered " : "asked " %>
+      <span class="message-ts"><%= writeDate(message.created_ts) %></span>
+    </div>
+    <hr>
+ <% } %>
+</div>

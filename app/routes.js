@@ -129,12 +129,16 @@ module.exports = function(app, passport) {
 	app.post('/chats/new', isLoggedIn, chats.new_message);
 	app.post('/chats/connect', isSexpert, chats.connect);
 	app.post('/chats/select_sexpert', isLoggedIn, chats.select_sexpert);
+  app.post('/chats/approve', isSexpert, chats.approve_chat);
+  app.post('/chats/deny', isSexpert, chats.deny_chat);
 	app.get('/chats/sexpert', isLoggedIn, chats.sexpert);
 	app.get('/chats/waiting', isSexpert, chats.waiting);
 	app.get('/chats/open', isSexpert, chats.get_open_chats_by_sexpert);
 	app.get('/chats/first', isLoggedIn, chats.first);
 	app.get('/chats/:id', isLoggedIn, chats.get_chat_messages);
 	app.get('/chats', isEmployee, chats.get_all_chats);
+	app.get('/chats-approved', isLoggedIn, chats.get_approved_chats);
+	app.get('/chats-pending', isEmployee, chats.get_pending_chats);
 
 	// SHARE YOUR STORY
 	app.post('/stories/create', isLoggedIn, stories.create);
@@ -197,6 +201,24 @@ module.exports = function(app, passport) {
 			route        : req.subroute
 		});
 	});
+
+  app.get(new RegExp(subroutes + '\/feed$'), getSubroute, isLoggedIn, function(req, res){
+    res.render('feed.ejs', {
+      user: req.user,
+      is_logged_in : true,
+      route: req.subroute,
+      status: "approved"
+    });
+  });
+
+  app.get(new RegExp(subroutes + '\/feed-pending$'), getSubroute, isSexpert, function(req, res){
+    res.render('feed.ejs', {
+      user: req.user,
+      is_logged_in : true,
+      route: req.subroute,
+      status: "pending"
+    });
+  });
 
 	// =====================================
 	// PROFILE SECTION =========================

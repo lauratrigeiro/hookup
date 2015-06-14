@@ -267,3 +267,13 @@ body.select-sexpert > p, body.select-sexpert > h2 { color: #fff; text-align: cen
 @media (max-width: 825px) {
   .sexpert-container .sexpert-list-item span.bio { width: 18%; }
 }
+
+
+#chat-feed{ background-color: #ebebeb; color: #444; padding: 20px 0; padding-top: 50px;}
+#chat-feed .chat{ background-color: white; width: 90%; margin: 45px auto; text-align: left; padding: 15px;}
+#chat-feed .message-footer{color: #8E8E8E; font-size: .8em; padding-top: 10px;}
+#chat-feed .chat hr{margin: 10px 0; border: 1px solid #888;}
+#chat-feed .chat hr:last-child{display: none;}
+.big-orange-button {border-radius: 0px!important; width: 300px; padding: 20px; }
+#cherry{ margin: auto; margin-bottom: -50px;}
+#cherry, #cherry img{width: 100px; height: 100px;}

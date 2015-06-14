@@ -1,0 +1,29 @@
+<!-- views/feed.ejs -->
+<!doctype html>
+<html>
+    <head>
+      <% include ./partials/head %>
+    </head>
+    <body id="share">
+    <header>
+        <% include ./partials/header %>
+    </header>
+
+    <div id="share-content">
+      <div id="share-section">
+        <h2>Get Answers to your Question.</h2>
+        <p>Our trained sexperts will provide a response to any topic.</p>
+        <p>Once a question is asked, pick a sexpert to answer. Try it out!</p>
+        <a href="<%= route %>/ask" class="big-orange-button btn">Ask a Question</a>
+      </div>
+    </div>
+    <div id="cherry"><img src="/public/images/cherry-shadow.png"></div>
+    <div id="chat-feed" data-status=<%= status %>>
+    </div>
+    <footer>
+        <% include ./partials/footer %>
+        <% include ./partials/analytics %>
+        <script type='text/javascript' src='/public/js/feed.js'></script>
+    </footer>
+  </body>
+</html>
