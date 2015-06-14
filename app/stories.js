@@ -7,7 +7,7 @@ var statuses = {
   submitted: 0,
   approved:  1,
   denied:    2
-}
+};
 
 // PUBLIC INTERFACE
 exports.statuses = statuses;
@@ -76,7 +76,7 @@ function upvote_story(req, res) {
 
     // Check if a user has upvoted this story yet
     var q = 'SELECT upvote_id FROM upvotes WHERE story_id = ? and user_id = ?';
-    query(conn, q, [story_id, user_id], function(rows, fields) {
+    query(conn, q, [story_id, user_id], false, function(rows, fields) {
       // If the have return 400
       if (rows.length > 0) {
         conn.release();
@@ -161,15 +161,21 @@ function connect_to_db(callback){
   });
 }
 
-function query(conn, q, params, callback){
+function query(conn, q, params, release, callback){
+  if (typeof release === 'function') {
+    callback = release;
+    release = true;
+  }
+
   conn.query(q, params, function(error, rows, fields){
-    conn.release();
     if(error) return generic_query_error(err, conn);
+    if (release) conn.release();
     callback(rows, fields);
   });
 }
 
 function generic_query_error(err,conn){
+  conn.release();
   return res.status(502).send({
     error      : 'database error',
     details    : err,
