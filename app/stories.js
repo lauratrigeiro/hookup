@@ -9,15 +9,7 @@ var statuses = {
   denied:    2
 }
 
-// Possible personalities for discussion
-var personalities = {
-  drdick: "drdick",
-  susanb: "susanb",
-  jack:   "jack"
-}
-
 // PUBLIC INTERFACE
-exports.personalities = personalities;
 exports.statuses = statuses;
 exports.create = create_story;
 exports.approve = approve_story;
