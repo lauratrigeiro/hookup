@@ -63,7 +63,7 @@ function loadStories(offset) {
 				$('#stories').append('<div class="story-container">\
 	      			<div class="story">' + showReturns(story.content) + '</div>\
 	      			<div class="votes"><span class="upvotes" data-story_id="' +
-	      			story.story_id + '">' + (1+story.upvotes) + '</span><img class="upvote-image enabled"\
+	      			story.story_id + '">' + (story.upvotes) + '</span><img class="upvote-image enabled"\
 	      			 src="/public/images/condom_unselected.png" /></div>\
 	      			<div class="byline">\
 	      				<img src="/public/images/clock.png" /><span class="date">' +

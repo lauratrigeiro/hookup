@@ -42,7 +42,7 @@ function create_story(req, res) {
     var story_id = utils.uuid(),
         user_id = req.user.id,
         content = req.body.content,
-        q = 'INSERT INTO stories_approved (story_id, user_id, content) VALUES (?, ?, ?)';
+        q = 'INSERT INTO stories_approved (story_id, user_id, content, created_ts) VALUES (?, ?, ?, NOW())';
     query(conn, q, [story_id, user_id, content], function() {
       res.status(201).send({ story_id : story_id, content : content });
     });
@@ -53,6 +53,7 @@ function approve_story(req, res) {
   connect_to_db(function(conn) {
     var story_id = req.body.story_id,
         q = 'UPDATE stories_approved SET status = ? WHERE story_id = ?';
+    console.log(story_id + "!");
     query(conn, q, [statuses.approved, story_id], function(){
       res.status(200).send();
     });

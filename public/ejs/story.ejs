@@ -11,7 +11,7 @@
 <% for(var i = 0, len = this.length; i < len; i++) { %>
   <% var story = this[i] %>
   <div class="story-container" data-story_id="<%= story.story_id %>"
-       data-discussion="<%= story.discussion %>" data-content="<% story.content %>">
+       data-discussion="<%= story.discussion %>" data-content="<%= story.content %>">
     <div class="story"><%= story.content %></div>
     <div class="votes">
       <button type="button" class="approve-button btn"
@@ -27,7 +27,13 @@
       <span class="author"></span>
     </div>
     <div class="clear"></div>
-    <div class="discussion">
+    <div class="edit-area" style="display:none;">
+      <div class="discussion">
+      </div>
+      <div>
+        <button class='save-button btn'>Save</button>
+        <button class='cancel-button btn'>Cancel</button>
+      </div>
     </div>
   </div>
 <% } %>
