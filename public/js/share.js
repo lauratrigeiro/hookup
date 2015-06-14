@@ -26,8 +26,8 @@ $(document).ready(function() {
 			},
 			error       : function() {
 				$('#alert').html("Sorry, we had trouble submitting your amazing story.");
-			}  
-		});				
+			}
+		});
 	});
 
 	$('#load-more').click(function() {
@@ -49,8 +49,8 @@ $(document).ready(function() {
 				$upvoteImage.prop('src', '/public/images/condom_selected.png')
 				$upvoteImage.css('cursor', 'default');
 				$upvoteImage.removeClass('enabled');
-			}  
-		});	
+			}
+		});
 	});
 });
 
@@ -62,8 +62,8 @@ function loadStories(offset) {
 			data.forEach(function(story) {
 				$('#stories').append('<div class="story-container">\
 	      			<div class="story">' + showReturns(story.content) + '</div>\
-	      			<div class="votes"><span class="upvotes" data-story_id="' + 
-	      			story.story_id + '">' + story.upvotes + '</span><img class="upvote-image enabled"\
+	      			<div class="votes"><span class="upvotes" data-story_id="' +
+	      			story.story_id + '">' + (1+story.upvotes) + '</span><img class="upvote-image enabled"\
 	      			 src="/public/images/condom_unselected.png" /></div>\
 	      			<div class="byline">\
 	      				<img src="/public/images/clock.png" /><span class="date">' +
@@ -71,8 +71,8 @@ function loadStories(offset) {
 	      			<div class="clear"></div>\
 	      		</div>');
 			});
-			
-			$('#load-more').data('offset', offset + 10);	
+
+			$('#load-more').data('offset', offset + 10);
 		}
 	});
 }
