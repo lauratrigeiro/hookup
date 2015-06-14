@@ -79,16 +79,15 @@ function upvote_story(req, res) {
     });
   }
 
-  connect_to_db(function(){
+  connect_to_db(function(conn){
     var story_id = req.body.story_id,
         user_id = req.user.id;
 
     // Check if a user has upvoted this story yet
     var q = 'SELECT upvote_id FROM upvotes WHERE story_id = ? and user_id = ?';
     query(conn, q, [story_id, user_id], function(rows, fields) {
-      // If the have return 400
+      // If they have return 400
       if (rows.length > 0) {
-        conn.release();
         return res.status(400).send({
           error      : 'User has already upvoted this story',
           details    : { request : req.body },
@@ -96,11 +95,13 @@ function upvote_story(req, res) {
         });
       }
 
-      // Otherwise record the upvote
-      var upvote_id = utils.uuid(),
-          q = 'INSERT INTO upvotes (upvote_id, story_id, user_id) VALUES (?, ?, ?)';
-      query(conn, q, [upvote_id, story_id, user_id], function(rows, fields) {
-        return res.status(200).send();
+      connect_to_db(function(conn){
+        // Otherwise record the upvote
+        var upvote_id = utils.uuid(),
+            q = 'INSERT INTO upvotes (upvote_id, story_id, user_id) VALUES (?, ?, ?)';
+        query(conn, q, [upvote_id, story_id, user_id], function(rows, fields) {
+          return res.status(200).send();
+        });
       });
     });
   });
