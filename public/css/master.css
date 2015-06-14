@@ -22,7 +22,7 @@ h2, h3, h4 { color: #fff; font-weight: 100; }
 h4 { color: #267F9E; text-transform: uppercase; }
 
 /* ----------------------- Forms ------------------------- */
-.btn { 
+.btn {
   background: #F1A50B;
   border: 0;
   border-radius: 30px;
@@ -31,19 +31,19 @@ h4 { color: #267F9E; text-transform: uppercase; }
   font-size: 18px;
   display: inline-block;
   padding: 0.5em 1em;
-  text-decoration: none; 
+  text-decoration: none;
 }
 
 textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 20px; width: 85%; }
 
 /* ---------------------- Header ------------------------ */
-.dropdown { 
-  background: #FF6409; 
+.dropdown {
+  background: #FF6409;
   margin-top: 5px;
-  max-width: 200px; 
-  padding-left: 0; 
-  position: absolute; 
-  list-style: none; 
+  max-width: 200px;
+  padding-left: 0;
+  position: absolute;
+  list-style: none;
 }
 .dropdown li { padding: 3px 10px; }
 .dropdown li a { color: #fff; }
@@ -56,15 +56,15 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #menu-toggle { display: none; margin: 0; }
 #menu-toggle a { color: #fff; }
 
-#menu-content { 
+#menu-content {
   background: #092D3C;
-  color: #fff; 
-  margin: 0 27px 0 0 !important; 
-  padding-left: 0px; 
+  color: #fff;
+  margin: 0 27px 0 0 !important;
+  padding-left: 0px;
   position: absolute;
   top: -300px;
   width: 220px;
-  z-index: 1000; 
+  z-index: 1000;
 }
 #menu-content.active { right: 3px; top: 52px !important; }
 #menu-content .dropdown { position: relative; }
@@ -92,7 +92,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #footer #social .fa-stack-1x { color: #122B3D; }
 
 #footer-nav { list-style: none; padding-left: 0px; }
-#footer-nav li { display: inline-block; margin: 0px 3px; } 
+#footer-nav li { display: inline-block; margin: 0px 3px; }
 #footer-nav a { color: #fff; text-decoration: none; }
 
 #footer.early { background: none; }
@@ -169,7 +169,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #home.public #intro p { line-height: 40px; }
 #home.public #intro #join { margin: 40px 0px; }
 #home.public #intro #join .btn { line-height: 28px; margin: 10px 30px; min-width: 120px; }
-#home.public #intro #join #signup { background: #37B1B2; } 
+#home.public #intro #join #signup { background: #37B1B2; }
 
 #home.privacy #policy { text-align: left; margin-bottom: 4em; }
 
@@ -206,6 +206,11 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #share #load-more { margin-bottom: 1em; }
 #share.approve .approve-button.disabled { background-color: gray; cursor: default; }
 
+#share .discussion-message{ min-height: 57px; padding: 20px 0px 0px;}
+#share .discussion-icon{ width: 57px; height: 57px; float: left; padding-right: 1.3rem;}
+#share .discussion-body{ color: #666; }
+#share .discussion-body .name {font-size: 110%; margin-bottom: 5px; color: #444;}
+
 .question { margin: auto; max-width: 500px; text-align: center; }
 .question-form { background: #fff; border-radius: 3px; padding-top: 15px; position: relative; }
 .question-form .btn { border-radius: 0 0 3px 3px; padding: 30px; width: 100%; }
@@ -214,15 +219,15 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 .question-form #available-sexperts { margin-top: 100px; }
 
   .question.ask { height: 400px; margin-top: 10%; width: 45%; }
-  
+
   .question.chat { text-align: center; width: 81%; }
-  .question.chat h4 { 
-    color: #000; 
-    font-weight: 400; 
-    margin-left: 30px; 
-    margin-top: 10px; 
-    text-align: left; 
-    text-transform: none; 
+  .question.chat h4 {
+    color: #000;
+    font-weight: 400;
+    margin-left: 30px;
+    margin-top: 10px;
+    text-align: left;
+    text-transform: none;
   }
 
 .sexpert-profile { background: #fff; margin: -80px auto 40px; padding: 5px 15px; text-align: center; width: 75%; }

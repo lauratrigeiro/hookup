@@ -15,12 +15,19 @@
        data-discussion="<%= story.discussion %>" data-content="<%= story.content %>">
     <div class="story"><%= story.content %></div>
     <div class="votes">
-      <button type="button" class="approve-button btn"
-              data-story_id="<%= story.story_id %>">Approve</button>
-      <button type="button" class="deny-button btn"
-              data-story_id="<%= story.story_id %>">Deny</button>
-      <button type="button" class="edit-button btn"
-              data-story_id="<%= story.story_id %>">Edit</button>
+      <% if(this.mode == "approve") { %>
+        <button type="button" class="approve-button btn" data-story_id="<%= story.story_id %>">Approve</button>
+        <button type="button" class="deny-button btn" data-story_id="<%= story.story_id %>">Deny</button>
+        <button type="button" class="edit-button btn" data-story_id="<%= story.story_id %>">Edit</button>
+      <% } %>
+      <% if(this.mode == "show" ) { %>
+        <% if(story.discussion.length > 0){ %>
+          <span class="upvotes"><%= story.discussion.length %></span>
+          <img class="discussion-image" src="/public/images/comment.png">
+        <% } %>
+        <span class="upvotes" data-story_id="<%= story.story_id %>"><%= story.upvotes %></span>
+        <img class="upvote-image enabled" src="/public/images/condom_unselected.png" />
+      <% } %>
     </div>
     <div class="byline">
       <img src="/public/images/clock.png" />
@@ -29,27 +36,44 @@
     </div>
     <div class="clear"></div>
     <% if(this.mode == "approve") { %>
-    <div class="edit-area" style="display:none;">
-      <div class="discussion">
-        <% for(var i2 = 0, len2 = story.discussion.length; i2 < len2; i2++) { %>
-        <% var d = story.discussion[i2] %>
-          <div class="discussion-message">
-            <button class="remove-discussion">Remove</button>
-            <select name="name">
-              <option value="drdick" <%= d[0]=="drdick"?"selected":"" %> >Dr. Dick</option>
-              <option value="susanb" <%= d[0]=="susanb"?"selected":"" %> >Susan B.</option>
-              <option value="jack" <%= d[0]=="jack"?"selected":"" %> >Jack</option>
-            </select>
-            <textarea><%= d[1] %></textarea>
+      <div class="edit-area" style="display:none;">
+        <div class="discussion">
+          <% for(var i2 = 0, len2 = story.discussion.length; i2 < len2; i2++) { %>
+            <% var d = story.discussion[i2] %>
+              <div class="discussion-message">
+                <button class="remove-discussion">Remove</button>
+                <select name="name">
+                  <option value="drdick" <%= d[0]=="drdick"?"selected":"" %> >Dr. Dick</option>
+                  <option value="susanb" <%= d[0]=="susanb"?"selected":"" %> >Susan B.</option>
+                  <option value="jack" <%= d[0]=="jack"?"selected":"" %> >Jack</option>
+                </select>
+                <textarea><%= d[1] %></textarea>
+              </div>
+          <% } %>
+        </div>
+        <button class="add-discussion btn">Add Discussion</button>
+        <div>
+          <button class='save-button btn'>Save</button>
+          <button class='cancel-button btn'>Cancel</button>
+        </div>
+      </div>
+    <% } %>
+    <% if(this.mode == "show") { %>
+    <% var personalities = {drdick:"Dr. Dick", susanb: "Susan B.", jack: "Jack"} %>
+      <div class="discussion" style="display:none">
+      <% for(var i3 = 0, len3 = story.discussion.length; i3 < len3; i3++) { %>
+        <% var d = story.discussion[i3] %>
+        <div class="discussion-message">
+          <div class="discussion-icon <%= d[0] %>">
+            <img src="/public/images/<%=d[0]%>.png">
           </div>
-        <% } %>
+          <div class="discussion-body">
+            <div class="name"><%= personalities[d[0]] %></div>
+            <div class="says"><%= d[1] %></div>
+          </div>
+        </div>
+      <% } %>
       </div>
-      <button class="add-discussion btn">Add Discussion</button>
-      <div>
-        <button class='save-button btn'>Save</button>
-        <button class='cancel-button btn'>Cancel</button>
-      </div>
-    </div>
     <% } %>
   </div>
 <% } %>

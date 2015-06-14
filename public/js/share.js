@@ -54,36 +54,15 @@ $(document).ready(function() {
 	});
 });
 
+ $('#stories').on('click', '.discussion-image', function(){
+   $(this).parents(".story-container").find(".discussion").toggle();
+ });
+
 function loadStories(offset) {
-	$.ajax({
-		type        : 'GET',
-		url         : '/stories/approved?offset=' + offset,
-		success     : function(data) {
-			data.forEach(function(story) {
-				$('#stories').append('<div class="story-container">\
-	      			<div class="story">' + showReturns(story.content) + '</div>\
-	      			<div class="votes"><span class="upvotes" data-story_id="' +
-	      			story.story_id + '">' + (story.upvotes) + '</span><img class="upvote-image enabled"\
-	      			 src="/public/images/condom_unselected.png" /></div>\
-	      			<div class="byline">\
-	      				<img src="/public/images/clock.png" /><span class="date">' +
-	      				writeDate(story.created) + '</span><span class="author"></span></div>\
-	      			<div class="clear"></div>\
-	      		</div>');
-			});
-
-			$('#load-more').data('offset', offset + 10);
-		}
-	});
+  $.get('/stories/approved?offset='+offset, function(data) {
+      var stories = new EJS({url: "/public/ejs/story.ejs"}).render({data: data, mode: "show"});
+      $('#stories').append(stories);
+      $('#load-more').data('offset', offset + 10);
+  });
 }
 
-function writeDate(timestamp) {
-	// given unix timestamp
-	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-	var date = new Date(timestamp * 1000);
-	return ' ' + months[date.getMonth()] + ' ' + date.getDate();
-}
-
-function showReturns(str) {
-	return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
-}
