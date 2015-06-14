@@ -7,7 +7,7 @@ var statuses = {
   submitted: 0,
   approved:  1,
   denied:    2
-}
+};
 
 // PUBLIC INTERFACE
 exports.statuses = statuses;
@@ -166,14 +166,15 @@ function connect_to_db(callback){
 
 function query(conn, q, params, callback){
   conn.query(q, params, function(error, rows, fields){
-    console.log(error);
     conn.release();
+    if(error) console.log(error);
     if(error) return generic_query_error(err, conn);
     callback(rows, fields);
   });
 }
 
 function generic_query_error(err,conn){
+  conn.release();
   return res.status(502).send({
     error      : 'database error',
     details    : err,

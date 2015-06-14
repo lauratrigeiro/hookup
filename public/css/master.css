@@ -108,7 +108,8 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 
 #chat { background: #37B1B2; height: 100%; }
 #chat h1 { color: #fff; font-size: 3em; margin-left: 35px; }
-#chat #end-chat { background-color: #FF5600; color: #fff; font-size: 18px; width: 100%; padding: 30px 0; margin: 3em 0; border: none; }
+#chat #end-chat { background-color: #FF5600; color: #fff; font-size: 18px; width: 100%; padding: 30px 0; margin: 3em 0; border: none; cursor: pointer;}
+#chat #end-chat:disabled, #chat input:disabled { cursor: default; background-color: #ccc }
 
 #content { padding: 30px; }
 
@@ -237,43 +238,32 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 
 .sexpert-queue { color: #267F9E; font-size: 12px; margin-left: 85px; margin-top: -10px; }
 
-.sexpert-container {
-  background-color: #fff;
-  margin: 2em;
-  padding: 1em;
+body.select-sexpert > p, body.select-sexpert > h2 { color: #fff; text-align: center; margin: .25em auto; }
+
+.sexpert-container { background-color: #fff; margin: 2em; padding: 1em; font-size: 16px; }
+.sexpert-container h2 { color: #24B1B1; text-align: center; }
+.sexpert-container ol { list-style: none; padding-left: 0px; }
+.sexpert-container div.row, .sexpert-container div.narrow-row { display: inline; }
+.sexpert-container .sexpert-list-item { width: 100%; color: black; }
+.sexpert-container .sexpert-list-item span { display: inline-block; margin: 1em .5em; vertical-align: middle; }
+.sexpert-container .sexpert-list-item span.photo, .sexpert-container .sexpert-list-item span.photo img { width: 75px; }
+.sexpert-container .sexpert-list-item span.username { color: #24B1B1; width: 75px; }
+.sexpert-container .sexpert-list-item span.experience, .sexpert-container .sexpert-list-item span.age { width: 8%; }
+.sexpert-container .sexpert-list-item span.bio { width: 35%; vertical-align: top; padding-top: 1.25em; }
+.sexpert-container .sexpert-list-item button.select-sexpert-btn { border-radius: 5px; }
+
+.sexpert-container .online-status { text-align: center; width: 60px; margin-left: 0px; }
+.sexpert-container .online-status > span { width: 100%; margin: 0 auto; }
+.sexpert-container .online-status span.circle-container { margin-bottom : 5px; }
+.sexpert-container .online-status span.circle { border-radius: 50%; width: 16px; height: 16px; display: inline-block; margin: 0 auto; }
+.sexpert-container .online span.circle { background-color: green; }
+.sexpert-container .offline span.circle { background-color: red; }
+.sexpert-container .online-status .online-text { font-size: 12px; color: #aaa; }
+
+@media (max-width: 970px) {
+  .sexpert-container .sexpert-list-item span.bio { width: 25%; }
 }
 
-.sexpert-container h2 {
-  color: #24B1B1;
-  text-align: center;
-}
-
-.sexpert-list-item {
-  color: black;
-}
-
-.sexpert-container .sexpert-list-item span.username {
-  color: #24B1B1;
-}
-
-.sexpert-container .photo img {
-  width: 100px;
-}
-
-.sexpert-container .sexpert-list-item {
-  width: 100%;
-}
-
-.sexpert-container li .second-row span.gender {
-  width: 25%;
-}
-
-.sexpert-container .sexpert-list-item span {
-  width: 15%;
-  display: inline-block;
-  margin: 1em .75em;
-}
-
-.sexpert-container .second-row {
-  display: inline-block;
+@media (max-width: 825px) {
+  .sexpert-container .sexpert-list-item span.bio { width: 18%; }
 }

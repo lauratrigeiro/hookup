@@ -9,9 +9,10 @@ function init(server) {
 	var chats = {};	// username : socket
 
 	io.on('connection', function(socket) {
-		console.log('a user connected');
+		console.log('someone connected');
 
 		socket.on('new sexpert', function() {
+			console.log('sexpert join room');
 			socket.join('sexperts');
 		});
 
@@ -21,18 +22,27 @@ function init(server) {
 				console.log('user join with an invalid chat_id');
 				return;
 			}
+
+			console.log('user join, chat: ' + chat_id);
 			socket.chat_id = chat_id;
 			socket.type = 'user';
-			chats[chat_id] = {};
-			chats[chat_id]['user'] = socket;
-			for (var key in chats) {
-				for (var i in chats[key]) {
-					console.log("chat: " + key + " , " + i);
+			// sexpert has already joined chat
+			if (chats[chat_id] && chats[chat_id].sexpert) {
+				chats[chat_id].user = socket;
+				console.log('user connected');
+				chats[chat_id].sexpert.emit('user connected', chat_id);
+				socket.emit('connected to sexpert', data.sexpert_id);
+			} else {
+				chats[chat_id] = {};
+				chats[chat_id].user = socket;
+				for (var key in chats) {
+					for (var i in chats[key]) {
+						console.log('chat: ' + key + ' , ' + i);
+					}
 				}
+
+				io.to('sexperts').emit('update waiting');
 			}
-
-			io.to('sexperts').emit('update waiting');
-
 	//		console.log("chats: %j", chats);
 		});
 
@@ -42,28 +52,35 @@ function init(server) {
 				console.log('sexpert join with an invalid chat_id');
 				return;
 			}
+
+			console.log('sexpert join: ' + data.sexpert_id + ', chat: ' + chat_id);
+			socket.chat_id = chat_id;
 			socket.type = 'sexpert';
-			if (!chats[chat_id]) {
-				console.log('sexpert join before user join');	// need to wait?
-				socket.emit('user status', false);
+			// user already joined socket
+			if (chats[chat_id] && chats[chat_id].user) {
+				chats[chat_id].sexpert = socket;
+				socket.emit('user connected', chat_id);
+				chats[chat_id].user.emit('connected to sexpert', data.sexpert_id);
 				return;
 			}
-			chats[chat_id]['sexpert'] = socket;
+
+			chats[chat_id] = {};
+			chats[chat_id].sexpert = socket;
+
 			// for (var key_2 in chats) {
 			// 	for (var i_2 in chats[key_2]) {
 			// 		console.log("chat: " + key_2 + " , " + i_2);
 			// 	}
 			// }
-			console.log('sexpert join: ' + data.sexpert_id);
-			socket.emit('user status', true);
-			chats[chat_id]['user'].emit('connected to sexpert', data.sexpert_id);
-			io.to('sexperts').emit('update waiting');
 
+	//		socket.emit('user status', { online: false, chat_id : chat_id });
+	//		chats[chat_id].user.emit('connected to sexpert', data.sexpert_id);
+	//		io.to('sexperts').emit('update waiting');
 		});
 
 		socket.on('user message', function(data) {
 			if (!socket.chat_id) {
-				console.log('user tried to end chat with undefined chat_id on socket');
+				console.log('user tried to send message with undefined chat_id on socket');
 				return;
 			}
 
@@ -71,17 +88,31 @@ function init(server) {
 				console.log('user message with undefined data (messasge)');
 				return;
 			}
-			if (!chats[socket.chat_id] || !chats[socket.chat_id]['sexpert']) {
-				console.log('users message has undefined users object');
+
+			var chat_id = socket.chat_id;
+
+			if (!chats[chat_id]) {
+				console.log('users message has undefined chats object');
 				return;
 			}
-			console.log('user message: ' + socket.chat_id + ', ' + data);
-			chats[socket.chat_id]['sexpert'].emit('new message', { message : data, chat_id : socket.chat_id });
-			chats_api.new_message(socket.chat_id, 0, data, function(err, result) {
+
+			console.log('user message: ' + chat_id + ', ' + data);
+			// if sexpert is in chat
+			if (chats[chat_id].sexpert) {
+				chats[chat_id].sexpert.emit('new message', { message : data, chat_id : chat_id });
+			} else {
+				io.to('sexperts').emit('update waiting');
+			}
+
+			chats_api.new_message(chat_id, 0, data, false, function(err, result) {
+				if (err && err.closed) {
+					socket.emit('closed chat', chat_id);
+				}
+
 				if (err) {
 					console.log(err);
 				} else {
-					console.log("new user message: " + result);
+					console.log('new user message: ' + result);
 				}
 			});
 		});
@@ -92,17 +123,29 @@ function init(server) {
 				if (data) { console.log('chat_id: ' + data.chat_id + ', message: ' + data.message); }
 				return;
 			}
-			console.log('sexpert message: ' + data.chat_id + ', ' + data.message);
-			if (!chats[data.chat_id] || !chats[data.chat_id]['user']) {
-				console.log('sexpert message has undefined users object');
+
+			var chat_id = data.chat_id;
+
+			console.log('sexpert message: ' + chat_id + ', ' + data.message);
+			if (!chats[chat_id]) {
+				console.log('sexpert message has undefined chats object');
 				return;
 			}
-			chats[data.chat_id]['user'].emit('new message', data.message);
-			chats_api.new_message(data.chat_id, 1, data.message, function(err, result) {
+
+			//  user is connected
+			if (chats[chat_id].user) {
+				chats[chat_id].user.emit('new message', data.message);
+			}
+
+			chats_api.new_message(chat_id, 1, data.message, chats[chat_id].user, function(err, result) {
+				if (err && err.closed) {
+					socket.emit('closed chat', chat_id);
+				}
+
 				if (err) {
 					console.log(err);
 				} else {
-					console.log("new sexpert message: " + result);
+					console.log('new sexpert message: ' + result);
 				}
 			});
 		});
@@ -119,12 +162,13 @@ function init(server) {
 					console.log(err);
 				}
 
-				if (chats[chat_id] && chats[chat_id]['sexpert']) {
-					chats[chat_id]['sexpert'].emit('user end chat', chat_id);
+				if (chats[chat_id] && chats[chat_id].sexpert) {
+					chats[chat_id].sexpert.emit('user end chat', chat_id);
 				}
 
 				console.log('user end chat ' + chat_id);
 				chats[chat_id] = null;
+				socket.disconnect();
 			});
 		});
 
@@ -139,8 +183,8 @@ function init(server) {
 					console.log(err);
 				}
 
-				if (chats[chat_id] && chats[chat_id]['user']) {
-					chats[chat_id]['user'].emit('sexpert end chat');
+				if (chats[chat_id] && chats[chat_id].user) {
+					chats[chat_id].user.emit('sexpert end chat');
 				}
 
 				console.log('sexpert end chat ' + chat_id);
@@ -149,43 +193,33 @@ function init(server) {
 		});
 
 		socket.on('disconnect', function() {
-			console.log('someone disconnected'); // remove username
-			if (socket.type === 'sexpert') {
-				for (var key in chats) {
-					if (chats[key] && chats[key]['sexpert'] && chats[key]['sexpert'] === socket && chats[key]['user']) {
-						chats[key]['user'].emit('sexpert disconnected');
-					}
-				}
+			console.log('someone disconnected');
+	//		console.log(socket);
+			if (!socket.chat_id || !chats[socket.chat_id]) {
+				console.log('no socket chat_id to disconnect');
 				return;
 			}
 
 			var chat_id = socket.chat_id;
-			if (!chat_id) {
-				return;
-			}
 
-			var chat = chats[chat_id];
-			if (!chat) {
-				return;
-			}
-			if ('user' in chat) {
-				var user_socket = chat.user;				
-			}
-
-			if ('sexpert' in chat) {
-				var sexpert_socket = chat.sexpert;
-				if (sexpert_socket) {
-					sexpert_socket.emit('user disconnected', chat_id);
+			if (socket.type === 'sexpert') {
+				if (!chats[chat_id].user) {
+					console.log('sexpert disconnected without attached user');
+					return;
 				}
+
+				chats[chat_id].user.emit('sexpert disconnected');
+				chats[chat_id].sexpert = null;
+				return;
 			}
-	//				delete sexpert_socket;
-			// 	}
-			// }
-//			if (user_socket) {
-//				delete user_socket;	
-//			}
-	//		console.log(JSON.stringify(chats));
-//			delete chats[chat_id];
+
+			if (!chats[chat_id].sexpert) {
+				console.log('user disconnected without attached sexpert');
+				return;
+			}
+
+			chats[chat_id].sexpert.emit('user disconnected', chat_id);
+			chats[chat_id].user = null;
 		});
 
 		socket.on('error', function(err) {
