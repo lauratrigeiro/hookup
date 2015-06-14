@@ -172,13 +172,13 @@ function connect_to_db(callback){
 
 function query(conn, q, params, callback){
   conn.query(q, params, function(error, rows, fields){
+    conn.release();
     if(error) return generic_query_error(err, conn);
     callback(rows, fields);
   });
 }
 
 function generic_query_error(err,conn){
-  conn.release();
   return res.status(502).send({
     error      : 'database error',
     details    : err,
