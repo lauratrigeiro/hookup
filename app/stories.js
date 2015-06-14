@@ -117,9 +117,10 @@ function get_unapproved(req, res) {
 function edit_story(req, res) {
   var story_id = req.body.story_id;
   var content = req.body.content;
+  var discussion = req.body.discussion || null;
   connect_to_db(function(conn){
-    var q = 'UPDATE stories_approved SET content = ? WHERE story_id = ?';
-    query(conn, q, [content, story_id], function() {});
+    var q = 'UPDATE stories_approved SET content = ?, discussion = ? WHERE story_id = ?';
+    query(conn, q, [content, discussion, story_id], function() {});
     return res.status(200).send();
   });
 }
@@ -173,6 +174,7 @@ function connect_to_db(callback){
 
 function query(conn, q, params, callback){
   conn.query(q, params, function(error, rows, fields){
+    console.log(error);
     conn.release();
     if(error) return generic_query_error(err, conn);
     callback(rows, fields);

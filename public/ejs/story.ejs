@@ -8,8 +8,9 @@
 <%   return ' ' + months[date.getMonth()] + ' ' + date.getDate(); %>
 <% } %>
 
-<% for(var i = 0, len = this.length; i < len; i++) { %>
-  <% var story = this[i] %>
+<% for(var i = 0, len = this.data.length; i < len; i++) { %>
+  <% var story = this.data[i] %>
+  <% story.discussion = JSON.parse(story.discussion) || [] %>
   <div class="story-container" data-story_id="<%= story.story_id %>"
        data-discussion="<%= story.discussion %>" data-content="<%= story.content %>">
     <div class="story"><%= story.content %></div>
@@ -27,13 +28,28 @@
       <span class="author"></span>
     </div>
     <div class="clear"></div>
+    <% if(this.mode == "approve") { %>
     <div class="edit-area" style="display:none;">
       <div class="discussion">
+        <% for(var i2 = 0, len2 = story.discussion.length; i2 < len2; i2++) { %>
+        <% var d = story.discussion[i2] %>
+          <div class="discussion-message">
+            <button class="remove-discussion">Remove</button>
+            <select name="name">
+              <option value="drdick" <%= d[0]=="drdick"?"selected":"" %> >Dr. Dick</option>
+              <option value="susanb" <%= d[0]=="susanb"?"selected":"" %> >Susan B.</option>
+              <option value="jack" <%= d[0]=="jack"?"selected":"" %> >Jack</option>
+            </select>
+            <textarea><%= d[1] %></textarea>
+          </div>
+        <% } %>
       </div>
+      <button class="add-discussion btn">Add Discussion</button>
       <div>
         <button class='save-button btn'>Save</button>
         <button class='cancel-button btn'>Cancel</button>
       </div>
     </div>
+    <% } %>
   </div>
 <% } %>

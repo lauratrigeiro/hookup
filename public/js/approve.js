@@ -50,13 +50,22 @@ $(document).ready(function() {
   });
 
   $('#stories').on('click', ".save-button", function(){
-    var $storyContainer = $(this).parents('.story-container');
-    var new_content = $storyContainer.find('textarea').val();
-    var story_id = $storyContainer.data('story_id');
+    var $storyContainer = $(this).parents('.story-container'),
+        new_content = $storyContainer.find('textarea').val(),
+        story_id = $storyContainer.data('story_id'),
+        $discussion = $storyContainer.find(".discussion-message"),
+        discussion = [];
+    for(var i = 0, len = $discussion.length; i < len; i++){
+      var node = $discussion[i];
+      discussion.push([$(node).find("select").val(), $(node).find("textarea").val()]);
+    }
+    discussion = JSON.stringify(discussion);
+    console.log(discussion);
     $.post('/stories/edit',
       {
         story_id: story_id,
-        content : new_content
+        content : new_content,
+        discussion: discussion
       },
       function(data) {
         $storyContainer.data('content', new_content);
@@ -64,11 +73,34 @@ $(document).ready(function() {
       }
     );
   });
+
+  $('#stories').on('click', ".add-discussion", function(){
+    var $storyContainer = $(this).parents('.story-container');
+    var $dC = $(this).siblings('.discussion');
+    $dC.append(' \
+      <div class="discussion-message"> \
+        <button class="remove-discussion">Remove</button> \
+        <select name="name"> \
+          <option value="drdick">Dr. Dick</option> \
+          <option value="susanb">Susan B.</option> \
+          <option value="jack">Jack</option> \
+        </select> \
+        <textarea></textarea> \
+      </div> \
+    ');
+  });
+
+
+  $('#stories').on('click', ".remove-discussion", function(){
+    $(this).parent().remove();
+  });
+
+
 });
 
 function loadStories(offset) {
 	$.get('/stories/unapproved?offset='+offset, function(data) {
-      var stories = new EJS({url: "/public/ejs/story.ejs"}).render(data);
+      var stories = new EJS({url: "/public/ejs/story.ejs"}).render({data: data, mode: "approve"});
       $('#stories').append(stories);
 			$('#load-more').data('offset', offset + 10);
 	});
