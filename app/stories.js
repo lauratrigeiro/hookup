@@ -45,7 +45,6 @@ function approve_story(req, res) {
   connect_to_db(function(conn) {
     var story_id = req.body.story_id,
         q = 'UPDATE stories_approved SET status = ? WHERE story_id = ?';
-    console.log(story_id + "!");
     query(conn, q, [statuses.approved, story_id], function(){
       res.status(200).send();
     });
