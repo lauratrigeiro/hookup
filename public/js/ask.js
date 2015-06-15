@@ -15,9 +15,48 @@ var AskSexpert = (function($) {
 
   var init = function (){
  //   getAvailableSexperts();
+  getOpenChats();
 
     $editButton.click(editQuestion);
     $submit.click(submitQuestion);
+
+    $('.user-chats-container').on('click', '.select-chat', function() {
+      window.open($('#route').val() + '/chat?id=' + $(this).data('chat_id'), 'blank');
+    });
+  };
+
+  var getOpenChats = function() {
+    $.ajax({
+      type        : 'GET',
+      url         : '/chats/me',
+      success     : function(data) {
+        if (!data.length) {
+          return;
+        }
+
+        var appendString = '<h2>Open Chats</h2>\
+          <div class="user-chats">\
+            <p class="header-row"><span class="resume-button"></span>\
+              <span class="date">Date</span>\
+              <span class="sexpert">Sexpert</span>\
+              <span class="content">Question</span>\
+            </p>';
+
+        data.forEach(function(row) {
+          appendString += '<p>\
+            <span class="resume-button first"><button class="select-chat btn" data-chat_id="' + row.chat_id + '">Resume Chat</button></span>\
+            <span class="date">' + getCurrentDate(new Date(row.created_ts * 1000)) + '</span>\
+            <span class="sexpert"><span class="sexpert-label">Sexpert: </span>' + row.sexpert_username + '</span>\
+            <span class="content">' + (row.content.length > 50 ? row.content.slice(0, 50) + '...' : row.content) + '</span>\
+            <span class="resume-button last"><button class="select-chat btn" data-chat_id="' + row.chat_id + '">Resume Chat</button></span>\
+          </p>';
+        });
+
+        appendString += '</div>';
+
+        $('.user-chats-container').append(appendString);
+      }
+    });
   };
 
   var editQuestion = function(e){
@@ -69,6 +108,20 @@ var AskSexpert = (function($) {
       }
     });
   };
+
+  var getCurrentDate = function(date) {
+    var month = date.getMonth() + 1;
+    if (month < 10) {
+      month = '0' + month;
+    }
+
+    var day = date.getDate();
+    if (day < 10) {
+      day = '0' + day;
+    }
+
+    return month + '/' + day + '/' + date.getFullYear().toString().slice(2);
+}
 
   var myPublic = {
     init: init

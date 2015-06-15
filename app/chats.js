@@ -498,6 +498,58 @@ function get_open_chats_by_sexpert(req, res) {
 	});
 }
 
+function get_open_chats_by_user(req, res) {
+	db.get_connection(function(error, conn) {
+		if (error) {
+			conn.release();
+			return res.status(502).send({
+				error      : 'database error',
+				details    : error,
+				error_type : 'database connection'
+			});
+		}
+
+		var querystring = 'SELECT \
+			a.chat_id,            \
+			b.username as sexpert_username, \
+			c.content,            \
+			UNIX_TIMESTAMP(c.created_ts) as created_ts \
+			FROM chats a          \
+			INNER JOIN users b    \
+				ON a.sexpert_id = b.id   \
+			INNER JOIN messages c      \
+				ON a.chat_id = c.chat_id \
+			WHERE a.user_id = ? AND a.closed_ts IS NULL    \
+			AND c.created_ts =  (                          \
+				SELECT MIN(d.created_ts) FROM messages d     \
+				WHERE c.chat_id = d.chat_id                  \
+			)                                              \
+			ORDER BY a.created_ts ASC';
+
+		conn.query(querystring, [req.user.id], function(err, rows) {
+			conn.release();
+			if (err) {
+				return res.status(502).send({
+					error      : 'database error',
+					details    : err,
+					error_type : 'database query'
+				});
+			}
+
+			var data = rows.map(function(row) {
+				return {
+					chat_id            : row.chat_id,
+					sexpert_username   : row.sexpert_username,
+					content            : row.content,
+					created_ts         : row.created_ts
+				};
+			});
+
+			return res.status(200).send(data);
+		});
+	});
+}
+
 function get_first_message(req, res) {
 	db.get_connection(function(error, conn) {
 		if (!req.query || !req.query.id) {
@@ -718,9 +770,11 @@ function get_all_chats(req, res, status) {
 function deny_chat(req, res){
   set_chat_status(req, res, statuses.denied);
 }
+
 function approve_chat(req, res){
   set_chat_status(req, res, statuses.approved);
 }
+
 function set_chat_status(req, res, status){
   db.get_connection(function(error, conn) {
       if (error) {
@@ -750,7 +804,6 @@ function set_chat_status(req, res, status){
   });
 }
 
-
 exports.create = create_chat;
 exports.new_message = new_message;
 exports.connect = connect;
@@ -764,5 +817,6 @@ exports.get_pending_chats = get_submitted_chats;
 exports.get_approved_chats = get_approved_chats;
 exports.select_sexpert = select_sexpert;
 exports.get_open_chats_by_sexpert = get_open_chats_by_sexpert;
+exports.get_open_chats_by_user = get_open_chats_by_user;
 exports.approve_chat = approve_chat;
 exports.deny_chat = deny_chat;

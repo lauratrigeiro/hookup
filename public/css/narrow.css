@@ -12,8 +12,22 @@
 .conversation .sexpert { float: none; }
 .conversation .user { float: none; }
 
-.question.ask #description { height: 90% !important; }
-.question.ask { width: 90%; }
+#content { padding: 0px; margin-bottom: 2em;}
+.question.ask #description { height: initial; }
+.question.ask { width: 90%; height: initial; }
+
+.user-chats-container { padding: .25em 0; }
+.user-chats-container h2 { margin-bottom: 0px; }
+.user-chats-container .user-chats span { padding: .25em 0; }
+.user-chats-container .user-chats span.date { display: inline-block; width: initial; }
+.user-chats-container .user-chats span.resume-button.last { display: block; width: 100%; }
+.user-chats-container .user-chats span.resume-button.first { display: none; }
+.user-chats-container .user-chats span.resume-button button { width: 100%; }
+.user-chats-container .user-chats p.header-row { display: none; }
+.user-chats-container .user-chats p { display: block; width: inherit; }
+.user-chats-container .user-chats span.content { display: block; width: 100%; }
+.user-chats-container .user-chats span.sexpert { width: initial; margin-left: 10px; display: inline-block; }
+.user-chats-container .user-chats span.sexpert-label { display: inline-block; margin-right: 5px}
 
 .question.chat { width: 97%; }
 
