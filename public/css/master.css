@@ -226,6 +226,20 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
     text-transform: none; 
   }
 
+.user-chats-container { background-color: #fff; width: 90%; margin: 0 auto; padding: .5em 0; }
+.user-chats-container h2 { color: #267F9E; text-align: center; }
+.user-chats-container .user-chats { padding: .25em 1em; }
+.user-chats-container .user-chats p { display: table-row; width: 100%; }
+.user-chats-container .user-chats p.header-row span { font-weight: bold; }
+.user-chats-container .user-chats span { display: table-cell; padding: .25em .5em; }
+.user-chats-container .user-chats span.date { width: 50px; }
+.user-chats-container .user-chats span.sexpert { width: 80px; }
+.user-chats-container .user-chats span.sexpert-label { display: none; }
+.user-chats-container .user-chats span.content { width: 50%; }
+.user-chats-container .user-chats span.resume-button { width: 100px; }
+.user-chats-container .user-chats span.resume-button button { padding: .5em; border-radius: 5px; }
+.user-chats-container .user-chats span.resume-button.last { display: none; }
+
 .sexpert-profile { background: #fff; margin: -80px auto 40px; padding: 5px 15px; text-align: center; width: 75%; }
 .sexpert-profile #sexpert-content { display: none; }
 .sexpert-profile #name { color: #267F9E; }

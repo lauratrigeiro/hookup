@@ -250,7 +250,7 @@ function getCurrentTime(date, include_day) {
 	minutes = minutes < 10 ? '0' + minutes : minutes;
 	var strTime;
 	if (include_day) {
-		strTime = month + ' ' + day + ' ' + hours + ':' + minutes + ' ' + ampm;
+		strTime = month + '-' + day + ' ' + hours + ':' + minutes + ' ' + ampm;
 	} else {
 		strTime = hours + ':' + minutes + ' ' + ampm;
 	}

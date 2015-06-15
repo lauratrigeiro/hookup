@@ -492,6 +492,58 @@ function get_open_chats_by_sexpert(req, res) {
 	});
 }
 
+function get_open_chats_by_user(req, res) {
+	db.get_connection(function(error, conn) {
+		if (error) {
+			conn.release();
+			return res.status(502).send({
+				error      : 'database error',
+				details    : error,
+				error_type : 'database connection'
+			});
+		}
+
+		var querystring = 'SELECT \
+			a.chat_id,            \
+			b.username as sexpert_username, \
+			c.content,            \
+			UNIX_TIMESTAMP(c.created_ts) as created_ts \
+			FROM chats a          \
+			INNER JOIN users b    \
+				ON a.sexpert_id = b.id   \
+			INNER JOIN messages c      \
+				ON a.chat_id = c.chat_id \
+			WHERE a.user_id = ? AND a.closed_ts IS NULL    \
+			AND c.created_ts =  (                          \
+				SELECT MIN(d.created_ts) FROM messages d     \
+				WHERE c.chat_id = d.chat_id                  \
+			)                                              \
+			ORDER BY a.created_ts ASC';
+
+		conn.query(querystring, [req.user.id], function(err, rows) {
+			conn.release();
+			if (err) {
+				return res.status(502).send({
+					error      : 'database error',
+					details    : err,
+					error_type : 'database query'
+				});
+			}
+
+			var data = rows.map(function(row) {
+				return {
+					chat_id            : row.chat_id,
+					sexpert_username   : row.sexpert_username,
+					content            : row.content,
+					created_ts         : row.created_ts
+				};
+			});
+
+			return res.status(200).send(data);
+		});
+	});
+}
+
 function get_first_message(req, res) {
 	db.get_connection(function(error, conn) {
 		if (!req.query || !req.query.id) {
@@ -694,6 +746,7 @@ function get_all_chats(req, res) {
 	});
 }
 
+exports.get_open_chats_by_user = get_open_chats_by_user;
 exports.create = create_chat;
 exports.new_message = new_message;
 exports.connect = connect;
