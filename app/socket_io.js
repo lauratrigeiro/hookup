@@ -1,6 +1,7 @@
 var socket_io = require('socket.io');
 
 var chats_api = require('./chats');
+var sexperts = require('./sexperts');
 //var utils = require('./utils');
 
 function init(server) {
@@ -11,7 +12,8 @@ function init(server) {
 	io.on('connection', function(socket) {
 		console.log('someone connected');
 
-		socket.on('new sexpert', function() {
+		socket.on('new sexpert', function(data) {
+			socket.sexpert_id = data.sexpert_id;
 			console.log('sexpert join room');
 			socket.join('sexperts');
 		});
@@ -194,7 +196,16 @@ function init(server) {
 
 		socket.on('disconnect', function() {
 			console.log('someone disconnected');
-	//		console.log(socket);
+			// console.log(socket);
+
+			if (socket.sexpert_id) {
+				sexperts.change_active_status_internal(socket.sexpert_id, false, function(err, data) {
+					if (err) {
+						console.log(err);
+					}
+				});
+			}
+
 			if (!socket.chat_id || !chats[socket.chat_id]) {
 				console.log('no socket chat_id to disconnect');
 				return;

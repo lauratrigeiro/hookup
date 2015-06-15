@@ -88,34 +88,41 @@ function change_active_status(req, res) {
 		});
 	}
 
-	db.get_connection(function(error, conn) {
-		if (error) {
-			conn.release();
+	change_active_status_internal(req.user.id, req.body.active, function(err, data) {
+		if (err) {
 			return res.status(502).send({
 				error      : 'database error',
-				details    : error,
-				error_type : 'database connection'
+				details    : err,
+				error_type : 'database query'
 			});
 		}
 
-		var active = req.body.active ? 1 : 0;
+		return res.status(200).send(data);
+	});
+}
+
+function change_active_status_internal(sexpert_id, active_status, callback) {
+	db.get_connection(function(error, conn) {
+		if (error) {
+			conn.release();
+			return callback(true);
+		}
+
+		var active = active_status ? 1 : 0;
 		var querystring = 'UPDATE sexperts SET active = ? WHERE sexpert_id = ?';
-		var params = [active, req.user.id];
+		var params = [active, sexpert_id];
 		conn.query(querystring, params, function(err, rows) {
 			conn.release();
 			if (err) {
-				return res.status(502).send({
-					error      : 'database error',
-					details    : err,
-					error_type : 'database query'
-				});
+				return callback(true);
 			}
 
-			return res.status(200).send({ active : active });
+			return callback(null, { active : active });
 		});
 	});
 }
 
 exports.change_active_status = change_active_status;
+exports.change_active_status_internal = change_active_status_internal;
 exports.get = get_sexperts;
 exports.get_active = get_active;
