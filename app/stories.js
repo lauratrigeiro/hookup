@@ -34,7 +34,7 @@ function create_story(req, res) {
     var story_id = utils.uuid(),
         user_id = req.user.id,
         content = req.body.content,
-        q = 'INSERT INTO stories_approved (story_id, user_id, content, created_ts) VALUES (?, ?, ?, NOW())';
+        q = 'INSERT INTO stories_approved (story_id, user_id, content) VALUES (?, ?, ?)';
     query(conn, q, [story_id, user_id, content], function() {
       res.status(201).send({ story_id : story_id, content : content });
     });
@@ -70,15 +70,16 @@ function upvote_story(req, res) {
     });
   }
 
-  connect_to_db(function(conn){
+  connect_to_db(function(conn) {
     var story_id = req.body.story_id,
         user_id = req.user.id;
 
     // Check if a user has upvoted this story yet
     var q = 'SELECT upvote_id FROM upvotes WHERE story_id = ? and user_id = ?';
-    query(conn, q, [story_id, user_id], function(rows, fields) {
+    query(conn, q, [story_id, user_id], false, function(rows, fields) {
       // If they have return 400
       if (rows.length > 0) {
+        conn.release();
         return res.status(400).send({
           error      : 'User has already upvoted this story',
           details    : { request : req.body },
@@ -86,13 +87,11 @@ function upvote_story(req, res) {
         });
       }
 
-      connect_to_db(function(conn){
-        // Otherwise record the upvote
-        var upvote_id = utils.uuid(),
-            q = 'INSERT INTO upvotes (upvote_id, story_id, user_id) VALUES (?, ?, ?)';
-        query(conn, q, [upvote_id, story_id, user_id], function(rows, fields) {
-          return res.status(200).send();
-        });
+      // Otherwise record the upvote
+      var upvote_id = utils.uuid(),
+          q = 'INSERT INTO upvotes (upvote_id, story_id, user_id) VALUES (?, ?, ?)';
+      query(conn, q, [upvote_id, story_id, user_id], function(rows, fields) {
+        return res.status(200).send();
       });
     });
   });
@@ -164,11 +163,17 @@ function connect_to_db(callback){
   });
 }
 
-function query(conn, q, params, callback){
-  conn.query(q, params, function(error, rows, fields){
+function query(conn, q, params, release, callback) {
+  if (typeof release === 'function') {
+    callback = release;
+    release = true;
+  }
+
+  conn.query(q, params, function(error, rows, fields) {
     conn.release();
     if(error) console.log(error);
     if(error) return generic_query_error(err, conn);
+    if (release) conn.release();
     callback(rows, fields);
   });
 }
