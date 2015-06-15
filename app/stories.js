@@ -70,14 +70,14 @@ function upvote_story(req, res) {
     });
   }
 
-  connect_to_db(function(){
+  connect_to_db(function(conn) {
     var story_id = req.body.story_id,
         user_id = req.user.id;
 
     // Check if a user has upvoted this story yet
     var q = 'SELECT upvote_id FROM upvotes WHERE story_id = ? and user_id = ?';
     query(conn, q, [story_id, user_id], false, function(rows, fields) {
-      // If the have return 400
+      // If they have return 400
       if (rows.length > 0) {
         conn.release();
         return res.status(400).send({
@@ -108,9 +108,10 @@ function get_unapproved(req, res) {
 function edit_story(req, res) {
   var story_id = req.body.story_id;
   var content = req.body.content;
+  var discussion = req.body.discussion || null;
   connect_to_db(function(conn){
-    var q = 'UPDATE stories_approved SET content = ? WHERE story_id = ?';
-    query(conn, q, [content, story_id], function() {});
+    var q = 'UPDATE stories_approved SET content = ?, discussion = ? WHERE story_id = ?';
+    query(conn, q, [content, discussion, story_id], function() {});
     return res.status(200).send();
   });
 }
@@ -126,7 +127,7 @@ function get_stories(req, res, story_status) {
     }
 
     var q = '\
-          SELECT story_id, content, upvotes, UNIX_TIMESTAMP(created_ts) created \
+          SELECT story_id, content, upvotes, discussion, UNIX_TIMESTAMP(created_ts) created \
           FROM stories_approved WHERE status = ? ORDER BY created_ts DESC \
           LIMIT 10 OFFSET ?';
 
@@ -136,7 +137,8 @@ function get_stories(req, res, story_status) {
           story_id   : row.story_id,
           content    : row.content,
           created    : row.created,
-          upvotes    : row.upvotes
+          upvotes    : row.upvotes,
+          discussion : row.discussion
         };
       });
 
@@ -161,13 +163,14 @@ function connect_to_db(callback){
   });
 }
 
-function query(conn, q, params, release, callback){
+function query(conn, q, params, release, callback) {
   if (typeof release === 'function') {
     callback = release;
     release = true;
   }
 
-  conn.query(q, params, function(error, rows, fields){
+  conn.query(q, params, function(error, rows, fields) {
+    if(error) console.log(error);
     if(error) return generic_query_error(err, conn);
     if (release) conn.release();
     callback(rows, fields);
