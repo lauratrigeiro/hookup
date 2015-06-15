@@ -42,7 +42,7 @@ function display_sexperts() {
 				var sexpert_name = sexpert.username;
 				var sexpert_src = '/public/images/sexperts/' + sexpert_name.toLowerCase();
 				//temporary
-				var sexpert_names = ['jake', 'kaitlin', 'tory'];
+				var sexpert_names = ['jake', 'kaitlin', 'tara s', 'sarah', 'brie', 'steffani' /*', tory'*/];
 				if (sexpert_names.indexOf(sexpert_name.toLowerCase()) < 0) {
 					sexpert_src = '/public/images/sexperts/kristy_profile';
 				}
