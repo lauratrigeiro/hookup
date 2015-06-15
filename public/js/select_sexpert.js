@@ -55,7 +55,7 @@ function display_sexperts() {
 							<span class="username">' + sexpert_name + '</span>\
 						</div>\
 						<div class="narrow-row">\
-							<span class="experience">' + sexpert.experience.slice(0, 1) + ' year<br/> sexpert</span>\
+							<span class="experience">' + parseInt(sexpert.experience) + ' year<br/> sexpert</span>\
 							<span class="age">' + sexpert.age + '<br/>years old</span>\
 						</div>\
 					<div class="row">\
