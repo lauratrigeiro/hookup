@@ -629,6 +629,7 @@ function get_chat_messages(req, res) {
 			UNIX_TIMESTAMP(a.closed_ts) as closed_ts, \
 			a.user_id,                   \
 			a.sexpert_id,                \
+			a.display_username,          \
 			b.age as user_age,           \
 			b.username,                  \
 			c.username as sexpert_username, \
@@ -675,6 +676,7 @@ function get_chat_messages(req, res) {
 			var data = {};
 			data.closed_ts = first_row.closed_ts;
 			data.username = first_row.username;
+			data.display_username = first_row.display_username;
 			data.user_age = first_row.user_age;
 			data.sexpert_id = first_row.sexpert_id;
 			data.sexpert_username = first_row.sexpert_username;
@@ -722,6 +724,7 @@ function get_all_chats(req, res, status, open) {
 		var querystring = 'SELECT      \
 			a.chat_id,                   \
       a.status, \
+      a.display_username,          \
 			d.age AS user_age,           \
 			c.username AS sexpert_username, \
 			(SELECT COUNT(b.message_id)  \
@@ -760,6 +763,7 @@ function get_all_chats(req, res, status, open) {
 				return {
 					chat_id          : row.chat_id,
 					user_age         : row.user_age,
+					display_username : row.display_username,
 					sexpert_username : row.sexpert_username,
 					messages         : row.messages,
 					created_ts       : row.created_ts,
@@ -810,6 +814,44 @@ function set_chat_status(req, res, status){
   });
 }
 
+function set_display_username(req, res) {
+	if (!req.body || !req.body.chat_id || !('display_username' in req.body)) {
+		return res.status(400).send({
+			error      : 'Request must include chat_id, display_username',
+			details    : { request : req.body },
+			error_type : 'bad request'
+		});
+	}
+
+  db.get_connection(function(error, conn) {
+      if (error) {
+        conn.release();
+        return res.status(502).send({
+          error      : 'database error',
+          details    : error,
+          error_type : 'database connection'
+        });
+      }
+
+    var chat_id = req.body.chat_id;
+    var display_username = req.body.display_username || '';
+    var querystring = 'UPDATE chats SET display_username = ? WHERE chat_id = ?';
+
+    conn.query(querystring, [display_username, chat_id], function(err, rows, fields) {
+      conn.release();
+      if (err) {
+        return res.status(502).send({
+          error      : 'database error',
+          details    : err,
+          error_type : 'database query'
+        });
+      }
+
+      res.status(200).send({ result : 'Success' });
+    });
+  });
+}
+
 exports.create = create_chat;
 exports.new_message = new_message;
 exports.connect = connect;
@@ -826,3 +868,4 @@ exports.get_open_chats_by_sexpert = get_open_chats_by_sexpert;
 exports.get_open_chats_by_user = get_open_chats_by_user;
 exports.approve_chat = approve_chat;
 exports.deny_chat = deny_chat;
+exports.set_display_username = set_display_username;

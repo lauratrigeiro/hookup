@@ -14,13 +14,16 @@
     <div class="message-controls">
       <button class="approve btn">Approve</button>
       <button class="deny btn">Deny</button>
+      <input type="text" id="display-username-input" value="<%= chat.display_username || '' %>"/>
+      <button class="display-username btn">Add Display Username</button>
     </div>
   <% } %>
   <% for(var i2 = 0, len2 = chat.messages.length; i2 < len2; i2++) { %>
     <% var message = chat.messages[i2] %>
     <div class="message-content"><%= showReturns(message.content) %></div>
     <div class="message-footer">
-      <span class="message-sender"><%= message.sender == "Sexpert" ? chat.sexpert_username : chat.username %></span>
+      <% var display_username = chat.display_username ? chat.display_username : chat.username; %>
+      <span class="message-sender"><%= message.sender == "Sexpert" ? chat.sexpert_username : display_username %></span>
       <%= message.sender == "Sexpert" ? "answered " : "asked " %>
       <span class="message-ts"><%= writeDate(message.created_ts) %></span>
     </div>

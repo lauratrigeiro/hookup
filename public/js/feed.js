@@ -27,5 +27,23 @@ function loadChats(offset) {
       $chat.remove();
     });
   });
+
+  $('#chat-feed').on('click', '.display-username', function() {
+    var $chat = $(this).parents(".chat");
+    var $input = $chat.find('#display-username-input');
+
+    $.ajax({
+      type        : 'PUT',
+      url         : '/chats/display_username',
+      contentType : "application/json",
+      data        : JSON.stringify({
+        chat_id          : $chat.data("chat_id"),
+        display_username : $input.val()
+      }),
+      success     : function(result) {
+        console.log(result);
+      }
+    });
+  });
 }
 

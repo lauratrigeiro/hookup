@@ -132,6 +132,7 @@ module.exports = function(app, passport) {
 	app.post('/chats/select_sexpert', isLoggedIn, chats.select_sexpert);
   app.post('/chats/approve', isSexpert, chats.approve_chat);
   app.post('/chats/deny', isSexpert, chats.deny_chat);
+  app.put('/chats/display_username', isSexpert, chats.set_display_username);
 	app.get('/chats/sexpert', isLoggedIn, chats.sexpert);
 	app.get('/chats/waiting', isSexpert, chats.waiting);
 	app.get('/chats/me', isLoggedIn, chats.get_open_chats_by_user);
