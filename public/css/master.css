@@ -82,6 +82,8 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 
 /* ---------------------- Footer ------------------------ */
 #footer { background: #092D3C; font-size: 12px; padding: 10px 10px 40px; }
+#footer p.feedback { font-size: 14px; }
+#footer p.feedback a { color: #37B1B2; }
 
 #footer #contact { font-size: 1em; }
 #footer #contact a { color: #fff; text-decoration: none; }
@@ -184,6 +186,8 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 #login h1 { margin-bottom: .5em; }
 #login .btn { width: 25%; border-radius: none; margin-top: 1em; }
 #login #footer { text-align: center; }
+
+#login.signup span.username-tip { color: #16D3D5; font-weight: normal; }
 
 #share { background: #8B4D8E; text-align: center; color: #FFFFFF;}
 #share #share-section { margin-bottom: 4em; }

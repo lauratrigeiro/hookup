@@ -22,7 +22,8 @@ module.exports = function(app, passport) {
 				We're in a beta testing period, and we chose our Tennessee home for first dibs. Go Vols!";
 		} else if (req.subroute === '/launch') {
 			welcome_message = "We're Hookup, and we'll answer all your sex-related questions. \
-				We're in a beta testing period, and we chose New Orleans!";
+				Snoop to see what others are saying about sex and relationships. We're in a beta testing period. \
+				Check us out and let us know what you think!";
 		} else {
 			welcome_message = "We're Hookup, and we'll answer all your sex-related questions.";
 		}
@@ -154,7 +155,7 @@ module.exports = function(app, passport) {
 				And shout out to Sex Week UT for supporting our beta test launch.";
 		} else if (req.subroute === '/launch') {
 			home_message = "Thanks for being our Hookup virgins! \
-				And shout out to New Orleans for supporting our beta test launch.";
+				Follow us and tell your bestie, the bae, people on the street — basically anyone except your mother.";
 		} else {
 			home_message = "Thanks for being our Hookup virgins!";
 		}
