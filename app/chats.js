@@ -708,7 +708,7 @@ function get_approved_chats(req, res) {
   get_all_chats(req, res, statuses.approved);
 }
 
-function get_all_chats(req, res, status) {
+function get_all_chats(req, res, status, open) {
 	db.get_connection(function(error, conn) {
 		if (error) {
 			conn.release();
@@ -730,14 +730,20 @@ function get_all_chats(req, res, status) {
 			UNIX_TIMESTAMP(d.created_ts) as created_ts, \
 			UNIX_TIMESTAMP(a.closed_ts) as closed_ts    \
 			FROM chats a                                \
-			LEFT JOIN users c            \
+			INNER JOIN users c            \
 				ON a.sexpert_id = c.id     \
 			INNER JOIN users d           \
-				ON a.user_id = d.id '
+				ON a.user_id = d.id';
+
       if(status || status === 0){
-        querystring += "WHERE a.status = "+status+" ";
+        querystring += " WHERE a.status = " + status;
+        if (!open) {
+        	querystring += ' AND a.closed_ts IS NOT NULL';
+        }
+      } else if (!open) {
+      	querystring += ' WHERE a.closed_ts IS NOT NULL';
       }
-			querystring += 'ORDER BY created_ts DESC';
+			querystring += ' ORDER BY created_ts DESC';
 
 		conn.query(querystring, [], function(err, rows) {
 			conn.release();
@@ -798,7 +804,7 @@ function set_chat_status(req, res, status){
           error_type : 'database query'
         });
       }
-      console.log("got here");
+
       res.status(200).send();
     });
   });

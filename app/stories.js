@@ -170,7 +170,6 @@ function query(conn, q, params, release, callback) {
   }
 
   conn.query(q, params, function(error, rows, fields) {
-    conn.release();
     if(error) console.log(error);
     if(error) return generic_query_error(err, conn);
     if (release) conn.release();

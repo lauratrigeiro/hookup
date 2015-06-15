@@ -224,6 +224,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
 .question-form #available-sexperts { margin-top: 100px; }
 
   .question.ask { height: 400px; margin-top: 10%; width: 45%; }
+  .question.ask a.feed-btn { width: 250px; border-radius: 5px; padding: 20px; margin-bottom: 2em; }
 
   .question.chat { text-align: center; width: 81%; }
   .question.chat h4 {

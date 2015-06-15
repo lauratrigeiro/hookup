@@ -140,7 +140,7 @@ module.exports = function(app, passport) {
 	app.get('/chats/:id', isLoggedIn, chats.get_chat_messages);
 	app.get('/chats', isEmployee, chats.get_all_chats);
 	app.get('/chats-approved', isLoggedIn, chats.get_approved_chats);
-	app.get('/chats-pending', isEmployee, chats.get_pending_chats);
+	app.get('/chats-pending', isSexpert, chats.get_pending_chats);
 
 	// SHARE YOUR STORY
 	app.post('/stories/create', isLoggedIn, stories.create);

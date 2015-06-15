@@ -18,7 +18,8 @@
         <ul class="dropdown" style="display: none;">
           <% if (user.sexpert || user.admin) { %>
           <li><a href="<%= route %>/sexpert">Sexpert</a></li>
-          <li><a href="<%= route %>/approve">Approve</a></li>
+          <li><a href="<%= route %>/feed-pending">Approve Chats</a></li>
+          <li><a href="<%= route %>/approve">Approve Stories</a></li>
         <% } %>
         <% if (user.employee || user.admin) { %>
           <li><a href="/admin">Admin</a></li>
@@ -45,8 +46,8 @@
         <a class="nav-trigger-account" href="#" id="username"><%= user.username %><i class="fa fa-caret-down"></i></a>
         <ul class="dropdown">
           <% if (user.sexpert || user.admin) { %>
-            <li><a href="<%= route %>/sexpert">Sexpert</a></li>
-            <li><a href="<%= route %>/approve">Approve</a></li>
+            <li><a href="<%= route %>/feed-pending">Approve Chats</a></li>
+          <li><a href="<%= route %>/approve">Approve Stories</a></li>
           <% } %>
           <% if (user.employee || user.admin) { %>
             <li><a href="/admin">Admin</a></li>
