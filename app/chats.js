@@ -730,7 +730,7 @@ function get_all_chats(req, res, status, open) {
 			(SELECT COUNT(b.message_id)  \
 				FROM messages b            \
 				WHERE a.chat_id = b.chat_id) AS messages, \
-			UNIX_TIMESTAMP(d.created_ts) as created_ts, \
+			UNIX_TIMESTAMP(a.created_ts) as created_ts, \
 			UNIX_TIMESTAMP(a.closed_ts) as closed_ts    \
 			FROM chats a                                \
 			INNER JOIN users c            \
