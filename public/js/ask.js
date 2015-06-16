@@ -54,6 +54,7 @@ var AskSexpert = (function($) {
 
         appendString += '</div>';
 
+        $('.user-chats-container').show();
         $('.user-chats-container').append(appendString);
       }
     });

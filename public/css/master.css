@@ -236,7 +236,7 @@ textarea { border: 1px solid #ccc; border-radius: 3px; font-size: 1em; padding: 
     text-transform: none;
   }
 
-.user-chats-container { background-color: #fff; width: 90%; margin: 0 auto; padding: .5em 0; }
+.user-chats-container { background-color: #fff; width: 90%; margin: 0 auto; padding: .5em 0; display: none; }
 .user-chats-container h2 { color: #267F9E; text-align: center; }
 .user-chats-container .user-chats { padding: .25em 1em; }
 .user-chats-container .user-chats p { display: table-row; width: 100%; }
