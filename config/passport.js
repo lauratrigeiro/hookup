@@ -54,7 +54,7 @@ module.exports = function(passport) {
             passReqToCallback : true // allows us to pass back the entire request to the callback
         },
         function(req, username, password, done) {
-            if (!username|| username.length < 3) {
+            if (!username || username.length < 3) {
                 return done(null, false, req.flash('signupMessage', 'Password must be at least 3 characters.'));
             }
 
@@ -65,6 +65,30 @@ module.exports = function(passport) {
             if (password !== req.body.confirm_password) {
                 return done(null, false, req.flash('signupMessage', 'Passwords need to match.'));
             }
+
+            if (!req.body.birthday || !req.body.zip || !req.body.gender) {
+                return done(null, false, req.flash('signupMessage', 'All fields are required.'));
+            }
+
+            var birthday = req.body.birthday;
+            var zip = req.body.zip;
+            var gender = req.body.gender;
+
+            // iso_date could be yyyy-mm-dd or yyyy/mm/dd
+            var is_iso_date = /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/.test(birthday);
+            if (!is_iso_date) {
+                return done(null, false, req.flash('signupMessage', 'Birthday must be valid.'));
+            }
+
+            if (zip.length !== 5 || isNaN(parseInt(zip))) {
+                return done(null, false, req.flash('signupMessage', 'Zip code must be valid.'));
+            }
+
+            var genders = ['Female', 'Male', 'Trans', 'Other'];
+            if (genders.indexOf(gender) < 0) {
+                return done(null, false, req.flash('signupMessage', 'Gender must be valid.'));
+            }
+
             // find a user whose username is the same as the forms username
             // we are checking to see if the user trying to login already exists
             db.get_connection(function(error, conn) {
@@ -91,12 +115,18 @@ module.exports = function(passport) {
                             username : username,
                             password : bcrypt.hashSync(password, bcrypt.genSaltSync(10), null),  // use the generateHash function in our user model
                             email    : req.body.email,
-                            age      : parseInt(req.body.age)
+                            birthday : birthday,
+                            zip      : zip,
+                            gender   : gender
                         };
 
-                        var insertQuery = "INSERT INTO users ( id, username, password, email, age ) values (?,?,?,?,?)";
+                        var insertQuery = "INSERT INTO users \
+                            ( id, username, password, email, birthday, zip, gender) \
+                            values (?,?,?,?,?,?,?)";
 
-                        conn.query(insertQuery,[new_user.id, new_user.username, new_user.password, new_user.email, new_user.age],function(err, rows) {
+                        var params = [new_user.id, new_user.username, new_user.password, new_user.email, new_user.birthday, new_user.zip, new_user.gender];
+
+                        conn.query(insertQuery, params, function(err, rows) {
                             conn.release();
                             mailchimp.subscribe_new_user(new_user.username, new_user.email, function(err) {
                                 if (err) {
