@@ -66,13 +66,18 @@ module.exports = function(passport) {
                 return done(null, false, req.flash('signupMessage', 'Passwords need to match.'));
             }
 
-            if (!req.body.birthday || !req.body.zip || !req.body.gender) {
+            if (!req.body.email || !req.body.birthday || !req.body.zip || !req.body.gender) {
                 return done(null, false, req.flash('signupMessage', 'All fields are required.'));
             }
 
+            var email = req.body.email;
             var birthday = req.body.birthday;
             var zip = req.body.zip;
             var gender = req.body.gender;
+
+            if (email.indexOf('@') < 0) {
+                return done(null, false, req.flash('signupMessage', 'Email must be valid.'));
+            }
 
             // iso_date could be yyyy-mm-dd or yyyy/mm/dd
             var is_iso_date = /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/.test(birthday);
@@ -97,7 +102,7 @@ module.exports = function(passport) {
                     return done(error);
                 }
 
-                conn.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows) {
+                conn.query("SELECT * FROM users WHERE username = ?", [username], function(err, rows) {
                     if (err) {
                         conn.release();
                         return done(err);
@@ -114,7 +119,7 @@ module.exports = function(passport) {
                             id       : id,
                             username : username,
                             password : bcrypt.hashSync(password, bcrypt.genSaltSync(10), null),  // use the generateHash function in our user model
-                            email    : req.body.email,
+                            email    : email,
                             birthday : birthday,
                             zip      : zip,
                             gender   : gender
