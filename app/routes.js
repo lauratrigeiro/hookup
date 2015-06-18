@@ -4,6 +4,7 @@ var chats = require('./chats');
 var mailchimp = require('./mailchimp');
 var sexperts = require('./sexperts');
 var stories = require('./stories');
+var users = require('./users');
 
 var subroutes = '^(\/tn|\/launch)';
 var admin_default_subroute = '/launch';
@@ -295,6 +296,8 @@ module.exports = function(app, passport) {
 	app.get('/admin/users', isAdmin, admin.get_user);
 	app.post('/admin/users', isAdmin, admin.upgrade_user);
 	app.post('/admin/sexperts', isAdmin, admin.add_profile);
+
+	app.get('/users', isAdmin, users.get);
 };
 
 // route middleware to make sure
