@@ -624,80 +624,98 @@ function get_chat_messages(req, res) {
 			});
 		}
 
-		var chat_id = req.params.id;
-		var querystring = 'SELECT      \
-			UNIX_TIMESTAMP(a.closed_ts) as closed_ts, \
-			a.user_id,                   \
-			a.sexpert_id,                \
-			a.display_username,          \
-			b.age as user_age,           \
-			b.username,                  \
-			c.username as sexpert_username, \
-			d.sender,                    \
-			d.content,                   \
-			UNIX_TIMESTAMP(d.created_ts) as created_ts \
-			FROM chats a                 \
-			INNER JOIN users b           \
-				ON a.user_id = b.id        \
-			INNER JOIN users c           \
-				ON a.sexpert_id = c.id     \
-			INNER JOIN messages d        \
-				ON a.chat_id = d.chat_id   \
-			WHERE a.chat_id = ?          \
-			ORDER BY created_ts ASC';
-
-		conn.query(querystring, [chat_id], function(err, rows) {
-			conn.release();
-			if (err) {
-				return res.status(502).send({
-					error      : 'database error',
-					details    : err,
-					error_type : 'database query'
-				});
+		var chat_id = req.params.id,
+	      chat;
+	  var q = "SELECT status from chats where chat_id = ?";
+		db.query(res, conn, q, [chat_id], false, function(rows, fields){
+			if(rows){
+				chat = rows[0];
+			} else {
+					return res.status(404).send({
+						error      : 'That chat does not exist.',
+						details    : { request : chat_id },
+						error_type : 'not found'
+					});
 			}
 
-			if (!rows || !rows.length) {
-				return res.status(400).send({
-					error      : 'No messages associated with this chat id',
-					details    : { request : chat_id },
-					error_type : 'bad request'
-				});
-			}
+			var querystring = 'SELECT      \
+				UNIX_TIMESTAMP(a.closed_ts) as closed_ts, \
+				a.user_id,                   \
+				a.sexpert_id,                \
+				a.display_username,          \
+				b.age as user_age,           \
+				b.username,                  \
+				c.username as sexpert_username, \
+				d.sender,                    \
+				d.content,                   \
+				UNIX_TIMESTAMP(d.created_ts) as created_ts \
+				FROM chats a                 \
+				INNER JOIN users b           \
+					ON a.user_id = b.id        \
+				INNER JOIN users c           \
+					ON a.sexpert_id = c.id     \
+				INNER JOIN messages d        \
+					ON a.chat_id = d.chat_id   \
+				WHERE a.chat_id = ?          \
+				ORDER BY created_ts ASC';
 
-			var first_row = rows[0];
-			if (!req.user.employee && ((req.user.sexpert && req.user.id !== first_row.sexpert_id) || (!req.user.sexpert && req.user.id !== first_row.user_id))) {
-				return res.status(403).send({
-					error      : 'User does not have permission to view this chat',
-					details    : null,
-					error_type : 'forbidden'
-				});
-			}
-
-			var data = {};
-			data.closed_ts = first_row.closed_ts;
-			data.username = first_row.username;
-			data.display_username = first_row.display_username;
-			data.user_age = first_row.user_age;
-			data.sexpert_id = first_row.sexpert_id;
-			data.sexpert_username = first_row.sexpert_username;
-      data.chat_id = chat_id;
-
-			data.messages = rows.map(function(row) {
-				var sender;
-				if (row.sender) {
-					sender = 'Sexpert';
-				} else {
-					sender = 'User';
+			conn.query(querystring, [chat_id], function(err, rows) {
+				conn.release();
+				if (err) {
+					return res.status(502).send({
+						error      : 'database error',
+						details    : err,
+						error_type : 'database query'
+					});
 				}
 
-				return {
-					sender     : sender,
-					content    : row.content,
-					created_ts : row.created_ts
-				};
-			});
+				if (!rows || !rows.length) {
+					return res.status(400).send({
+						error      : 'No messages associated with this chat id',
+						details    : { request : chat_id },
+						error_type : 'bad request'
+					});
+				}
 
-			return res.status(200).send(data);
+				var first_row = rows[0];
+				console.log(chat);
+				if ( chat.status !== statuses.approved &&
+					   !req.user.employee &&
+						 ((req.user.sexpert && req.user.id !== first_row.sexpert_id) ||
+						 (!req.user.sexpert && req.user.id !== first_row.user_id))) {
+					return res.status(403).send({
+						error      : 'User does not have permission to view this chat',
+						details    : null,
+						error_type : 'forbidden'
+					});
+				}
+
+				var data = {};
+				data.closed_ts = first_row.closed_ts;
+				data.username = first_row.username;
+				data.display_username = first_row.display_username;
+				data.user_age = first_row.user_age;
+				data.sexpert_id = first_row.sexpert_id;
+				data.sexpert_username = first_row.sexpert_username;
+				data.chat_id = chat_id;
+
+				data.messages = rows.map(function(row) {
+					var sender;
+					if (row.sender) {
+						sender = 'Sexpert';
+					} else {
+						sender = 'User';
+					}
+
+					return {
+						sender     : sender,
+						content    : row.content,
+						created_ts : row.created_ts
+					};
+				});
+
+				return res.status(200).send(data);
+			});
 		});
 	});
 }

@@ -91,7 +91,10 @@ function upvote_story(req, res) {
       var upvote_id = utils.uuid(),
           q = 'INSERT INTO upvotes (upvote_id, story_id, user_id) VALUES (?, ?, ?)';
       query(conn, q, [upvote_id, story_id, user_id], function(rows, fields) {
-        return res.status(200).send();
+        var q = "UPDATE stories_approved SET upvotes = upvotes + 1 WHERE story_id = ?";
+        db.query(res, conn, q, [story_id], false, function(){
+          return res.status(200).send();
+        });
       });
     });
   });
