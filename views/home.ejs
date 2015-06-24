@@ -1,48 +1,65 @@
 <html>
-    <head>
-      <% include ./partials/head %>
-    </head>
-    <body id="home" class="member">
-    <header>
-        <% include ./partials/header %>
-    </header>
-    
-    <div id="content">
-      <div id="intro">
-        <h1>Welcome to hookup!</h1>
-        <p><%= home_message %></p>
-        <p id="signup-message"></p>
-        <p id="signature">xoxo, <br/><img height="28px" src="/public/images/logo.png" /></p>
-        <div class="clear"></div>
-      </div>
-    </div>
-    
-    <div id="features">
-      <div class="c2l">
-        <p><img src="/public/images/condom_home.png" /></p>
-        <h3>Sexpert</h3>
-        <p class="description">Read our feed of Q&A or ask your own question.</p>
-        <p><a class="btn" href="<%= route %>/feed">Snoop</a></p>
-      </div>
-      <div class="c2r">
-        <p><img src="/public/images/grape_home.png" /></p>
-        <h3>Share Your Story</h3>
-        <p class="description">Read our feed of stories about sex and relationships. Upvote favorites and share your own.</p>
-        <p><a class="btn" href="<%= route %>/share">Snoop</a></p>
-      </div>
-      <div class="clear"></div>
-    </div>
-    
-    <footer>
-        <% include ./partials/footer %>
-        <% include ./partials/analytics %>
-        <script>
-          $(document).ready(function() {
-            if (window.location.search === '?new=1') {
-              $('#signup-message').html("We've sent you a special lil something in your inbox too ;)");
-            }
-          });
-        </script>
-    </footer>  
-  </body>
+<head>
+	<% include ./partials/head %>
+	<!-- Facebook Conversion Code for Registrations - dohookup.com/launch NOLA -->
+	<script>(function() {
+		var _fbq = window._fbq || (window._fbq = []);
+		if (!_fbq.loaded) {
+			var fbds = document.createElement('script');
+			fbds.async = true;
+			fbds.src = '//connect.facebook.net/en_US/fbds.js';
+			var s = document.getElementsByTagName('script')[0];
+			s.parentNode.insertBefore(fbds, s);
+			_fbq.loaded = true;
+		}
+	})();
+	window._fbq = window._fbq || [];
+	window._fbq.push(['track', '6025740496310', {'value':'0.00', 'currency':'USD'}]);
+	</script>
+	<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6025740496310&amp;cd[value]=0.00&amp;cd[currency]=USD&amp;noscript=1" />
+	</noscript>
+</head>
+	<body id="home" class="member">
+	<header>
+			<% include ./partials/header %>
+	</header>
+
+	<div id="content">
+		<div id="intro">
+			<h1>Welcome to hookup!</h1>
+			<p><%= home_message %></p>
+			<p id="signup-message"></p>
+			<p id="signature">xoxo, <br/><img height="28px" src="/public/images/logo.png" /></p>
+			<div class="clear"></div>
+		</div>
+	</div>
+
+	<div id="features">
+		<div class="c2l">
+			<p><img src="/public/images/condom_home.png" /></p>
+			<h3>Sexpert</h3>
+			<p class="description">Read our feed of Q&A or ask your own question.</p>
+			<p><a class="btn" href="<%= route %>/feed">Snoop</a></p>
+		</div>
+		<div class="c2r">
+			<p><img src="/public/images/grape_home.png" /></p>
+			<h3>Share Your Story</h3>
+			<p class="description">Read our feed of stories about sex and relationships. Upvote favorites and share your own.</p>
+			<p><a class="btn" href="<%= route %>/share">Snoop</a></p>
+		</div>
+		<div class="clear"></div>
+	</div>
+
+	<footer>
+			<% include ./partials/footer %>
+			<% include ./partials/analytics %>
+			<script>
+				$(document).ready(function() {
+					if (window.location.search === '?new=1') {
+						$('#signup-message').html("We've sent you a special lil something in your inbox too ;)");
+					}
+				});
+			</script>
+	</footer>
+</body>
 </html>
