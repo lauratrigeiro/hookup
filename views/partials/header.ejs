@@ -18,10 +18,10 @@
         <ul class="dropdown" style="display: none;">
           <% if (user.sexpert || user.admin) { %>
           <li><a href="<%= route %>/sexpert">Sexpert</a></li>
-          <li><a href="<%= route %>/feed-pending">Approve Chats</a></li>
-          <li><a href="<%= route %>/approve">Approve Stories</a></li>
         <% } %>
         <% if (user.employee || user.admin) { %>
+          <li><a href="<%= route %>/feed-pending">Approve Chats</a></li>
+          <li><a href="<%= route %>/approve">Approve Stories</a></li>
           <li><a href="/admin">Admin</a></li>
         <% } %>
           <li><a href="/logout">Logout</a></li>
