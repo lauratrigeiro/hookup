@@ -1,30 +1,30 @@
 <!-- views/feed.ejs -->
 <!doctype html>
 <html>
-    <head>
-      <% include ./partials/head %>
-    </head>
-    <body id="share">
-    <header>
-        <% include ./partials/header %>
-    </header>
+<head>
+	<% include ./partials/head %>
+</head>
+<body id="share">
+	<header>
+		<% include ./partials/header %>
+	</header>
 
-    <div id="share-content">
-      <div id="share-section">
-        <h2>Snoop or Ask</h2>
-        <p>See what others are asking or ask your own question. </p>
-        <p>Then choose a Sexpert to answer your question.</p>
-        <a href="<%= route %>/ask" class="big-orange-button btn">Ask a Question</a>
-      </div>
-    </div>
-    <div id="cherry"><img src="/public/images/cherry-shadow.png"></div>
-    <div id="chat-feed" data-status=<%= status %>>
-    </div>
-    <footer>
-        <% include ./partials/footer %>
-        <script src="/public/js/ejs_production.js" type="text/javascript"></script>
-        <% include ./partials/analytics %>
-        <script type='text/javascript' src='/public/js/feed.js'></script>
-    </footer>
-  </body>
+	<div id="share-content">
+		<div id="share-section">
+			<h2>Snoop or Ask</h2>
+			<p>See what others are asking or ask your own question. </p>
+			<p>Then choose a Sexpert to answer your question.</p>
+			<a href="<%= route %>/ask" class="big-orange-button btn">Ask a Question</a>
+		</div>
+	</div>
+	<div id="cherry"><img src="/public/images/cherry-shadow.png"></div>
+	<div id="chat-feed" data-status=<%= status %>>
+	</div>
+	<footer>
+		<% include ./partials/footer %>
+		<script src="/public/js/ejs_production.js" type="text/javascript"></script>
+		<% include ./partials/analytics %>
+		<script type='text/javascript' src='/public/js/feed.js'></script>
+	</footer>
+</body>
 </html>

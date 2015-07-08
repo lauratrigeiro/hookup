@@ -30,8 +30,8 @@ module.exports = function(app, passport) {
 		}
 
 		res.render('index.ejs', {
-			is_logged_in    : false,
-			route           : req.subroute,
+			is_logged_in		: false,
+			route					 : req.subroute,
 			welcome_message : welcome_message
 		});
 	});
@@ -42,7 +42,7 @@ module.exports = function(app, passport) {
 			data_to_send = {
 				user : req.user,
 				is_logged_in : true,
-				route        : req.subroute
+				route				: req.subroute
 			};
 		} else {
 			data_to_send = { is_logged_in : false, route : req.subroute };
@@ -60,29 +60,29 @@ module.exports = function(app, passport) {
 		res.render('login.ejs', {
 			message: req.flash('loginMessage'),
 			is_logged_in : false,
-			route        : req.subroute
+			route				: req.subroute
 		});
 	});
 
 	// process the login form
 	app.post('/login/tn', passport.authenticate('local-login', {
-            successRedirect : '/tn/home', // redirect to the secure profile section
-            failureRedirect : '/tn/login', // redirect back to the signup page if there is an error
-            failureFlash : true // allow flash messages
+						successRedirect : '/tn/home', // redirect to the secure profile section
+						failureRedirect : '/tn/login', // redirect back to the signup page if there is an error
+						failureFlash : true // allow flash messages
 		}),
-    function(req, res) {
-      if (req.body.remember) {
-        req.session.cookie.maxAge = 1000 * 60 * 3;
-      } else {
-        req.session.cookie.expires = false;
-      }
-    }
-  );
+		function(req, res) {
+			if (req.body.remember) {
+				req.session.cookie.maxAge = 1000 * 60 * 3;
+			} else {
+				req.session.cookie.expires = false;
+			}
+		}
+	);
 
 	app.post('/login/launch', passport.authenticate('local-login', {
-   //         successRedirect : '/launch/home', // redirect to the secure profile section
-            failureRedirect : '/launch/login', // redirect back to the signup page if there is an error
-            failureFlash : true // allow flash messages
+	//        successRedirect : '/launch/home', // redirect to the secure profile section
+						failureRedirect : '/launch/login', // redirect back to the signup page if there is an error
+						failureFlash : true // allow flash messages
 		}),
 		function(req, res) {
 			if (req.body.remember) {
@@ -108,7 +108,7 @@ module.exports = function(app, passport) {
 		res.render('signup.ejs', {
 			message: req.flash('signupMessage'),
 			is_logged_in : false,
-			route        : req.subroute
+			route				: req.subroute
 		});
 	});
 
@@ -131,9 +131,9 @@ module.exports = function(app, passport) {
 	app.post('/chats/new', isLoggedIn, chats.new_message);
 	app.post('/chats/connect', isSexpert, chats.connect);
 	app.post('/chats/select_sexpert', isLoggedIn, chats.select_sexpert);
-  app.post('/chats/approve', isEmployee, chats.approve_chat);
-  app.post('/chats/deny', isEmployee, chats.deny_chat);
-  app.put('/chats/display_username', isEmployee, chats.set_display_username);
+	app.post('/chats/approve', isEmployee, chats.approve_chat);
+	app.post('/chats/deny', isEmployee, chats.deny_chat);
+	app.put('/chats/display_username', isEmployee, chats.set_display_username);
 	app.get('/chats/sexpert', isLoggedIn, chats.sexpert);
 	app.get('/chats/waiting', isSexpert, chats.waiting);
 	app.get('/chats/me', isLoggedIn, chats.get_open_chats_by_user);
@@ -171,7 +171,7 @@ module.exports = function(app, passport) {
 		res.render('home.ejs', {
 			is_logged_in : true,
 			user : req.user, // get the user out of session and pass to template
-			route        : req.subroute,
+			route				: req.subroute,
 			home_message : home_message
 		});
 	});
@@ -180,7 +180,7 @@ module.exports = function(app, passport) {
 		res.render('ask.ejs', {
 			user : req.user,
 			is_logged_in : true,
-			route        : req.subroute
+			route				: req.subroute
 		});
 	});
 
@@ -188,7 +188,7 @@ module.exports = function(app, passport) {
 		res.render('chat.ejs', {
 			user : req.user,
 			is_logged_in : true,
-			route        : req.subroute
+			route				: req.subroute
 		});
 	});
 
@@ -196,35 +196,35 @@ module.exports = function(app, passport) {
 		res.render('share.ejs', {
 			user : req.user,
 			is_logged_in : true,
-			route        : req.subroute
+			route				: req.subroute
 		});
 	});
 
 	app.get(new RegExp(subroutes + '\/select$'), getSubroute, isLoggedIn, function(req, res) {
 		res.render('select_sexpert.ejs', {
-			user         : req.user,
+			user				 : req.user,
 			is_logged_in : true,
-			route        : req.subroute
+			route				: req.subroute
 		});
 	});
 
-  app.get(new RegExp(subroutes + '\/feed$'), getSubroute, isLoggedIn, function(req, res){
-    res.render('feed.ejs', {
-      user: req.user,
-      is_logged_in : true,
-      route: req.subroute,
-      status: "approved"
-    });
-  });
+	app.get(new RegExp(subroutes + '\/feed$'), getSubroute, isLoggedIn, function(req, res){
+		res.render('feed.ejs', {
+			user: req.user,
+			is_logged_in : true,
+			route: req.subroute,
+			status: "approved"
+		});
+	});
 
-  app.get(new RegExp(subroutes + '\/feed-pending$'), getSubroute, isEmployee, function(req, res){
-    res.render('feed.ejs', {
-      user: req.user,
-      is_logged_in : true,
-      route: req.subroute,
-      status: "pending"
-    });
-  });
+	app.get(new RegExp(subroutes + '\/feed-pending$'), getSubroute, isEmployee, function(req, res){
+		res.render('feed.ejs', {
+			user: req.user,
+			is_logged_in : true,
+			route: req.subroute,
+			status: "pending"
+		});
+	});
 
 	// =====================================
 	// PROFILE SECTION =========================
@@ -235,7 +235,7 @@ module.exports = function(app, passport) {
 		res.render('profile.ejs', {
 			is_logged_in : true,
 			user : req.user, // get the user out of session and pass to template
-			route        : req.subroute
+			route				: req.subroute
 		});
 	});
 
@@ -254,7 +254,7 @@ module.exports = function(app, passport) {
 		res.render('sexpert.ejs', {
 			is_logged_in : true,
 			user : req.user,
-			route        : req.subroute
+			route				: req.subroute
 		});
 	});
 
@@ -262,7 +262,7 @@ module.exports = function(app, passport) {
 		res.render('approve.ejs', {
 			is_logged_in : true,
 			user : req.user,
-			route        : req.subroute
+			route				: req.subroute
 		});
 	});
 
@@ -275,7 +275,7 @@ module.exports = function(app, passport) {
 		res.render('admin.ejs', {
 			is_logged_in : true,
 			user : req.user,
-			route        : admin_default_subroute
+			route				: admin_default_subroute
 		});
 	});
 
@@ -283,7 +283,7 @@ module.exports = function(app, passport) {
 		res.render('chats_list.ejs', {
 			is_logged_in : true,
 			user : req.user,
-			route        : admin_default_subroute
+			route				: admin_default_subroute
 		});
 	});
 
@@ -291,7 +291,7 @@ module.exports = function(app, passport) {
 		res.render('chat_messages.ejs', {
 			is_logged_in : true,
 			user : req.user,
-			route        : admin_default_subroute
+			route				: admin_default_subroute
 		});
 	});
 

@@ -4,9 +4,9 @@ var utils = require('./utils');
 var db = require('../config/database');
 
 var statuses = {
-  submitted: 0,
-  approved: 1,
-  denied: 2
+	submitted : 0,
+	approved  : 1,
+	denied    : 2
 };
 
 function create_chat(req, res) {
@@ -586,7 +586,7 @@ function get_first_message(req, res) {
 				});
 			}
 
-			if (!rows || rows.length == 0) {
+			if (!rows || !rows.length) {
 				return res.status(400).send({
 					error      : 'No messages associated with this chat id or it is already closed',
 					details    : { request : chat_id },
@@ -624,18 +624,18 @@ function get_chat_messages(req, res) {
 			});
 		}
 
-		var chat_id = req.params.id,
-	      chat;
-	  var q = "SELECT status from chats where chat_id = ?";
-		db.query(res, conn, q, [chat_id], false, function(rows, fields){
-			if(rows){
+		var chat_id = req.params.id;
+		var chat;
+		var q = 'SELECT status from chats where chat_id = ?';
+		db.query(res, conn, q, [chat_id], false, function(rows, fields) {
+			if (rows) {
 				chat = rows[0];
 			} else {
-					return res.status(404).send({
-						error      : 'That chat does not exist.',
-						details    : { request : chat_id },
-						error_type : 'not found'
-					});
+				return res.status(404).send({
+					error      : 'That chat does not exist.',
+					details    : { request : chat_id },
+					error_type : 'not found'
+				});
 			}
 
 			var querystring = 'SELECT      \
@@ -681,10 +681,10 @@ function get_chat_messages(req, res) {
 
 				var first_row = rows[0];
 				console.log(chat);
-				if ( chat.status !== statuses.approved &&
-					   !req.user.employee &&
-						 ((req.user.sexpert && req.user.id !== first_row.sexpert_id) ||
-						 (!req.user.sexpert && req.user.id !== first_row.user_id))) {
+				if (chat.status !== statuses.approved &&
+					!req.user.employee &&
+					((req.user.sexpert && req.user.id !== first_row.sexpert_id) ||
+					(!req.user.sexpert && req.user.id !== first_row.user_id))) {
 					return res.status(403).send({
 						error      : 'User does not have permission to view this chat',
 						details    : null,
@@ -725,11 +725,11 @@ function get_chat_messages(req, res) {
 }
 
 function get_submitted_chats(req, res) {
-  get_all_chats(req, res, statuses.submitted);
+	get_all_chats(req, res, statuses.submitted);
 }
 
 function get_approved_chats(req, res) {
-  get_all_chats(req, res, statuses.approved);
+	get_all_chats(req, res, statuses.approved);
 }
 
 function get_all_chats(req, res, status, open) {
@@ -745,8 +745,8 @@ function get_all_chats(req, res, status, open) {
 
 		var querystring = 'SELECT      \
 			a.chat_id,                   \
-      a.status, \
-      a.display_username,          \
+			a.status,                    \
+			a.display_username,          \
 			d.age AS user_age,           \
 			c.username AS sexpert_username, \
 			(SELECT COUNT(b.message_id)  \
@@ -760,20 +760,21 @@ function get_all_chats(req, res, status, open) {
 			INNER JOIN users d           \
 				ON a.user_id = d.id';
 
-      if(status || status === 0){
-        querystring += " WHERE a.status = " + status;
-        if (!open) {
-        	querystring += ' AND a.closed_ts IS NOT NULL';
-        }
-      } else if (!open) {
-      	querystring += ' WHERE a.closed_ts IS NOT NULL';
-      }
-			querystring += ' ORDER BY created_ts DESC';
+		if (status || status === 0) {
+			querystring += ' WHERE a.status = ' + status;
+			if (!open) {
+				querystring += ' AND a.closed_ts IS NOT NULL';
+			}
+		} else if (!open) {
+			querystring += ' WHERE a.closed_ts IS NOT NULL';
+		}
+
+		querystring += ' ORDER BY created_ts DESC';
 
 		conn.query(querystring, [], function(err, rows) {
 			conn.release();
 			if (err) {
-        console.log(err)
+				console.log(err);
 				return res.status(502).send({
 					error      : 'database error',
 					details    : err,
@@ -790,7 +791,7 @@ function get_all_chats(req, res, status, open) {
 					messages         : row.messages,
 					created_ts       : row.created_ts,
 					closed_ts        : row.closed_ts,
-          status           : row.status
+					status           : row.status
 				};
 			});
 
@@ -799,41 +800,41 @@ function get_all_chats(req, res, status, open) {
 	});
 }
 
-function deny_chat(req, res){
-  set_chat_status(req, res, statuses.denied);
+function deny_chat(req, res) {
+	set_chat_status(req, res, statuses.denied);
 }
 
-function approve_chat(req, res){
-  set_chat_status(req, res, statuses.approved);
+function approve_chat(req, res) {
+	set_chat_status(req, res, statuses.approved);
 }
 
-function set_chat_status(req, res, status){
-  db.get_connection(function(error, conn) {
-      if (error) {
-        conn.release();
-        return res.status(502).send({
-          error      : 'database error',
-          details    : error,
-          error_type : 'database connection'
-        });
-      }
+function set_chat_status(req, res, status) {
+	db.get_connection(function(error, conn) {
+		if (error) {
+			conn.release();
+			return res.status(502).send({
+				error      : 'database error',
+				details    : error,
+				error_type : 'database connection'
+			});
+		}
 
-    var chat_id = req.body.chat_id;
-    var querystring = 'UPDATE chats SET status = ? WHERE chat_id = ?';
+		var chat_id = req.body.chat_id;
+		var querystring = 'UPDATE chats SET status = ? WHERE chat_id = ?';
 
-    conn.query(querystring, [status, chat_id], function(err, rows, fields) {
-      conn.release();
-      if (err) {
-        return res.status(502).send({
-          error      : 'database error',
-          details    : err,
-          error_type : 'database query'
-        });
-      }
+		conn.query(querystring, [status, chat_id], function(err, rows, fields) {
+			conn.release();
+			if (err) {
+				return res.status(502).send({
+					error      : 'database error',
+					details    : err,
+					error_type : 'database query'
+				});
+			}
 
-      res.status(200).send();
-    });
-  });
+			res.status(200).send();
+		});
+	});
 }
 
 function set_display_username(req, res) {
@@ -845,34 +846,34 @@ function set_display_username(req, res) {
 		});
 	}
 
-  db.get_connection(function(error, conn) {
-      if (error) {
-        conn.release();
-        return res.status(502).send({
-          error      : 'database error',
-          details    : error,
-          error_type : 'database connection'
-        });
-      }
+	db.get_connection(function(error, conn) {
+		if (error) {
+			conn.release();
+			return res.status(502).send({
+				error      : 'database error',
+				details    : error,
+				error_type : 'database connection'
+			});
+		}
 
-    var chat_id = req.body.chat_id;
-    var display_username = req.body.display_username || '';
-    var querystring = 'UPDATE chats SET display_username = ? WHERE chat_id = ?';
+		var chat_id = req.body.chat_id;
+		var display_username = req.body.display_username || '';
+		var querystring = 'UPDATE chats SET display_username = ? WHERE chat_id = ?';
 
-    conn.query(querystring, [display_username, chat_id], function(err, rows, fields) {
-      conn.release();
-      if (err) {
-        return res.status(502).send({
-          error      : 'database error',
-          details    : err,
-          error_type : 'database query'
-        });
-      }
+		conn.query(querystring, [display_username, chat_id], function(err, rows, fields) {
+			conn.release();
+			if (err) {
+				return res.status(502).send({
+					error      : 'database error',
+					details    : err,
+					error_type : 'database query'
+				});
+			}
 
-      res.status(200).send({ result : 'Success' });
-    });
-  });
- }
+			res.status(200).send({ result : 'Success' });
+		});
+	});
+}
 
  function edit_message(req, res) {
 	if (!req.body || !req.params || !req.params.id || !('content' in req.body || 'status' in req.body)) {
@@ -883,9 +884,9 @@ function set_display_username(req, res) {
 		});
 	}
 
-  db.connect_to_db(res, function(conn) {
+	db.connect_to_db(res, function(conn) {
 
-  	var possible_fields = {
+		var possible_fields = {
 			content : req.body.content,
 			status  : req.body.status
 		};
@@ -902,15 +903,15 @@ function set_display_username(req, res) {
 		var message_id = req.params.id;
 		params.push(message_id);
 
-    var querystring = 'UPDATE messages SET ' + fields.join(', ') + ' WHERE message_id = ?';
+		var querystring = 'UPDATE messages SET ' + fields.join(', ') + ' WHERE message_id = ?';
 
-    db.query(res, conn, querystring, params, function(rows) {
-      res.status(200).send({
-      	message_id : message_id,
-      	fields     : possible_fields
-      });
-    });
-  });
+		db.query(res, conn, querystring, params, function(rows) {
+			res.status(200).send({
+				message_id : message_id,
+				fields     : possible_fields
+			});
+		});
+	});
 }
 
 exports.create = create_chat;
