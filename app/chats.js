@@ -646,8 +646,10 @@ function get_chat_messages(req, res) {
 				b.age as user_age,           \
 				b.username,                  \
 				c.username as sexpert_username, \
+				d.message_id,                \
 				d.sender,                    \
 				d.content,                   \
+				d.status,                    \
 				UNIX_TIMESTAMP(d.created_ts) as created_ts \
 				FROM chats a                 \
 				INNER JOIN users b           \
@@ -708,8 +710,10 @@ function get_chat_messages(req, res) {
 					}
 
 					return {
+						message_id : row.message_id,
 						sender     : sender,
 						content    : row.content,
+						status     : row.status,
 						created_ts : row.created_ts
 					};
 				});
@@ -868,6 +872,45 @@ function set_display_username(req, res) {
       res.status(200).send({ result : 'Success' });
     });
   });
+ }
+
+ function edit_message(req, res) {
+	if (!req.body || !req.params || !req.params.id || !('content' in req.body || 'status' in req.body)) {
+		return res.status(400).send({
+			error      : 'Request must include message_id as param, and either content or status',
+			details    : { request : req.body },
+			error_type : 'bad request'
+		});
+	}
+
+  db.connect_to_db(res, function(conn) {
+
+  	var possible_fields = {
+			content : req.body.content,
+			status  : req.body.status
+		};
+
+		var fields = [];
+		var params = [];
+		for (var name in possible_fields) {
+			if (possible_fields[name]) {
+				fields.push(name + ' = ?');
+				params.push(possible_fields[name]);
+			}
+		}
+
+		var message_id = req.params.id;
+		params.push(message_id);
+
+    var querystring = 'UPDATE messages SET ' + fields.join(', ') + ' WHERE message_id = ?';
+
+    db.query(res, conn, querystring, params, function(rows) {
+      res.status(200).send({
+      	message_id : message_id,
+      	fields     : possible_fields
+      });
+    });
+  });
 }
 
 exports.create = create_chat;
@@ -887,3 +930,4 @@ exports.get_open_chats_by_user = get_open_chats_by_user;
 exports.approve_chat = approve_chat;
 exports.deny_chat = deny_chat;
 exports.set_display_username = set_display_username;
+exports.edit_message = edit_message;

@@ -144,6 +144,8 @@ module.exports = function(app, passport) {
 	app.get('/chats-approved', isLoggedIn, chats.get_approved_chats);
 	app.get('/chats-pending', isEmployee, chats.get_pending_chats);
 
+	app.put('/messages/:id', isEmployee, chats.edit_message);
+
 	// SHARE YOUR STORY
 	app.post('/stories/create', isLoggedIn, stories.create);
 	app.post('/stories/approve', isEmployee, stories.approve);
