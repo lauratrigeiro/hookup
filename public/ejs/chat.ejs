@@ -17,18 +17,37 @@
       <input type="text" id="display-username-input" value="<%= chat.display_username || '' %>"/>
       <button class="display-username btn">Add Display Username</button>
     </div>
+    <hr>
   <% } %>
 
   <% for(var i2 = 0, len2 = chat.messages.length; i2 < len2; i2++) { %>
     <% var message = chat.messages[i2] %>
-    <div class="message-content"><%= showReturns(message.content) %></div>
+    <% if (status !== 'pending' && message.status === 2) { continue; } %>
+  <div class="message-container" data-message_id="<%= message.message_id %>" data-content="<%= message.content %>">
+    <div class="message-content <% if (status === 'pending' && message.status === 2) { %> removed<% } %>">
+      <%= showReturns(message.content) %></div>
     <div class="message-footer">
       <img src="<%= message.sender === "Sexpert" ? '/public/images/sexperts/' + chat.sexpert_username.toLowerCase() + '-small.png' : '/public/images/pinkbunny_small.png' %>" />
       <% var display_username = chat.display_username ? chat.display_username : chat.username; %>
       <span class="message-sender"><%= message.sender == "Sexpert" ? chat.sexpert_username : display_username %></span>
       <%= message.sender == "Sexpert" ? "answered " : "asked " %>
       <span class="message-ts"><%= writeDate(message.created_ts) %></span>
+      <% if (status === 'pending') { %>
+        <span class="edit-message-buttons">
+          <button class="edit-message btn">Edit</button>
+          <button class="remove-message btn">
+          <% if (message.status === 1) { %>Remove<% } else { %>Add<% } %></button>
+        </span>
+      <% } %>
     </div>
-    <hr>
+    <% if (status === 'pending') { %>
+    <div class="edit-area">
+      <textarea class="message-edit"><%= message.content %></textarea>
+      <button class='save-button btn'>Save</button>
+      <button class='cancel-button btn'>Cancel</button>
+    </div>
+    <% } %>
+  </div>
+  <hr>
  <% } %>
 </div>

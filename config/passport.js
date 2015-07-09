@@ -28,7 +28,6 @@ module.exports = function(passport) {
     passport.deserializeUser(function(id, done) {
         db.get_connection(function(error, conn) {
             if (error) {
-                conn.release();
                 return done(error);
             }
             
@@ -98,7 +97,6 @@ module.exports = function(passport) {
             // we are checking to see if the user trying to login already exists
             db.get_connection(function(error, conn) {
                 if (error) {
-                    conn.release();
                     return done(error);
                 }
 
@@ -164,7 +162,6 @@ module.exports = function(passport) {
         function(req, username, password, done) { // callback with email and password from our form
             db.get_connection(function(error, conn) {
                 if (error) {
-                    conn.release();
                     return done(error);
                 }
 

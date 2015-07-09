@@ -296,3 +296,8 @@ body.select-sexpert > p, body.select-sexpert > h2 { color: #fff; text-align: cen
 .big-orange-button {border-radius: 0px!important; width: 300px; padding: 20px; }
 #cherry{ margin: auto; margin-bottom: -50px;}
 #cherry, #cherry img{width: 100px; height: 100px;}
+
+#chat-feed .message-content.removed { color: #ccc; }
+#chat-feed .edit-area { display: none; }
+#chat-feed .edit-area textarea.message-edit { height: 6em; }
+#chat-feed .edit-message-buttons { display: inline-block; }

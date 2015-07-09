@@ -58,3 +58,6 @@
 .sexpert-container .sexpert-list-item { margin: 1em auto; } 
 .sexpert-container .sexpert-list-item span { width: initial; }
 .sexpert-container .online-status span.circle-container { margin-bottom: 1em; }
+
+#chat-feed .edit-message-buttons { width: 100%; }
+#chat-feed .btn { font-size: 16px; padding: .25em .5em; border-radius: 10px; margin-top: 5px; }
