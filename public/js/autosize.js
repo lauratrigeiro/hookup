@@ -1,4 +1,4 @@
-(function (root, factory) {
+(function(root, factory) {
 	'use strict';
 
 	if (typeof define === 'function' && define.amd) {
@@ -12,8 +12,8 @@
 	} else {
 		// Browser globals (root is window)
 		root.autosize = factory();
-  }
-}(this, function () {
+	}
+}(this, function() {
 	function main(ta) {
 		if (!ta || !ta.nodeName || ta.nodeName !== 'TEXTAREA' || ta.hasAttribute('data-autosize-on')) { return; }
 
@@ -44,11 +44,11 @@
 			ta.style.width = width;
 
 			maxHeight = style.maxHeight !== 'none' ? parseFloat(style.maxHeight) : false;
-			
+
 			if (style.boxSizing === 'content-box') {
-				heightOffset = -(parseFloat(style.paddingTop)+parseFloat(style.paddingBottom));
+				heightOffset = -(parseFloat(style.paddingTop) + parseFloat(style.paddingBottom));
 			} else {
-				heightOffset = parseFloat(style.borderTopWidth)+parseFloat(style.borderBottomWidth);
+				heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
 			}
 
 			adjust();
@@ -58,10 +58,10 @@
 			var startHeight = ta.style.height;
 			var htmlTop = document.documentElement.scrollTop;
 			var bodyTop = document.body.scrollTop;
-			
+
 			ta.style.height = 'auto';
 
-			var endHeight = ta.scrollHeight+heightOffset;
+			var endHeight = ta.scrollHeight + heightOffset;
 
 			if (maxHeight !== false && maxHeight < endHeight) {
 				endHeight = maxHeight;
@@ -72,7 +72,7 @@
 				ta.style.overflowY = 'hidden';
 			}
 
-			ta.style.height = endHeight+'px';
+			ta.style.height = endHeight + 'px';
 
 			// prevents scroll-position jumping
 			document.documentElement.scrollTop = htmlTop;
@@ -97,13 +97,13 @@
 
 		ta.addEventListener('autosize.update', adjust);
 
-		ta.addEventListener('autosize.destroy', function(style){
+		ta.addEventListener('autosize.destroy', function(style) {
 			window.removeEventListener('resize', adjust);
 			ta.removeEventListener('input', adjust);
 			ta.removeEventListener('keyup', adjust);
 			ta.removeEventListener('autosize.destroy');
 
-			Object.keys(style).forEach(function(key){
+			Object.keys(style).forEach(function(key) {
 				ta.style[key] = style[key];
 			});
 
@@ -120,7 +120,7 @@
 		ta.style.overflow = 'hidden';
 		ta.style.overflowY = 'hidden';
 
-		init();		
+		init();
 	}
 
 	// Do nothing in IE8 or lower

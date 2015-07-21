@@ -1,36 +1,36 @@
 <!-- views/index.ejs -->
 <!doctype html>
 <html>
-    <head>
-      <% include ./partials/head %>
-    </head>
-    <body id="share">
-    <header>
-        <% include ./partials/header %>
-    </header>
-    
-    <div id="share-content">
-      <div id="share-section">
-        <h2>Share your story</h2>         
-        <p>It is anonymous and will be up within 24 hours.</p>
-        <div id="share-form">
-        	<textarea id="story-input" class="story-textarea" autocomplete="off" maxlength="500" placeholder="What happened last night?" rows="1"></textarea>
-        	<button type="button" id="share-button" class="btn">spill</button>
-        	<div id="share-alert"></div>
-        </div>
-      </div>
-        <div id="read-section">
-      		<img class="overlap" src="/public/images/grape_icon.png" />
-      		<h3>Story Time</h3>
-      		<div id="stories"></div>
-      		<input type="button" id="load-more" class="btn" value="Show me more!" data-offset />
-	    </div>
-      </div>
-    <footer>
-        <% include ./partials/footer %>
-        <% include ./partials/analytics %>
-        <script src="/public/js/ejs_production.js" type="text/javascript"></script>
-        <script type='text/javascript' src='/public/js/share.js'></script> 
-    </footer>
-  </body>
+	<head>
+		<% include ./partials/head %>
+	</head>
+	<body id="share">
+		<header>
+				<% include ./partials/header %>
+		</header>
+		
+		<div id="share-content">
+			<div id="share-section">
+				<h2>Share your story</h2>         
+				<p>It is anonymous and will be up within 24 hours.</p>
+				<div id="share-form">
+					<textarea id="story-input" class="story-textarea" autocomplete="off" maxlength="500" placeholder="What happened last night?" rows="1"></textarea>
+					<button type="button" id="share-button" class="btn">spill</button>
+					<div id="share-alert"></div>
+				</div>
+			</div>
+				<div id="read-section">
+					<img class="overlap" src="/public/images/grape_icon.png" />
+					<h3>Story Time</h3>
+					<div id="stories"></div>
+					<input type="button" id="load-more" class="btn" value="Show me more!" data-offset />
+			</div>
+			</div>
+		<footer>
+				<% include ./partials/footer %>
+				<% include ./partials/analytics %>
+				<script src="/public/js/ejs_production.js" type="text/javascript"></script>
+				<script type='text/javascript' src='/public/js/share.js'></script>
+		</footer>
+	</body>
 </html>

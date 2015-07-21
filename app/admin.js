@@ -9,16 +9,7 @@ function get_user(req, res) {
 		});
 	}
 
-	db.get_connection(function(error, conn) {
-		if (error) {
-			conn.release();
-			return res.status(502).send({
-				error      : 'database error',
-				details    : error,
-				error_type : 'database connection'
-			});
-		}
-
+	db.connect_to_db(res, function(conn) {
 		var username = req.query.name;
 		get_user_info(username, conn, false, res, function(data) {
 			return res.status(200).send(data);
@@ -40,25 +31,26 @@ function get_user_info(username, conn, keep_connection, res, callback) {
 			conn.release();
 			return res.status(400).send({
 				error      : 'Request must contain a valid username',
-				details    : { request : req.query },
+				details    : { username : username },
 				error_type : 'bad request'
 			});
-		} else {
-			if (!keep_connection) {
-				conn.release();
-			}
-			var row = rows[0];
-			var data = {
-				id       : row.id,
-				username : row.username,
-				email    : row.email,
-				age      : row.age,
-				sexpert  : row.sexpert,
-				employee : row.employee,
-				admin    : row.admin
-			};
-			callback(data);
 		}
+
+		if (!keep_connection) {
+			conn.release();
+		}
+		var row = rows[0];
+		var data = {
+			id       : row.id,
+			username : row.username,
+			email    : row.email,
+			age      : row.age,
+			sexpert  : row.sexpert,
+			employee : row.employee,
+			admin    : row.admin
+		};
+
+		callback(data);
 	});
 }
 
@@ -102,7 +94,7 @@ function upgrade_user(req, res) {
 				});
 			}
 
-			return res.status(200).send({ msg : "Update successful" });
+			return res.status(200).send({ msg : 'Update successful' });
 		});
 	});
 }
@@ -127,7 +119,7 @@ function add_profile(req, res) {
 		}
 
 		var username = req.body.username;
-		get_user_info(username, conn, true, res, function (user) {
+		get_user_info(username, conn, true, res, function(user) {
 			if (!user.sexpert) {
 				return res.status(400).send({
 					error      : 'username must belong to a sexpert',
@@ -150,7 +142,7 @@ function add_profile(req, res) {
 					});
 				}
 
-				return res.status(200).send({ msg : "Update successful" });
+				return res.status(200).send({ msg : 'Update successful' });
 			});
 		});
 	});

@@ -159,13 +159,13 @@ module.exports = function(app, passport) {
 	app.get(new RegExp(subroutes + '\/home$'), getSubroute, isLoggedIn, function(req, res) {
 		var home_message;
 		if (req.subroute === '/tn') {
-			home_message = "Thanks for being our Hookup virgins! \
-				And shout out to Sex Week UT for supporting our beta test launch.";
+			home_message = 'Thanks for being our Hookup virgins! \
+				And shout out to Sex Week UT for supporting our beta test launch.';
 		} else if (req.subroute === '/launch') {
-			home_message = "Thanks for being our Hookup virgins! \
-				Follow us and tell your bestie, the bae, people on the street — basically anyone except your mother.";
+			home_message = 'Thanks for being our Hookup virgins! \
+				Follow us and tell your bestie, the bae, people on the street — basically anyone except your mother.';
 		} else {
-			home_message = "Thanks for being our Hookup virgins!";
+			home_message = 'Thanks for being our Hookup virgins!';
 		}
 
 		res.render('home.ejs', {
@@ -208,21 +208,21 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.get(new RegExp(subroutes + '\/feed$'), getSubroute, isLoggedIn, function(req, res){
+	app.get(new RegExp(subroutes + '\/feed$'), getSubroute, isLoggedIn, function(req, res) {
 		res.render('feed.ejs', {
 			user: req.user,
 			is_logged_in : true,
 			route: req.subroute,
-			status: "approved"
+			status: 'approved'
 		});
 	});
 
-	app.get(new RegExp(subroutes + '\/feed-pending$'), getSubroute, isEmployee, function(req, res){
+	app.get(new RegExp(subroutes + '\/feed-pending$'), getSubroute, isEmployee, function(req, res) {
 		res.render('feed.ejs', {
 			user: req.user,
 			is_logged_in : true,
 			route: req.subroute,
-			status: "pending"
+			status: 'pending'
 		});
 	});
 
@@ -310,8 +310,9 @@ function getSubroute(req, res, next) {
 
 function isLoggedInAndRedirectBack(req, res, next) {
 	// if user is authenticated in the session, carry on
-	if (req.isAuthenticated())
+	if (req.isAuthenticated()) {
 		return next();
+	}
 
 	var redirect_url = '';
 	if (req.query && req.query.id) {
@@ -324,8 +325,9 @@ function isLoggedInAndRedirectBack(req, res, next) {
 
 function isLoggedIn(req, res, next) {
 	// if user is authenticated in the session, carry on
-	if (req.isAuthenticated())
+	if (req.isAuthenticated()) {
 		return next();
+	}
 
 	// if they aren't redirect them to the home page
 	res.redirect(req.subroute || admin_default_subroute + '/login');
@@ -333,8 +335,9 @@ function isLoggedIn(req, res, next) {
 
 function redirectIfLoggedIn(req, res, next) {
 	// if user is not authenticated in the session, carry on
-	if (!req.isAuthenticated())
+	if (!req.isAuthenticated()) {
 		return next();
+	}
 
 	// if they are redirect them to the home page
 	res.redirect(req.subroute + '/home');
@@ -344,9 +347,9 @@ function isSexpert(req, res, next) {
 	if (req.isAuthenticated()) {
 		if (req.user.sexpert) {
 			return next();
-		} else {
-			res.redirect(req.subroute + '/home');
 		}
+
+		res.redirect(req.subroute + '/home');
 	}
 
 	res.redirect(req.subroute);
@@ -356,9 +359,9 @@ function isEmployee(req, res, next) {
 	if (req.isAuthenticated()) {
 		if (req.user.employee) {
 			return next();
-		} else {
-			res.redirect(admin_default_subroute + '/home');
 		}
+
+		res.redirect(admin_default_subroute + '/home');
 	}
 
 	res.redirect(admin_default_subroute);
@@ -368,9 +371,9 @@ function isAdmin(req, res, next) {
 	if (req.isAuthenticated()) {
 		if (req.user.admin) {
 			return next();
-		} else {
-			res.redirect(admin_default_subroute + '/home');
 		}
+
+		res.redirect(admin_default_subroute + '/home');
 	}
 
 	res.redirect(admin_default_subroute);

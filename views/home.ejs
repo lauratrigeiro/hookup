@@ -20,37 +20,37 @@
 	</noscript>
 </head>
 	<body id="home" class="member">
-	<header>
-			<% include ./partials/header %>
-	</header>
+		<header>
+				<% include ./partials/header %>
+		</header>
 
-	<div id="content">
-		<div id="intro">
-			<h1>Welcome to hookup!</h1>
-			<p><%= home_message %></p>
-			<p id="signup-message"></p>
-			<p id="signature">xoxo, <br/><img height="28px" src="/public/images/logo.png" /></p>
+		<div id="content">
+			<div id="intro">
+				<h1>Welcome to hookup!</h1>
+				<p><%= home_message %></p>
+				<p id="signup-message"></p>
+				<p id="signature">xoxo, <br/><img height="28px" src="/public/images/logo.png" /></p>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div id="features">
+			<div class="c2l">
+				<p><img src="/public/images/condom_home.png" /></p>
+				<h3>Sexpert</h3>
+				<p class="description">Read our feed of Q&A or ask your own question.</p>
+				<p><a class="btn" href="<%= route %>/feed">Snoop</a></p>
+			</div>
+			<div class="c2r">
+				<p><img src="/public/images/grape_home.png" /></p>
+				<h3>Share Your Story</h3>
+				<p class="description">Read our feed of stories about sex and relationships. Upvote favorites and share your own.</p>
+				<p><a class="btn" href="<%= route %>/share">Snoop</a></p>
+			</div>
 			<div class="clear"></div>
 		</div>
-	</div>
 
-	<div id="features">
-		<div class="c2l">
-			<p><img src="/public/images/condom_home.png" /></p>
-			<h3>Sexpert</h3>
-			<p class="description">Read our feed of Q&A or ask your own question.</p>
-			<p><a class="btn" href="<%= route %>/feed">Snoop</a></p>
-		</div>
-		<div class="c2r">
-			<p><img src="/public/images/grape_home.png" /></p>
-			<h3>Share Your Story</h3>
-			<p class="description">Read our feed of stories about sex and relationships. Upvote favorites and share your own.</p>
-			<p><a class="btn" href="<%= route %>/share">Snoop</a></p>
-		</div>
-		<div class="clear"></div>
-	</div>
-
-	<footer>
+		<footer>
 			<% include ./partials/footer %>
 			<% include ./partials/analytics %>
 			<script>
@@ -60,6 +60,6 @@
 					}
 				});
 			</script>
-	</footer>
-</body>
+		</footer>
+	</body>
 </html>

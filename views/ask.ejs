@@ -1,32 +1,32 @@
 <html>
 	<head>
-	  <% include ./partials/head %>
+		<% include ./partials/head %>
 	</head>
 	<body class="teal-background">
-    <header>
-        <% include ./partials/header %>
-        <input type="hidden" id="route" value=<%= route %> />
-    </header>
-    <div id="content">
-      <div class="user-chats-container"></div>
-      <div class="question ask">
-        <a class="btn feed-btn" href="<%= route %>/feed">Snoop Q&A</a>
-        <div class="question-form">
-          <h4>Ask a sexpert anonymously</h4>
-          <p><textarea id="description" placeholder="Ask about relationships, STI's, condoms, orgasms, or consent, etc." rows="5"></textarea></p>
-          <p id="edit-question" style="display:none;"><a href="#">edit text</a></p>
-          <p id="available-sexperts" style="display:none;"><span id="sexpert-count"></span> sexperts available</p>
-          <p class="sexpert-queue" style="display:none;"></p>          
-          <input class="btn" id="submit" type="button" value="Hookup" />
-        </div>
-      </div>
-    </div>
-    <footer>
-        <script src="/public/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+		<header>
+				<% include ./partials/header %>
+				<input type="hidden" id="route" value=<%= route %> />
+		</header>
+		<div id="content">
+			<div class="user-chats-container"></div>
+			<div class="question ask">
+				<a class="btn feed-btn" href="<%= route %>/feed">Snoop Q&A</a>
+				<div class="question-form">
+					<h4>Ask a sexpert anonymously</h4>
+					<p><textarea id="description" placeholder="Ask about relationships, STI's, condoms, orgasms, or consent, etc." rows="5"></textarea></p>
+					<p id="edit-question" style="display:none;"><a href="#">edit text</a></p>
+					<p id="available-sexperts" style="display:none;"><span id="sexpert-count"></span> sexperts available</p>
+					<p class="sexpert-queue" style="display:none;"></p>
+					<input class="btn" id="submit" type="button" value="Hookup" />
+				</div>
+			</div>
+		</div>
+		<footer>
+				<script src="/public/js/jquery-1.11.2.min.js" type="text/javascript"></script>
 		<script src="/public/js/autosize.js" type="text/javascript"></script>
 		<script src="/public/js/master.js" type="text/javascript"></script>
-        <script src="/public/js/ask.js" type="text/javascript"></script>
-        <% include ./partials/analytics %>  
-    </footer>
-  </body>
+				<script src="/public/js/ask.js" type="text/javascript"></script>
+				<% include ./partials/analytics %>
+		</footer>
+	</body>
 </html>

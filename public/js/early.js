@@ -7,7 +7,7 @@ $(document).ready(function() {
 
 		var email = $('#email').val().trim();
 		if (!email) {
-			$('#alert-message').html("You must provide an email address.");
+			$('#alert-message').html('You must provide an email address.');
 			return;
 		} else if (email.indexOf('@') < 0) {
 			$('#alert-message').html("Email address must contain '@'.");
@@ -21,23 +21,23 @@ $(document).ready(function() {
 		}
 
 		var data = JSON.stringify({
-			"email" : email,
-			"age"   : age
+			email : email,
+			age   : age
 		});
 
 		$.ajax({
-			url: '/mailchimp/subscribe',
-			data: data,
-			type: 'POST',
-			contentType: 'application/json',
-			error: function(err) {
-				$('#alert-message').html("Processing error - please try again.");
+			url         : '/mailchimp/subscribe',
+			data        : data,
+			type        : 'POST',
+			contentType : 'application/json',
+			error       : function(err) {
+				$('#alert-message').html('Processing error - please try again.');
 			},
-			success: function(data) {
+			success     : function(result) {
 				$('#alert-message').removeClass('error');
 				$('#alert-message').addClass('success');
-				$('#alert-message').html(data.email + " is now subscribed! Please check your email to confirm.");
+				$('#alert-message').html(result.email + ' is now subscribed! Please check your email to confirm.');
 			}
 		});
-	})
+	});
 });

@@ -1,27 +1,27 @@
 <!-- views/index.ejs -->
 <!doctype html>
 <html>
-    <head>
-      <% include ./partials/head %>
-    </head>
-    <body id="home" class="public">
-    <div id="header">
-      <div id="logo"><a href="<%= route %>"><img src="/public/images/logo.png"></a></div>
-      <div id="nav">
-      </div>
-      <div class="clear"></div>
-    </div>
-    
-    <div id="content">
-      <div id="intro">
-        <h1>Sex ed sucks. Try us.</h1>         
-        <p><%= welcome_message %></p>
-        <p id="join"><a class="btn" href="<%= route %>/login">Login</a> <a class="btn" href="<%= route %>/signup" id="signup">Signup</a></p>
-      </div>
-    </div>
-    <footer>
-        <% include ./partials/footer %>
-        <% include ./partials/analytics %>
-    </footer>
-  </body>
+	<head>
+		<% include ./partials/head %>
+	</head>
+	<body id="home" class="public">
+		<div id="header">
+			<div id="logo"><a href="<%= route %>"><img src="/public/images/logo.png"></a></div>
+			<div id="nav">
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+		<div id="content">
+			<div id="intro">
+				<h1>Sex ed sucks. Try us.</h1>
+				<p><%= welcome_message %></p>
+				<p id="join"><a class="btn" href="<%= route %>/login">Login</a> <a class="btn" href="<%= route %>/signup" id="signup">Signup</a></p>
+			</div>
+		</div>
+		<footer>
+				<% include ./partials/footer %>
+				<% include ./partials/analytics %>
+		</footer>
+	</body>
 </html>

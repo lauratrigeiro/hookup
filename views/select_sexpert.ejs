@@ -1,24 +1,24 @@
 <html>
 	<head>
-	  <% include ./partials/head %>
+		<% include ./partials/head %>
 	</head>
 	<body class="teal-background select-sexpert">
-    <header>
-        <% include ./partials/header %>
-        <input type="hidden" id="route" value=<%= route %> />
-    </header>
-    <h2>Choose a sexpert</h2>
-    <p>Our current list of experts. If they're online right now they can answer right away.<br/>
-    If they're not, you can still select them and they will be sent an email.</p>
-    <div class="sexpert-container">
-      <ol id="sexpert-list"></ol>
-    </div>
-    <footer>
-        <script src="/public/js/jquery-1.11.2.min.js" type="text/javascript"></script>
-		<script src="/public/js/autosize.js" type="text/javascript"></script>
-		<script src="/public/js/master.js" type="text/javascript"></script>
-        <script src="/public/js/select_sexpert.js" type="text/javascript"></script>
-        <% include ./partials/analytics %>  
-    </footer>
-  </body>
+		<header>
+			<% include ./partials/header %>
+			<input type="hidden" id="route" value=<%= route %> />
+		</header>
+		<h2>Choose a sexpert</h2>
+		<p>Our current list of experts. If they're online right now they can answer right away.<br/>
+		If they're not, you can still select them and they will be sent an email.</p>
+		<div class="sexpert-container">
+			<ol id="sexpert-list"></ol>
+		</div>
+		<footer>
+			<script src="/public/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+			<script src="/public/js/autosize.js" type="text/javascript"></script>
+			<script src="/public/js/master.js" type="text/javascript"></script>
+			<script src="/public/js/select_sexpert.js" type="text/javascript"></script>
+			<% include ./partials/analytics %>
+		</footer>
+	</body>
 </html>

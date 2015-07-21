@@ -1,65 +1,65 @@
 <!-- views/partials/header.ejs -->
 
 <div id="header">
-  <div id="logo"><a href="<%= route %>/home"><img src="/public/images/logo.png"></a></div>
-  <div id="nav">
-    <ul id="nav-content">
-      <li><a href="<%= route %>/home">home</a></li>
-      <% if (is_logged_in) { %>
-      <li>
-        <a class="nav-trigger-site" href="#">features <i class="fa fa-caret-down"></i></a>
-        <ul class="dropdown" style="display: none;">
-          <li><a href="<%= route %>/ask">Ask a sexpert</a></li>
-          <li><a href="<%= route %>/share">Share your story</a></li>
-        </ul>
-      </li>
-      <li>
-        <a class="nav-trigger-account" href="#"><img src="/public/images/pinkbunny_small.png"/> <%= user.username %> <i class="fa fa-caret-down"></i></a>
-        <ul class="dropdown" style="display: none;">
-          <% if (user.sexpert || user.admin) { %>
-          <li><a href="<%= route %>/sexpert">Sexpert</a></li>
-        <% } %>
-        <% if (user.employee || user.admin) { %>
-          <li><a href="<%= route %>/feed-pending">Approve Chats</a></li>
-          <li><a href="<%= route %>/approve">Approve Stories</a></li>
-          <li><a href="/admin">Admin</a></li>
-        <% } %>
-          <li><a href="/logout">Logout</a></li>
-        </ul>
-      </li>
-      <% } %>
-    </ul>
-    
-    <p id="menu-toggle"><a href="#"><i class="fa fa-bars fa-2x"></i></a></p>
-    <ul id="menu-content">
-      <li><a href="<%= route %>/home">home</a></li>
-       <% if (is_logged_in) { %>
-      <li>
-        <a class="nav-trigger-site" href="#">features <i class="fa fa-caret-down"></i></a>
-        <ul class="dropdown">
-          <li><a href="<%= route %>/ask">Ask a sexpert</a></li>
-          <li><a href="<%= route %>/share">Share your story</a></li>
-        </ul>
-      </li>
-     
-      <li>
-        <a class="nav-trigger-account" href="#" id="username"><%= user.username %><i class="fa fa-caret-down"></i></a>
-        <ul class="dropdown">
-          <% if (user.sexpert || user.admin) { %>
-            <li><a href="<%= route %>/feed-pending">Approve Chats</a></li>
-          <li><a href="<%= route %>/approve">Approve Stories</a></li>
-          <% } %>
-          <% if (user.employee || user.admin) { %>
-            <li><a href="/admin">Admin</a></li>
-          <% } %>
-          <li><a href="/logout">Logout</a></li>
-        </ul>
-      </li>
-      <% } %>
-    </ul>
-  </div>
-  <div class="clear"></div>
+	<div id="logo"><a href="<%= route %>/home"><img src="/public/images/logo.png"></a></div>
+	<div id="nav">
+		<ul id="nav-content">
+			<li><a href="<%= route %>/home">home</a></li>
+			<% if (is_logged_in) { %>
+			<li>
+				<a class="nav-trigger-site" href="#">features <i class="fa fa-caret-down"></i></a>
+				<ul class="dropdown" style="display: none;">
+					<li><a href="<%= route %>/ask">Ask a sexpert</a></li>
+					<li><a href="<%= route %>/share">Share your story</a></li>
+				</ul>
+			</li>
+			<li>
+				<a class="nav-trigger-account" href="#"><img src="/public/images/pinkbunny_small.png"/> <%= user.username %> <i class="fa fa-caret-down"></i></a>
+				<ul class="dropdown" style="display: none;">
+					<% if (user.sexpert || user.admin) { %>
+					<li><a href="<%= route %>/sexpert">Sexpert</a></li>
+				<% } %>
+				<% if (user.employee || user.admin) { %>
+					<li><a href="<%= route %>/feed-pending">Approve Chats</a></li>
+					<li><a href="<%= route %>/approve">Approve Stories</a></li>
+					<li><a href="/admin">Admin</a></li>
+				<% } %>
+					<li><a href="/logout">Logout</a></li>
+				</ul>
+			</li>
+			<% } %>
+		</ul>
+		
+		<p id="menu-toggle"><a href="#"><i class="fa fa-bars fa-2x"></i></a></p>
+		<ul id="menu-content">
+			<li><a href="<%= route %>/home">home</a></li>
+			 <% if (is_logged_in) { %>
+			<li>
+				<a class="nav-trigger-site" href="#">features <i class="fa fa-caret-down"></i></a>
+				<ul class="dropdown">
+					<li><a href="<%= route %>/ask">Ask a sexpert</a></li>
+					<li><a href="<%= route %>/share">Share your story</a></li>
+				</ul>
+			</li>
+		 
+			<li>
+				<a class="nav-trigger-account" href="#" id="username"><%= user.username %><i class="fa fa-caret-down"></i></a>
+				<ul class="dropdown">
+					<% if (user.sexpert || user.admin) { %>
+						<li><a href="<%= route %>/feed-pending">Approve Chats</a></li>
+					<li><a href="<%= route %>/approve">Approve Stories</a></li>
+					<% } %>
+					<% if (user.employee || user.admin) { %>
+						<li><a href="/admin">Admin</a></li>
+					<% } %>
+					<li><a href="/logout">Logout</a></li>
+				</ul>
+			</li>
+			<% } %>
+		</ul>
+	</div>
+	<div class="clear"></div>
 </div>
 <% if (is_logged_in) { %>
-    <input type="hidden" id="this_user_id" value= <%= user.id %> />
+		<input type="hidden" id="this_user_id" value= <%= user.id %> />
 <% } %>

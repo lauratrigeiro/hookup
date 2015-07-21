@@ -1,53 +1,53 @@
 <!doctype html>
 <html>
-<head>
-	<% include ./partials/head %>
-</head>
-<body id="chat">
-<header>
-    <% include ./partials/header %>
-    <div id="sexpert-profile"></div>
-</header>
-<div id="content">
-      <h1>Ask a sexpert</h1>
-      <div class="c2r">       
-        <div class="sexpert-profile">
-          <p id="alert">Waiting to hookup... If you close your browser, you won't get your answer. It's just set up that way for beta.</p>
-          <div id="sexpert-content">
-	          <h4>You&#39;re talking to:</h4>
-	          <img id="pic" src="" />
-	          <p id="name"></p>
-	          <p>Experience: Volunteer for <span id="experience"></span></p>
-	          <p id="bio"></p>
-	  		  <p id="available-sexperts" style="display:none;"><span id="sexpert-count"></span> sexperts available</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="c2l">
-        <ul class="conversation">
-        </ul>
-        <div class="clear"></div>
-      </div>
-      
-      <div class="c2r">
-        <div class="question chat">
-          <div class="question-form">
-            <h4>Let&#39;s Hookup With Another Question</h4>
-            <p><textarea id="description" placeholder="Ask another question?" rows="5"></textarea></p>
-            <p id="edit-question" style="display:none;"><a href="#">edit text</a></p>
-            <p id="available-sexperts" style="display:none;"><span id="sexpert-count"></span> sexperts available</p>          
-            <input class="btn" id="submit" type="button" value="Hookup again" />
-          </div>
-          <input class="" id="end-chat" type="button" value="End chat">
-        </div>
-      </div>      
-    </div>
-	<script src="/public/js/jquery-1.11.2.min.js" type="text/javascript"></script>
-	<script src='/socket.io/socket.io.js'></script>
-	<script src="/public/js/autosize.js" type="text/javascript"></script>
-	<script src="/public/js/master.js" type="text/javascript"></script>
-	<script type='text/javascript' src='/public/js/chat.js'></script> 
-	<% include ./partials/analytics %>      
-  </body>
+	<head>
+		<% include ./partials/head %>
+	</head>
+	<body id="chat">
+		<header>
+			<% include ./partials/header %>
+			<div id="sexpert-profile"></div>
+		</header>
+		<div id="content">
+			<h1>Ask a sexpert</h1>
+			<div class="c2r">
+				<div class="sexpert-profile">
+					<p id="alert">Waiting to hookup... If you close your browser, you won't get your answer. It's just set up that way for beta.</p>
+					<div id="sexpert-content">
+						<h4>You&#39;re talking to:</h4>
+						<img id="pic" src="" />
+						<p id="name"></p>
+						<p>Experience: Volunteer for <span id="experience"></span></p>
+						<p id="bio"></p>
+					<p id="available-sexperts" style="display:none;"><span id="sexpert-count"></span> sexperts available</p>
+					</div>
+				</div>
+			</div>
+			
+			<div class="c2l">
+				<ul class="conversation">
+				</ul>
+				<div class="clear"></div>
+			</div>
+			
+			<div class="c2r">
+				<div class="question chat">
+					<div class="question-form">
+						<h4>Let&#39;s Hookup With Another Question</h4>
+						<p><textarea id="description" placeholder="Ask another question?" rows="5"></textarea></p>
+						<p id="edit-question" style="display:none;"><a href="#">edit text</a></p>
+						<p id="available-sexperts" style="display:none;"><span id="sexpert-count"></span> sexperts available</p>          
+						<input class="btn" id="submit" type="button" value="Hookup again" />
+					</div>
+					<input class="" id="end-chat" type="button" value="End chat">
+				</div>
+			</div>
+		</div>
+		<script src="/public/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+		<script src='/socket.io/socket.io.js'></script>
+		<script src="/public/js/autosize.js" type="text/javascript"></script>
+		<script src="/public/js/master.js" type="text/javascript"></script>
+		<script type='text/javascript' src='/public/js/chat.js'></script>
+		<% include ./partials/analytics %>
+	</body>
 </html>

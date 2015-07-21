@@ -5,7 +5,7 @@ $(document).ready(function() {
 		$.ajax({
 			type        : 'GET',
 			url         : '/admin/users?name=' + username,
-			contentType : "application/json",
+			contentType : 'application/json',
 			success     : function(result) {
 				var roles = [];
 				if (result.sexpert) {
@@ -23,7 +23,7 @@ $(document).ready(function() {
 				$('#credentials').html(result.username + ': ' + roles.join(', '));
 			},
 			error       : function() {
-				$('#credentials').html("Sorry, an error occurred.");
+				$('#credentials').html('Sorry, an error occurred.');
 			}
 		});
 	});
@@ -35,16 +35,16 @@ $(document).ready(function() {
 		$.ajax({
 			type        : 'POST',
 			url         : '/admin/users',
-			contentType : "application/json",
+			contentType : 'application/json',
 			data        : JSON.stringify({
 				username  : username,
 				user_type : user_type
 			}),
 			success     : function(result) {
-				$('#message').html("User successfully upgraded.");
+				$('#message').html('User successfully upgraded.');
 			},
 			error       : function() {
-				$('#message').html("Sorry, an error occurred.");
+				$('#message').html('Sorry, an error occurred.');
 			}
 		});
 	});
@@ -57,17 +57,17 @@ $(document).ready(function() {
 		$.ajax({
 			type        : 'POST',
 			url         : '/admin/sexperts',
-			contentType : "application/json",
+			contentType : 'application/json',
 			data        : JSON.stringify({
 				username   : username,
 				experience : experience,
 				bio        : bio
 			}),
 			success     : function(result) {
-				$('#message').html("Profile successfully added.");
+				$('#message').html('Profile successfully added.');
 			},
 			error       : function() {
-				$('#message').html("Sorry, an error occurred.");
+				$('#message').html('Sorry, an error occurred.');
 			}
 		});
 	});

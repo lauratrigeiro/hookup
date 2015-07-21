@@ -4,21 +4,21 @@
 	<% include ./partials/head %>
 </head>
 <body class="teal-background">
-    <div id="admin-container" class="container">
-        <header>
-            <% include ./partials/header %>
-        </header>
-        <div class="jumbotron text-center">
-            <h1><span class="fa fa-lock"></span>Admin Page</h1>
-            <a href="/admin/chats" class="btn btn-default">View All Chats</a>
-            <% if (user.admin) { %>
-                <% include ./partials/admin_only %>
-            <% } %>
-        </div>
-    </div>
-    <footer>
-        <% include ./partials/footer %>
-        <script type='text/javascript' src='/public/js/admin.js'></script>
-    </footer>
+	<div id="admin-container" class="container">
+		<header>
+			<% include ./partials/header %>
+		</header>
+		<div class="jumbotron text-center">
+			<h1><span class="fa fa-lock"></span>Admin Page</h1>
+			<a href="/admin/chats" class="btn btn-default">View All Chats</a>
+			<% if (user.admin) { %>
+				<% include ./partials/admin_only %>
+			<% } %>
+		</div>
+	</div>
+	<footer>
+		<% include ./partials/footer %>
+		<script type='text/javascript' src='/public/js/admin.js'></script>
+	</footer>
 </body>
 </html>

@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<% include ./partials/head %>
-    <link href="/public/css/chat.css" rel="stylesheet" type="text/css" />
-</head>
-<body class="teal-background">
-    <div id="content">
-        <header>
-            <% include ./partials/header %>
-        </header>
-        <div class="jumbotron text-center">
-            <h1><span class="fa fa-lock"></span>Sexpert Page</h1>
-            <button id="online" class="btn online-status">Change Status to ONLINE</button>
-            <button id="offline" class="btn online-status hidden-btn">Change Status to OFFLINE</button>
-            <h3>Open Chats <button id="refresh-waiting" class="btn">refresh</button></h3>
-        </div>
-        <div id="waiting-container">
-        	<ol id="waiting">
-        	</ol>
-        </div>
-        <p id="alert"></p>
-        <h3>Chat Windows <button id="chats-toggle" class="btn">show/hide all chats from this session</button></h3>
-        <div id="chat-windows">
-        </div>
-    </div>
-    <footer>
-        <% include ./partials/footer %>
-        <script src='/socket.io/socket.io.js'></script>
-        <script type='text/javascript' src='/public/js/sexpert.js'></script>
-    </footer>
-</body>
+	<head>
+		<% include ./partials/head %>
+		<link href="/public/css/chat.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body class="teal-background">
+		<div id="content">
+			<header>
+				<% include ./partials/header %>
+			</header>
+			<div class="jumbotron text-center">
+				<h1><span class="fa fa-lock"></span>Sexpert Page</h1>
+				<button id="online" class="btn online-status">Change Status to ONLINE</button>
+				<button id="offline" class="btn online-status hidden-btn">Change Status to OFFLINE</button>
+				<h3>Open Chats <button id="refresh-waiting" class="btn">refresh</button></h3>
+			</div>
+			<div id="waiting-container">
+				<ol id="waiting">
+				</ol>
+			</div>
+			<p id="alert"></p>
+			<h3>Chat Windows <button id="chats-toggle" class="btn">show/hide all chats from this session</button></h3>
+			<div id="chat-windows">
+			</div>
+		</div>
+		<footer>
+			<% include ./partials/footer %>
+			<script src='/socket.io/socket.io.js'></script>
+			<script type='text/javascript' src='/public/js/sexpert.js'></script>
+		</footer>
+	</body>
 </html>
