@@ -884,8 +884,7 @@ function set_display_username(req, res) {
 		});
 	}
 
-	db.connect_to_db(res, function(conn) {
-
+	db.connect(res, function(conn) {
 		var possible_fields = {
 			content : req.body.content,
 			status  : req.body.status

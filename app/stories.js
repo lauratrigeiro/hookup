@@ -30,33 +30,41 @@ function create_story(req, res) {
 		});
 	}
 
-	connect_to_db(function(conn) {
-		var story_id = utils.uuid(),
-			user_id = req.user.id,
-			content = req.body.content,
-			q = 'INSERT INTO stories_approved (story_id, user_id, content) VALUES (?, ?, ?)';
-		query(conn, q, [story_id, user_id, content], function() {
+	db.connect(res, function(conn) {
+		var story_id = utils.uuid();
+		var user_id = req.user.id;
+		var content = req.body.content;
+		var q = 'INSERT INTO stories_approved (story_id, user_id, content) VALUES (?, ?, ?)';
+		db.query(res, conn, q, [story_id, user_id, content], function() {
 			res.status(201).send({ story_id : story_id, content : content });
 		});
 	});
 }
 
 function approve_story(req, res) {
-	connect_to_db(function(conn) {
-		var story_id = req.body.story_id,
-			q = 'UPDATE stories_approved SET status = ? WHERE story_id = ?';
-		query(conn, q, [statuses.approved, story_id], function() {
-			res.status(200).send();
+	db.connect(res, function(conn) {
+		var story_id = req.body.story_id;
+		var q = 'UPDATE stories_approved SET status = ? WHERE story_id = ?';
+		db.query(res, conn, q, [statuses.approved, story_id], function() {
+			res.status(200).send({ story_id : story_id });
 		});
 	});
 }
 
 function deny_story(req, res) {
-	connect_to_db(function(conn) {
-		var story_id = req.body.story_id,
-				q = 'UPDATE stories_approved SET status = ? WHERE story_id = ?';
-		query(conn, q, [statuses.denied, story_id], function() {
-			res.status(200).send();
+	if (!req.body || !req.body.story_id) {
+		return res.status(400).send({
+			error      : 'Request must include story_id',
+			details    : { request : req.body },
+			error_type : 'bad request'
+		});
+	}
+
+	db.connect(res, function(conn) {
+		var story_id = req.body.story_id;
+		var q = 'UPDATE stories_approved SET status = ? WHERE story_id = ?';
+		db.query(res, conn, q, [statuses.denied, story_id], function() {
+			res.status(200).send({ story_id : story_id });
 		});
 	});
 }
@@ -70,13 +78,13 @@ function upvote_story(req, res) {
 		});
 	}
 
-	connect_to_db(function(conn) {
-		var story_id = req.body.story_id,
-				user_id = req.user.id;
+	db.connect(res, function(conn) {
+		var story_id = req.body.story_id;
+		var user_id = req.user.id;
 
 		// Check if a user has upvoted this story yet
 		var q = 'SELECT upvote_id FROM upvotes WHERE story_id = ? and user_id = ?';
-		query(conn, q, [story_id, user_id], false, function(rows, fields) {
+		db.query(res, conn, q, [story_id, user_id], false, function(rows) {
 			// If they have return 400
 			if (rows.length > 0) {
 				conn.release();
@@ -88,12 +96,12 @@ function upvote_story(req, res) {
 			}
 
 			// Otherwise record the upvote
-			var upvote_id = utils.uuid(),
-					q = 'INSERT INTO upvotes (upvote_id, story_id, user_id) VALUES (?, ?, ?)';
-			query(conn, q, [upvote_id, story_id, user_id], function(rows, fields) {
-				var q = 'UPDATE stories_approved SET upvotes = upvotes + 1 WHERE story_id = ?';
-				db.query(res, conn, q, [story_id], false, function() {
-					return res.status(200).send();
+			var upvote_id = utils.uuid();
+			var insert_q = 'INSERT INTO upvotes (upvote_id, story_id, user_id) VALUES (?, ?, ?)';
+			db.query(res, conn, insert_q, [upvote_id, story_id, user_id], false, function() {
+				var update_q = 'UPDATE stories_approved SET upvotes = upvotes + 1 WHERE story_id = ?';
+				db.query(res, conn, update_q, [story_id], function() {
+					res.status(200).send({ story_id : story_id });
 				});
 			});
 		});
@@ -109,20 +117,29 @@ function get_unapproved(req, res) {
 }
 
 function edit_story(req, res) {
+	if (!req.body || !req.body.story_id) {
+		return res.status(400).send({
+			error      : 'Request must include story_id',
+			details    : { request : req.body },
+			error_type : 'bad request'
+		});
+	}
+
 	var story_id = req.body.story_id;
 	var content = req.body.content;
 	var discussion = req.body.discussion || null;
-	connect_to_db(function(conn) {
+	db.connect(res, function(conn) {
 		var q = 'UPDATE stories_approved SET content = ?, discussion = ? WHERE story_id = ?';
-		query(conn, q, [content, discussion, story_id], function() {});
-		return res.status(200).send();
+		db.query(res, conn, q, [content, discussion, story_id], function() {
+			res.status(200).send({ story_id : story_id });
+		});
 	});
 }
 
 // PRIVATE FUNCTIONS
 function get_stories(req, res, story_status) {
-	connect_to_db(function(conn) {
-
+	db.connect(res, function(conn) {
+		var offset;
 		if ('offset' in req.query && req.query.offset && parseInt(req.query.offset) >= 0) {
 			offset = parseInt(req.query.offset);
 		} else {
@@ -134,9 +151,9 @@ function get_stories(req, res, story_status) {
 					FROM stories_approved WHERE status = ? ORDER BY created_ts DESC \
 					LIMIT 10 OFFSET ?';
 
-		query(conn, q, [story_status, offset], function(rows, fields) {
+		db.query(res, conn, q, [story_status, offset], function(rows) {
 			var data = rows.map(function(row) {
-				return row_data = {
+				return {
 					story_id   : row.story_id,
 					content    : row.content,
 					created    : row.created,
@@ -147,44 +164,5 @@ function get_stories(req, res, story_status) {
 
 			return res.status(200).send(data);
 		});
-	});
-}
-// Boilerplate
-// Eventually pull this out into a library
-function connect_to_db(callback) {
-	db.get_connection(function(error, conn) {
-		if (error) {
-			conn.release();
-			return res.status(502).send({
-				error      : 'database error',
-				details    : error,
-				error_type : 'database connection'
-			});
-		} else {
-			callback(conn);
-		}
-	});
-}
-
-function query(conn, q, params, release, callback) {
-	if (typeof release === 'function') {
-		callback = release;
-		release = true;
-	}
-
-	conn.query(q, params, function(error, rows, fields) {
-		if (error) console.log(error);
-		if (error) return generic_query_error(err, conn);
-		if (release) conn.release();
-		callback(rows, fields);
-	});
-}
-
-function generic_query_error(err, conn) {
-	conn.release();
-	return res.status(502).send({
-		error      : 'database error',
-		details    : err,
-		error_type : 'database query'
 	});
 }

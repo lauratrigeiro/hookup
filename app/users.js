@@ -1,7 +1,7 @@
 var db = require('../config/database');
 
 function get(req, res) {
-	db.connect_to_db(res, function(conn) {
+	db.connect(res, function(conn) {
 		var querystring = 'SELECT *, \
 		DATE_FORMAT(birthday, \'%m/%d/%Y\') AS birthday_formatted \
 		FROM users WHERE sexpert = 0 AND employee = 0 AND admin = 0 ORDER BY created_ts DESC';
