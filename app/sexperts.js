@@ -1,30 +1,13 @@
 var db = require('../config/database');
 
 function get_sexperts(req, res) {
-	db.get_connection(function(error, conn) {
-		if (error) {
-			conn.release();
-			return res.status(502).send({
-				error      : 'database error',
-				details    : error,
-				error_type : 'database connection'
-			});
-		}
-
+	db.connect(res, function(conn) {
 		var querystring = 'SELECT a.*, b.username, b.age from sexperts a \
 			INNER JOIN users b \
 			ON a.sexpert_id = b.id \
 			WHERE test = 0';
 
-		conn.query(querystring, [], function(err, rows) {
-			if (err) {
-				return res.status(502).send({
-					error      : 'database error',
-					details    : err,
-					error_type : 'database query'
-				});
-			}
-
+		db.query(res, conn, querystring, [], function(rows) {
 			var data = rows.map(function(row) {
 				var experience;
 				if (row.experience === 1) {
@@ -46,34 +29,16 @@ function get_sexperts(req, res) {
 				};
 			});
 
-			return res.status(200).send(data);
+			res.status(200).send(data);
 		});
 	});
 }
 
 function get_active(req, res) {
-	db.get_connection(function(error, conn) {
-		if (error) {
-			conn.release();
-			return res.status(502).send({
-				error      : 'database error',
-				details    : error,
-				error_type : 'database connection'
-			});
-		}
-
+	db.connect(res, function(conn) {
 		var querystring = 'SELECT COUNT(*) as count from sexperts \
 			WHERE active = 1';
-
-		conn.query(querystring, [], function(err, rows) {
-			if (err || !rows) {
-				return res.status(502).send({
-					error      : 'database error',
-					details    : err,
-					error_type : 'database query'
-				});
-			}
-
+		db.query(res, conn, querystring, [], function(rows) {
 			res.send(200, { active : rows[0].count });
 		});
 	});
@@ -97,11 +62,12 @@ function change_active_status(req, res) {
 			});
 		}
 
-		return res.status(200).send(data);
+		res.status(200).send(data);
 	});
 }
 
 function change_active_status_internal(sexpert_id, active_status, callback) {
+	// use get_connection because of use in socket_io.js
 	db.get_connection(function(error, conn) {
 		if (error) {
 			conn.release();
@@ -117,7 +83,7 @@ function change_active_status_internal(sexpert_id, active_status, callback) {
 				return callback(true);
 			}
 
-			return callback(null, { active : active });
+			callback(null, { active : active });
 		});
 	});
 }
