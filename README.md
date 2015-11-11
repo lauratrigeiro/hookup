@@ -15,3 +15,5 @@ I created the site in Node.js/Express with a MySQL database and EJS/jQuery on th
 The chat feature was definitely the hardest to figure out, and one of the main reasons I chose to use Node (besides that I was using it at work) was so I could use socket.io. Sexperts had to each be able to have chats going on with multiple users while everything was recorded in the database. We also e-mailed users and sexperts regarding the chat, which required using the Mandrill API.
 
 I would like to give special thanks to Elnaz Moshfeghian who helped out with the site's CSS and HTML for the landing, home, and chat pages at the beginning when I had little experience with front end work. Greg Baraghimian also deserves credit for his work on creating the chat feed using EJS and contributing to the stories API.
+
+Final note: server.js, app/mailchimp.js, app/mailer.js, app/mandrill.js, and config/database.js all contained sensitive information that I didn't bother with earlier because I was using a private Bitbucket. I used git-filter-branch to remove them from all commits and added them back at the end.
