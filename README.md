@@ -5,7 +5,7 @@ This repository contains the codebase for Hookup, an edgy and entertaining sex e
 
 Hookup has now changed names to [Juicebox](http://www.juiceboxit.com) and should be releasing an iOS app shortly, along with a revamped web app in the future.
 
-While http://www.dohookup.com now redirects to Juicebox, the old Hookup [landing page](http://hookup-prod.elasticbeanstalk.com/) and [main site](http://hookup-prod.elasticbeanstalk.com/launch/) can still be viewed.
+While http://www.dohookup.com now redirects to Juicebox, the old Hookup [landing page](http://old.dohookup.com/) and [main site](http://old.dohookup.com/launch/) can still be viewed.
 
 I created the site in Node.js/Express with a MySQL database and EJS/jQuery on the front end all deployed using Elastic Beanstalk from AWS. For user authentication I used Passport. The site has two main features:
 
